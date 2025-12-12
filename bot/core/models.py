@@ -1,4 +1,4 @@
-from tortoise import fields
+from tortoise import fields, Tortoise
 from tortoise.models import Model
 import uuid
 
@@ -189,3 +189,15 @@ class MealPlan(Model):
             f"Жиры: {self.calculated_daily_fat:.1f} г\n"
             f"Углеводы: {self.calculated_daily_carbs:.1f} г"
         )
+
+
+# --- Вспомогательные функции инициализации БД ---
+async def init_db(db_url: str):
+    """Инициализация подключения к базе"""
+    await Tortoise.init(db_url=db_url, modules={"models": ["bot.core.models"]})
+    await Tortoise.generate_schemas()
+
+
+async def close_db():
+    """Закрытие подключения к базе"""
+    await Tortoise.close_connections()
