@@ -1,0 +1,150 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h1 class="display-4 fw-bold mb-4">AI Recipe Bot</h1>
+                <p class="lead mb-4">
+                    Создавай персонализированные рецепты и планы питания с помощью искусственного интеллекта.
+                    Просто загрузи фото продуктов и получи готовый рецепт с точным расчетом КБЖУ!
+                </p>
+                {% if not user %}
+                <a href="/auth/register" class="btn btn-light btn-lg me-3">
+                    <i class="bi bi-person-plus"></i> Начать бесплатно
+                </a>
+                <a href="/auth/login" class="btn btn-outline-light btn-lg">
+                    <i class="bi bi-box-arrow-in-right"></i> Войти
+                </a>
+                {% else %}
+                <a href="/recipes/create" class="btn btn-light btn-lg me-3">
+                    <i class="bi bi-plus-circle"></i> Создать рецепт
+                </a>
+                <a href="/meal-plans/create" class="btn btn-outline-light btn-lg">
+                    <i class="bi bi-calendar-plus"></i> План питания
+                </a>
+                {% endif %}
+            </div>
+            <div class="col-lg-6">
+                <img src="/static/images/hero-image.png" alt="AI Recipe Bot" class="img-fluid rounded shadow"
+                     onerror="this.style.display='none'">
+                <div class="text-center mt-3">
+                    <i class="bi bi-camera-fill" style="font-size: 4rem; color: rgba(255,255,255,0.8);"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="py-5">
+    <div class="container">
+        <div class="row text-center mb-5">
+            <div class="col">
+                <h2 class="display-5 fw-bold">Как это работает</h2>
+                <p class="lead text-muted">Три простых шага к вкусному рецепту</p>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card feature-card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <div class="bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                            <i class="bi bi-camera-fill" style="font-size: 2rem;"></i>
+                        </div>
+                        <h5 class="card-title fw-bold">1. Загрузи фото</h5>
+                        <p class="card-text text-muted">
+                            Сфотографируй продукты, которые у тебя есть, и загрузи изображение в приложение.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card feature-card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <div class="bg-success text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                            <i class="bi bi-robot" style="font-size: 2rem;"></i>
+                        </div>
+                        <h5 class="card-title fw-bold">2. ИИ анализирует</h5>
+                        <p class="card-text text-muted">
+                            Искусственный интеллект распознает продукты и предлагает варианты уточнения.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card feature-card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <div class="bg-warning text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                            <i class="bi bi-star-fill" style="font-size: 2rem;"></i>
+                        </div>
+                        <h5 class="card-title fw-bold">3. Получи рецепт</h5>
+                        <p class="card-text text-muted">
+                            Готовый рецепт с точным расчетом калорий, белков, жиров и углеводов.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Stats Section -->
+{% if user %}
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-md-3">
+                <div class="h2 fw-bold text-primary mb-2">{{ user.recipes.count() if user.recipes else 0 }}</div>
+                <p class="text-muted mb-0">Созданных рецептов</p>
+            </div>
+            <div class="col-md-3">
+                <div class="h2 fw-bold text-success mb-2">{{ user.meal_plans.count() if user.meal_plans else 0 }}</div>
+                <p class="text-muted mb-0">Планов питания</p>
+            </div>
+            <div class="col-md-3">
+                <div class="h2 fw-bold text-info mb-2">437</div>
+                <p class="text-muted mb-0">Продуктов в базе</p>
+            </div>
+            <div class="col-md-3">
+                <div class="h2 fw-bold text-warning mb-2">24/7</div>
+                <p class="text-muted mb-0">Доступность</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- CTA Section -->
+<section class="py-5">
+    <div class="container text-center">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <h2 class="display-5 fw-bold mb-4">Готов создать свой первый рецепт?</h2>
+                <p class="lead text-muted mb-4">
+                    Присоединяйся к тысячам пользователей, которые уже используют AI Recipe Bot для создания вкусных и здоровых блюд.
+                </p>
+                {% if not user %}
+                <a href="/auth/register" class="btn btn-primary btn-lg px-5">
+                    <i class="bi bi-rocket-takeoff"></i> Начать прямо сейчас
+                </a>
+                {% else %}
+                <div class="d-flex justify-content-center gap-3">
+                    <a href="/recipes/create" class="btn btn-primary btn-lg px-4">
+                        <i class="bi bi-plus-circle"></i> Создать рецепт
+                    </a>
+                    <a href="/meal-plans/create" class="btn btn-outline-primary btn-lg px-4">
+                        <i class="bi bi-calendar-plus"></i> План питания
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

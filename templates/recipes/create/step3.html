@@ -1,0 +1,196 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <!-- Progress Bar -->
+            <div class="mb-4">
+                <nav aria-label="Progress">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item text-success">
+                            <i class="bi bi-check-circle-fill"></i> Шаг 1: Загрузка фото
+                        </li>
+                        <li class="breadcrumb-item text-success">
+                            <i class="bi bi-check-circle-fill"></i> Шаг 2: Анализ
+                        </li>
+                        <li class="breadcrumb-item active">
+                            <i class="bi bi-calculator"></i> Шаг 3: Параметры
+                        </li>
+                        <li class="breadcrumb-item text-muted">
+                            <i class="bi bi-star"></i> Готово!
+                        </li>
+                    </ol>
+                </nav>
+            </div>
+
+            <div class="card shadow">
+                <div class="card-body p-5">
+                    <div class="text-center mb-4">
+                        <i class="bi bi-calculator text-warning" style="font-size: 4rem;"></i>
+                        <h2 class="mt-3">Настрой параметры питания</h2>
+                        <p class="text-muted lead">
+                            Укажи желаемые калории и соотношение макронутриентов
+                        </p>
+                    </div>
+
+                    <form method="post" action="/recipes/create/step3">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <h5 class="fw-bold mb-3">
+                                    <i class="bi bi-fire text-danger"></i> Энергетическая ценность
+                                </h5>
+
+                                <div class="mb-4">
+                                    <label for="target_calories" class="form-label">
+                                        Калории <span class="text-danger">*</span>
+                                    </label>
+                                    <div class="input-group">
+                                        <input type="number" class="form-control form-control-lg"
+                                               id="target_calories" name="target_calories"
+                                               min="50" max="2000" step="10" placeholder="500" required>
+                                        <span class="input-group-text">ккал</span>
+                                    </div>
+                                    <div class="form-text">Общее количество калорий в блюде</div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <h5 class="fw-bold mb-3">
+                                    <i class="bi bi-activity text-info"></i> Макронутриенты
+                                </h5>
+
+                                <div class="mb-3">
+                                    <label for="target_protein" class="form-label">
+                                        Белки <span class="text-danger">*</span>
+                                    </label>
+                                    <div class="input-group">
+                                        <input type="number" class="form-control" id="target_protein"
+                                               name="target_protein" min="0" max="200" step="0.5"
+                                               placeholder="30" required>
+                                        <span class="input-group-text">г</span>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="target_fat" class="form-label">
+                                        Жиры <span class="text-danger">*</span>
+                                    </label>
+                                    <div class="input-group">
+                                        <input type="number" class="form-control" id="target_fat"
+                                               name="target_fat" min="0" max="200" step="0.5"
+                                               placeholder="20" required>
+                                        <span class="input-group-text">г</span>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="target_carbs" class="form-label">
+                                        Углеводы <span class="text-danger">*</span>
+                                    </label>
+                                    <div class="input-group">
+                                        <input type="number" class="form-control" id="target_carbs"
+                                               name="target_carbs" min="0" max="300" step="0.5"
+                                               placeholder="40" required>
+                                        <span class="input-group-text">г</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <h5 class="fw-bold mb-3">
+                                    <i class="bi bi-leaf text-success"></i> Растительность
+                                </h5>
+
+                                <div class="mb-4">
+                                    <label for="greens_weight" class="form-label">
+                                        Количество зелени/овощей/фруктов <span class="text-danger">*</span>
+                                    </label>
+                                    <div class="input-group">
+                                        <input type="number" class="form-control form-control-lg"
+                                               id="greens_weight" name="greens_weight"
+                                               min="0" max="1000" step="10" placeholder="100" required>
+                                        <span class="input-group-text">г</span>
+                                    </div>
+                                    <div class="form-text">
+                                        Сколько грамм растительной пищи включить в рецепт (зелень, овощи, фрукты)
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Preview Card -->
+                        <div class="card bg-light mb-4">
+                            <div class="card-body">
+                                <h6 class="card-title">
+                                    <i class="bi bi-eye"></i> Предварительный расчёт
+                                </h6>
+                                <div class="row text-center">
+                                    <div class="col-3">
+                                        <div class="fw-bold text-danger" id="preview-calories">-</div>
+                                        <small class="text-muted">ккал</small>
+                                    </div>
+                                    <div class="col-3">
+                                        <div class="fw-bold text-primary" id="preview-protein">-</div>
+                                        <small class="text-muted">белки</small>
+                                    </div>
+                                    <div class="col-3">
+                                        <div class="fw-bold text-warning" id="preview-fat">-</div>
+                                        <small class="text-muted">жиры</small>
+                                    </div>
+                                    <div class="col-3">
+                                        <div class="fw-bold text-info" id="preview-carbs">-</div>
+                                        <small class="text-muted">углеводы</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="/recipes/create/step2" class="btn btn-outline-secondary">
+                                <i class="bi bi-arrow-left"></i> Назад
+                            </a>
+                            <button type="submit" class="btn btn-success btn-lg px-5">
+                                <i class="bi bi-magic"></i> Создать рецепт
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block scripts %}
+<script>
+// Обновление предварительного расчёта
+function updatePreview() {
+    const calories = parseFloat(document.getElementById('target_calories').value) || 0;
+    const protein = parseFloat(document.getElementById('target_protein').value) || 0;
+    const fat = parseFloat(document.getElementById('target_fat').value) || 0;
+    const carbs = parseFloat(document.getElementById('target_carbs').value) || 0;
+
+    document.getElementById('preview-calories').textContent = calories;
+    document.getElementById('preview-protein').textContent = protein + 'г';
+    document.getElementById('preview-fat').textContent = fat + 'г';
+    document.getElementById('preview-carbs').textContent = carbs + 'г';
+}
+
+// Слушатели событий для полей ввода
+document.getElementById('target_calories').addEventListener('input', updatePreview);
+document.getElementById('target_protein').addEventListener('input', updatePreview);
+document.getElementById('target_fat').addEventListener('input', updatePreview);
+document.getElementById('target_carbs').addEventListener('input', updatePreview);
+
+// Предустановленные значения
+document.getElementById('target_calories').value = '500';
+document.getElementById('target_protein').value = '30';
+document.getElementById('target_fat').value = '20';
+document.getElementById('target_carbs').value = '40';
+document.getElementById('greens_weight').value = '100';
+updatePreview();
+</script>
+{% endblock %}
+{% endblock %}

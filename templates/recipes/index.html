@@ -1,0 +1,91 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h2 mb-1">
+                <i class="bi bi-book"></i> Мои рецепты
+            </h1>
+            <p class="text-muted mb-0">Созданные тобой рецепты с помощью ИИ</p>
+        </div>
+        <a href="/recipes/create" class="btn btn-primary btn-lg">
+            <i class="bi bi-plus-circle"></i> Создать рецепт
+        </a>
+    </div>
+
+    {% if recipes %}
+    <div class="row">
+        {% for recipe in recipes %}
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">
+                        <a href="/recipes/{{ recipe.id }}" class="text-decoration-none">
+                            {{ recipe.recipe_text.get('recipe_title', 'Без названия') if recipe.recipe_text else 'Без названия' }}
+                        </a>
+                    </h5>
+
+                    <div class="mb-3">
+                        <small class="text-muted">
+                            <i class="bi bi-calendar"></i>
+                            {{ recipe.created_at.strftime('%d.%m.%Y') }}
+                        </small>
+                    </div>
+
+                    <!-- Nutrition preview -->
+                    {% if recipe.calculated_calories %}
+                    <div class="row text-center mb-3 small">
+                        <div class="col-3">
+                            <div class="text-danger fw-bold">{{ recipe.calculated_calories }}</div>
+                            <div class="text-muted">ккал</div>
+                        </div>
+                        <div class="col-3">
+                            <div class="text-primary fw-bold">{{ recipe.calculated_protein }}г</div>
+                            <div class="text-muted">Б</div>
+                        </div>
+                        <div class="col-3">
+                            <div class="text-warning fw-bold">{{ recipe.calculated_fat }}г</div>
+                            <div class="text-muted">Ж</div>
+                        </div>
+                        <div class="col-3">
+                            <div class="text-info fw-bold">{{ recipe.calculated_carbs }}г</div>
+                            <div class="text-muted">У</div>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <div class="mt-auto">
+                        <a href="/recipes/{{ recipe.id }}" class="btn btn-outline-primary btn-sm w-100">
+                            <i class="bi bi-eye"></i> Посмотреть рецепт
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    {% if recipes|length >= 10 %}
+    <div class="text-center mt-4">
+        <p class="text-muted">Показаны последние 10 рецептов</p>
+    </div>
+    {% endif %}
+
+    {% else %}
+    <!-- Empty state -->
+    <div class="text-center py-5">
+        <div class="mb-4">
+            <i class="bi bi-book text-muted" style="font-size: 4rem;"></i>
+        </div>
+        <h3 class="text-muted mb-3">У тебя пока нет рецептов</h3>
+        <p class="text-muted mb-4">
+            Создай свой первый рецепт с помощью искусственного интеллекта!
+        </p>
+        <a href="/recipes/create" class="btn btn-primary btn-lg">
+            <i class="bi bi-plus-circle"></i> Создать первый рецепт
+        </a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

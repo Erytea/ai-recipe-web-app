@@ -1,0 +1,25 @@
+[Unit]
+Description=AI Recipe Web App
+After=network.target postgresql.service redis-server.service
+
+[Service]
+Type=simple
+User=www-data
+Group=www-data
+WorkingDirectory=/path/to/your/app
+Environment=PATH=/path/to/your/venv/bin
+ExecStart=/path/to/your/venv/bin/uvicorn main:app --host 127.0.0.1 --port 8000
+Restart=always
+RestartSec=5
+
+# Security
+NoNewPrivileges=yes
+PrivateTmp=yes
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=recipe-app
+
+[Install]
+WantedBy=multi-user.target

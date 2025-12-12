@@ -1,0 +1,142 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <!-- Recipe Header -->
+            <div class="card shadow mb-4">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div>
+                            <h1 class="h2 mb-2">{{ recipe_data.recipe_title }}</h1>
+                            <p class="text-muted mb-0">
+                                <i class="bi bi-calendar"></i>
+                                Создан {{ recipe.created_at.strftime('%d.%m.%Y в %H:%M') }}
+                            </p>
+                        </div>
+                        <div class="text-end">
+                            <span class="badge bg-success fs-6 px-3 py-2">
+                                <i class="bi bi-check-circle-fill"></i> Готово
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Nutrition Facts -->
+                    <div class="row text-center mb-4">
+                        <div class="col-3">
+                            <div class="p-3 bg-danger bg-opacity-10 rounded">
+                                <div class="h4 text-danger mb-1">{{ recipe_data.calculated_nutrition.calories }}</div>
+                                <small class="text-muted">ккал</small>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="p-3 bg-primary bg-opacity-10 rounded">
+                                <div class="h4 text-primary mb-1">{{ recipe_data.calculated_nutrition.protein_g }}г</div>
+                                <small class="text-muted">белки</small>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="p-3 bg-warning bg-opacity-10 rounded">
+                                <div class="h4 text-warning mb-1">{{ recipe_data.calculated_nutrition.fat_g }}г</div>
+                                <small class="text-muted">жиры</small>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="p-3 bg-info bg-opacity-10 rounded">
+                                <div class="h4 text-info mb-1">{{ recipe_data.calculated_nutrition.carbs_g }}г</div>
+                                <small class="text-muted">углеводы</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-5">
+                    <!-- Ingredients -->
+                    <div class="card shadow mb-4">
+                        <div class="card-header">
+                            <h5 class="mb-0">
+                                <i class="bi bi-basket"></i> Ингредиенты
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <ul class="list-group list-group-flush">
+                                {% for ingredient in recipe_data.ingredients_with_weights %}
+                                <li class="list-group-item px-0 d-flex justify-content-between align-items-center">
+                                    <span>{{ ingredient.name }}</span>
+                                    <span class="badge bg-secondary">{{ ingredient.weight_g }}г</span>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Original Photo -->
+                    {% if recipe.photo_file_id %}
+                    <div class="card shadow">
+                        <div class="card-header">
+                            <h6 class="mb-0">
+                                <i class="bi bi-camera"></i> Исходное фото
+                            </h6>
+                        </div>
+                        <div class="card-body p-3">
+                            <img src="/static/{{ recipe.photo_file_id }}" alt="Original photo"
+                                 class="img-fluid rounded shadow-sm">
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <div class="col-md-7">
+                    <!-- Cooking Steps -->
+                    <div class="card shadow">
+                        <div class="card-header">
+                            <h5 class="mb-0">
+                                <i class="bi bi-list-ol"></i> Приготовление
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <ol class="list-group list-group-numbered">
+                                {% for step in recipe_data.cooking_steps %}
+                                <li class="list-group-item border-0 px-0">{{ step }}</li>
+                                {% endfor %}
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="card shadow mt-4">
+                <div class="card-body text-center">
+                    <h5 class="mb-3">Что дальше?</h5>
+                    <div class="d-flex gap-2 justify-content-center flex-wrap">
+                        <a href="/recipes/create" class="btn btn-primary">
+                            <i class="bi bi-plus-circle"></i> Создать новый рецепт
+                        </a>
+                        <a href="/meal-plans/create" class="btn btn-success">
+                            <i class="bi bi-calendar-plus"></i> Создать план питания
+                        </a>
+                        <a href="/recipes" class="btn btn-outline-primary">
+                            <i class="bi bi-list"></i> Мои рецепты
+                        </a>
+                        <button onclick="window.print()" class="btn btn-outline-secondary">
+                            <i class="bi bi-printer"></i> Распечатать
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+@media print {
+    .navbar, .card-header, .btn, footer { display: none !important; }
+    .container { max-width: none !important; margin: 0 !important; }
+    .card { border: none !important; box-shadow: none !important; }
+}
+</style>
+{% endblock %}
