@@ -488,15 +488,61 @@
         }
 
         function updateProgress() {
-            const total = document.querySelectorAll('.checkbox-item').length;
+            const checkboxes = document.querySelectorAll('.checkbox-item');
+            if (checkboxes.length === 0) {
+                const progressBar = document.querySelector('.progress-bar');
+                if (progressBar) {
+                    progressBar.style.width = '0%';
+                }
+                return;
+            }
+            
+            const total = checkboxes.length;
             const checked = document.querySelectorAll('.checkbox-item input:checked').length;
             const percentage = (checked / total) * 100;
 
             const progressBar = document.querySelector('.progress-bar');
-            progressBar.style.width = percentage + '%';
+            if (progressBar) {
+                progressBar.style.width = percentage + '%';
+            }
+        }
+        
+        function updateCookingProgress() {
+            const checkboxes = document.querySelectorAll('.cooking-step input[type="checkbox"]');
+            if (checkboxes.length === 0) {
+                const progressBar = document.querySelector('.cooking-progress-bar');
+                if (progressBar) {
+                    progressBar.style.width = '0%';
+                }
+                return;
+            }
+            
+            const total = checkboxes.length;
+            const checked = document.querySelectorAll('.cooking-step input[type="checkbox"]:checked').length;
+            const percentage = (checked / total) * 100;
+
+            const progressBar = document.querySelector('.cooking-progress-bar');
+            if (progressBar) {
+                progressBar.style.width = percentage + '%';
+            }
         }
 
+        // Store timers for each button
+        const timers = {};
+        
+        function stopTimer(stepId) {
+            if (timers[stepId]) {
+                clearInterval(timers[stepId]);
+                delete timers[stepId];
+            }
+        }
+        
         function startDemoTimer(button) {
+            const stepId = button.dataset.stepId || 'default';
+            
+            // Stop existing timer if any
+            stopTimer(stepId);
+            
             button.innerHTML = '<i class="bi bi-stopwatch"></i> 5:00';
             button.style.background = '#E53E3E';
 
@@ -507,11 +553,14 @@
 
                 if (timeLeft <= 0) {
                     clearInterval(interval);
+                    delete timers[stepId];
                     button.innerHTML = '<i class="bi bi-check-circle-fill"></i> Готово!';
                     button.style.background = '#38A169';
                     showToast('Таймер завершен!', 'success');
                 }
             }, 1000);
+            
+            timers[stepId] = interval;
         }
 
         function showInstallDemo() {
@@ -548,6 +597,22 @@
                     card.classList.add('fade-in');
                 }, index * 200);
             });
+            
+            // Fix for Bug 3: Install button should be appended to the second navbar-nav (right-aligned menu)
+            // Instead of: navbar.querySelector('.navbar-nav')
+            // Use: navbar.querySelectorAll('.navbar-nav')[1] or a more specific selector
+            const navbar = document.querySelector('.navbar');
+            if (navbar) {
+                const navbarNavs = navbar.querySelectorAll('.navbar-nav');
+                // Select the second navbar-nav (right-aligned menu) if it exists
+                const rightNav = navbarNavs.length > 1 ? navbarNavs[1] : navbarNavs[0];
+                
+                // Example: Add install button to the correct navbar-nav
+                // const installButton = document.createElement('li');
+                // installButton.className = 'nav-item';
+                // installButton.innerHTML = '<button class="btn btn-sm btn-outline-light">Установить</button>';
+                // rightNav.appendChild(installButton);
+            }
         });
     </script>
 </body>
