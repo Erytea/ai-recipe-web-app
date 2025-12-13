@@ -13,12 +13,17 @@
     
     <style>
         :root {
-            --primary-color: #0d6efd;
-            --secondary-color: #6c757d;
-            --success-color: #198754;
-            --danger-color: #dc3545;
-            --warning-color: #ffc107;
-            --info-color: #0dcaf0;
+            --ringo-red: #c41e3a;
+            --ringo-red-dark: #8b1528;
+            --ringo-red-light: #e63950;
+            --text-dark: #1a1a1a;
+            --text-light: #666;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
         body {
@@ -26,37 +31,257 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            color: var(--text-dark);
+            line-height: 1.6;
         }
 
-        .hero-section {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 80px 0;
-            margin-top: -56px;
-            padding-top: 136px;
+        /* Red background pattern */
+        .red-bg {
+            background-color: var(--ringo-red);
+            background-image: 
+                radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+            background-size: 30px 30px;
+            background-position: 0 0, 15px 15px;
         }
 
+        /* Navigation - RINGO style */
         .navbar {
-            box-shadow: 0 2px 4px rgba(0,0,0,.1);
+            background-color: var(--ringo-red-dark) !important;
+            padding: 1rem 0;
+            box-shadow: none;
+            border-bottom: none;
         }
 
+        .navbar-brand {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: white !important;
+            text-transform: uppercase;
+        }
+
+        .navbar-brand img {
+            filter: brightness(0) invert(1);
+        }
+
+        .navbar-nav .nav-link {
+            color: white !important;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.9rem;
+            padding: 0.5rem 1rem !important;
+            transition: opacity 0.3s ease;
+        }
+
+        .navbar-nav .nav-link:hover {
+            opacity: 0.8;
+        }
+
+        .navbar-toggler {
+            border: none;
+        }
+
+        .navbar-toggler:focus {
+            box-shadow: none;
+        }
+
+        /* Hero Section - Full width image */
+        .hero-full-image {
+            width: 100%;
+            height: 70vh;
+            object-fit: cover;
+            display: block;
+        }
+
+        .hero-overlay {
+            position: relative;
+        }
+
+        .hero-logo {
+            position: absolute;
+            bottom: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            font-size: 4rem;
+            font-weight: 700;
+            letter-spacing: 8px;
+            text-transform: uppercase;
+            text-shadow: 2px 2px 10px rgba(0,0,0,0.5);
+        }
+
+        /* Section styling */
+        .section-white {
+            background: white;
+            padding: 100px 0;
+        }
+
+        .section-title {
+            font-size: 3rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            margin-bottom: 1rem;
+            color: var(--text-dark);
+        }
+
+        .section-subtitle {
+            font-size: 1.1rem;
+            color: var(--text-light);
+            margin-bottom: 60px;
+        }
+
+        /* Concept cards */
+        .concept-image {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            margin-bottom: 20px;
+        }
+
+        .concept-text {
+            font-size: 0.95rem;
+            color: var(--text-light);
+            line-height: 1.8;
+        }
+
+        /* Product section */
+        .product-image-wrapper {
+            position: relative;
+            margin-bottom: 40px;
+        }
+
+        .product-image {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* Learn more link */
+        .learn-more {
+            display: inline-flex;
+            align-items: center;
+            color: var(--ringo-red);
+            text-decoration: none;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.9rem;
+            margin-top: 20px;
+            transition: color 0.3s ease;
+        }
+
+        .learn-more:hover {
+            color: var(--ringo-red-dark);
+        }
+
+        .learn-more i {
+            margin-left: 8px;
+            transition: transform 0.3s ease;
+        }
+
+        .learn-more:hover i {
+            transform: translateX(5px);
+        }
+
+        /* Feature cards - updated */
         .feature-card {
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: none;
+            background: white;
+            transition: transform 0.3s ease;
         }
 
         .feature-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 8px 16px rgba(0,0,0,.15) !important;
+        }
+
+        /* Buttons */
+        .btn-primary {
+            background-color: var(--ringo-red);
+            border-color: var(--ringo-red);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 500;
+            padding: 12px 30px;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--ringo-red-dark);
+            border-color: var(--ringo-red-dark);
+        }
+
+        .btn-outline-primary {
+            border-color: var(--ringo-red);
+            color: var(--ringo-red);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 500;
+            padding: 12px 30px;
+        }
+
+        .btn-outline-primary:hover {
+            background-color: var(--ringo-red);
+            border-color: var(--ringo-red);
         }
 
         main {
             flex: 1;
         }
 
+        /* Footer - red style */
         footer {
-            background-color: #f8f9fa;
-            padding: 40px 0;
-            margin-top: 60px;
+            background-color: var(--ringo-red-dark);
+            color: white;
+            padding: 60px 0 40px;
+            margin-top: 0;
+        }
+
+        footer h5 {
+            color: white;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+        }
+
+        footer p {
+            color: rgba(255,255,255,0.8);
+        }
+
+        footer .text-muted {
+            color: rgba(255,255,255,0.6) !important;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .social-icons a {
+            color: white;
+            font-size: 1.2rem;
+            transition: opacity 0.3s ease;
+        }
+
+        .social-icons a:hover {
+            opacity: 0.7;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-logo {
+                font-size: 2.5rem;
+                letter-spacing: 4px;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .section-white {
+                padding: 60px 0;
+            }
         }
 
         .btn-group-mobile {
@@ -76,11 +301,11 @@
 </head>
 <body>
     <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container">
-            <a class="navbar-brand fw-bold d-flex align-items-center" href="/">
-                <img src="/static/logo.png" alt="AI Recipe Bot" height="30" class="me-2" style="object-fit: contain;">
-                AI Recipe Bot
+            <a class="navbar-brand d-flex align-items-center" href="/">
+                <img src="/static/logo.png" alt="AI Recipe Bot" height="35" class="me-2" style="object-fit: contain;" onerror="this.style.display='none';">
+                AI RECIPE BOT
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
@@ -88,29 +313,29 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="/">Главная</a>
+                        <a class="nav-link" href="/">ГЛАВНАЯ</a>
                     </li>
                     {% if user %}
                     <li class="nav-item">
-                        <a class="nav-link" href="/recipes">Мои рецепты</a>
+                        <a class="nav-link" href="/recipes">РЕЦЕПТЫ</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/meal-plans">Планы питания</a>
+                        <a class="nav-link" href="/meal-plans">ПЛАНЫ</a>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
-                            <i class="bi bi-person-circle"></i> {{ user.email }}
+                            {{ user.email|upper }}
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="/auth/logout">Выйти</a></li>
+                            <li><a class="dropdown-item" href="/auth/logout">ВЫЙТИ</a></li>
                         </ul>
                     </li>
                     {% else %}
                     <li class="nav-item">
-                        <a class="nav-link" href="/auth/login">Войти</a>
+                        <a class="nav-link" href="/auth/login">ВОЙТИ</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/auth/register">Регистрация</a>
+                        <a class="nav-link" href="/auth/register">РЕГИСТРАЦИЯ</a>
                     </li>
                     {% endif %}
                 </ul>
@@ -124,17 +349,22 @@
     </main>
 
     <!-- Footer -->
-    <footer>
+    <footer class="red-bg">
         <div class="container">
-            <div class="row">
+            <div class="row align-items-center">
                 <div class="col-md-6">
-                    <h5><i class="bi bi-robot"></i> AI Recipe Bot</h5>
-                    <p class="text-muted">Создавай персонализированные рецепты с помощью искусственного интеллекта</p>
+                    <h5>AI RECIPE BOT</h5>
+                    <p class="mb-0">&copy; 2025 AI Recipe Bot. Все права защищены.</p>
                 </div>
                 <div class="col-md-6 text-md-end">
-                    <p class="text-muted mb-0">
-                        &copy; 2025 AI Recipe Bot. Все права защищены.
-                    </p>
+                    <div class="mb-3">
+                        <strong>SOCIAL</strong>
+                    </div>
+                    <div class="social-icons">
+                        <a href="#" aria-label="Facebook"><i class="bi bi-facebook"></i></a>
+                        <a href="#" aria-label="Twitter"><i class="bi bi-twitter"></i></a>
+                        <a href="#" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
+                    </div>
                 </div>
             </div>
         </div>
