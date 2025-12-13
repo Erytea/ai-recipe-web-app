@@ -260,3 +260,4 @@ async def view_recipe(
         )
     except Recipe.DoesNotExist:
         raise HTTPException(status_code=404, detail="Рецепт не найден")
+

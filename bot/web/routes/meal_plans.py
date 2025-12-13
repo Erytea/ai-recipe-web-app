@@ -263,3 +263,4 @@ async def view_meal_plan(
         )
     except MealPlan.DoesNotExist:
         raise HTTPException(status_code=404, detail="План питания не найден")
+

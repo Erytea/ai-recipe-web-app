@@ -53,3 +53,4 @@ async def profile(
             "meal_plans_count": meal_plans_count
         }
     )
+

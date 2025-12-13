@@ -144,3 +144,4 @@ async def get_current_user_from_token(
         )
 
     return user
+

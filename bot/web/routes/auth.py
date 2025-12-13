@@ -201,3 +201,4 @@ async def api_register(register_data: RegisterRequest):
     )
 
     return {"access_token": access_token, "token_type": "bearer"}
+
