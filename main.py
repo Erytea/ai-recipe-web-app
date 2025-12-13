@@ -85,9 +85,10 @@ async def home(
 @app.get("/health")
 async def health_check():
     """Health check endpoint для мониторинга"""
+    from datetime import datetime
     return {
         "status": "healthy",
-        "timestamp": "2025-01-01T00:00:00Z",  # В продакшене использовать datetime.utcnow()
+        "timestamp": datetime.utcnow().isoformat() + "Z",
         "version": "1.0.0"
     }
 

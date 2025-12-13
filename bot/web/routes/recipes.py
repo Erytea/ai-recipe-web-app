@@ -23,6 +23,18 @@ UPLOAD_DIR = Path("static/uploads")
 UPLOAD_DIR.mkdir(exist_ok=True)
 
 
+def cleanup_recipe_session(response: Response, user_id: str):
+    """Очищает все куки связанные с созданием рецепта для пользователя"""
+    cookies_to_delete = [
+        f"recipe_photo_{user_id}",
+        f"recipe_analysis_{user_id}",
+        f"recipe_clarifications_{user_id}"
+    ]
+
+    for cookie_key in cookies_to_delete:
+        response.delete_cookie(key=cookie_key)
+
+
 @router.get("/", response_class=HTMLResponse)
 async def recipes_home(
     request: Request,
@@ -83,7 +95,9 @@ async def process_photo_upload(
     response.set_cookie(
         key=f"recipe_photo_{current_user.id}",
         value=str(file_path.relative_to("static")),
-        max_age=3600  # 1 час
+        httponly=True,  # Защита от XSS атак
+        secure=False,   # Для разработки без HTTPS
+        max_age=3600    # 1 час
     )
 
     return response
@@ -127,6 +141,8 @@ async def analyze_photo_page(
     response.set_cookie(
         key=f"recipe_analysis_{current_user.id}",
         value=json.dumps(analysis),
+        httponly=True,  # Защита от XSS атак
+        secure=False,   # Для разработки без HTTPS
         max_age=3600
     )
 
@@ -146,6 +162,8 @@ async def process_clarifications(
     response.set_cookie(
         key=f"recipe_clarifications_{current_user.id}",
         value=clarifications,
+        httponly=True,  # Защита от XSS атак
+        secure=False,   # Для разработки без HTTPS
         max_age=3600
     )
 
@@ -226,15 +244,20 @@ async def process_nutrition_parameters(
         # Очищаем сессию и перенаправляем на результат
         response = RedirectResponse(url=f"/recipes/{recipe.id}", status_code=302)
 
-        # Очищаем куки
-        response.delete_cookie(f"recipe_photo_{current_user.id}")
-        response.delete_cookie(f"recipe_analysis_{current_user.id}")
-        response.delete_cookie(f"recipe_clarifications_{current_user.id}")
+        # Очищаем все куки связанные с рецептом
+        cleanup_recipe_session(response, str(current_user.id))
 
         return response
 
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Ошибка генерации рецепта: {str(e)}")
+        # В случае ошибки тоже очищаем сессию
+        response = Response(
+            content=json.dumps({"error": f"Ошибка генерации рецепта: {str(e)}"}),
+            media_type="application/json",
+            status_code=500
+        )
+        cleanup_recipe_session(response, str(current_user.id))
+        return response
 
 
 @router.get("/{recipe_id}", response_class=HTMLResponse)
@@ -260,4 +283,5 @@ async def view_recipe(
         )
     except Recipe.DoesNotExist:
         raise HTTPException(status_code=404, detail="Рецепт не найден")
+
 

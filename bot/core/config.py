@@ -12,13 +12,13 @@ class Settings(BaseSettings):
     database_url: str = "sqlite://db.sqlite3"
 
     # Web App Settings
-    secret_key: str = "your-secret-key-change-in-production"
+    secret_key: str  # Обязательная переменная окружения
     debug: bool = False
     host: str = "0.0.0.0"
     port: int = int(os.getenv("PORT", 8000))
 
     # JWT Settings
-    jwt_secret_key: str = "jwt-secret-key"
+    jwt_secret_key: str  # Обязательная переменная окружения
     jwt_algorithm: str = "HS256"
     jwt_expiration_hours: int = 24
 
@@ -37,6 +37,14 @@ class Settings(BaseSettings):
         env_file_encoding="utf-8",
         case_sensitive=False
     )
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        # Проверяем, что секретные ключи не являются значениями по умолчанию
+        if self.secret_key == "your-secret-key-change-in-production":
+            raise ValueError("SECRET_KEY должен быть установлен в переменных окружения!")
+        if self.jwt_secret_key == "jwt-secret-key":
+            raise ValueError("JWT_SECRET_KEY должен быть установлен в переменных окружения!")
 
 
 # Глобальный экземпляр настроек
