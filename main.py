@@ -43,7 +43,7 @@ async def lifespan(app: FastAPI):
     # Инициализация
     logger.info("Запуск веб-приложения...")
     try:
-        await init_db()
+        await init_db(settings.database_url)
         logger.info("База данных инициализирована успешно")
     except Exception as e:
         logger.error(f"Ошибка инициализации базы данных: {e}", exc_info=True)
