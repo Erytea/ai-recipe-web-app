@@ -36,11 +36,35 @@ templates_dir = Path("templates")
 static_dir.mkdir(exist_ok=True)
 templates_dir.mkdir(exist_ok=True)
 
+# Управление жизненным циклом приложения
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Управление жизненным циклом приложения"""
+    # Инициализация
+    logger.info("Запуск веб-приложения...")
+    try:
+        await init_db()
+        logger.info("База данных инициализирована успешно")
+    except Exception as e:
+        logger.error(f"Ошибка инициализации базы данных: {e}", exc_info=True)
+        raise
+
+    yield
+
+    # Завершение
+    try:
+        await close_db()
+        logger.info("Веб-приложение остановлено")
+    except Exception as e:
+        logger.error(f"Ошибка при закрытии базы данных: {e}", exc_info=True)
+
+
 # Инициализация FastAPI
 app = FastAPI(
     title="AI Recipe Web App",
     description="Веб-приложение для создания рецептов с помощью ИИ",
     version="1.0.0",
+    lifespan=lifespan,
 )
 
 # Настройка CORS
@@ -118,22 +142,29 @@ async def app_status():
         }
 
 
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    """Управление жизненным циклом приложения"""
-    # Инициализация
-    logger.info("Запуск веб-приложения...")
-    await init_db()
+@app.exception_handler(Exception)
+async def global_exception_handler(request: Request, exc: Exception):
+    """Глобальный обработчик исключений"""
+    logger.error(f"Необработанное исключение: {exc}", exc_info=True)
+    try:
+        return templates.TemplateResponse(
+            "error.html",
+            {
+                "request": request,
+                "error": str(exc),
+                "title": "Ошибка"
+            },
+            status_code=500
+        )
+    except Exception:
+        # Если даже шаблон ошибки не загрузился, возвращаем простой текст
+        from fastapi.responses import PlainTextResponse
+        return PlainTextResponse(
+            f"Внутренняя ошибка сервера: {str(exc)}",
+            status_code=500
+        )
 
-    yield
 
-    # Завершение
-    await close_db()
-    logger.info("Веб-приложение остановлено")
-
-
-# Применяем lifespan
-app.router.lifespan = lifespan
 
 
 if __name__ == "__main__":
