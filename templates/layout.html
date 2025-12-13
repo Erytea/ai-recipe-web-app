@@ -5,6 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% if title %}{{ title }} - {% endif %}AI Recipe Bot</title>
 
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#FF6B35">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="AI Recipe Bot">
+    <meta name="mobile-web-app-capable" content="yes">
+    <link rel="manifest" href="/static/manifest.json">
+    <link rel="apple-touch-icon" href="/static/icons/icon-192x192.png">
+
+    <!-- Google Fonts - Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->
@@ -14,33 +28,209 @@
     <script src="https://unpkg.com/htmx.org@1.9.6/dist/ext/ws.js"></script>
 
     <style>
+        :root {
+            --primary-orange: #FF6B35;
+            --primary-orange-dark: #E55A2B;
+            --secondary-orange: #F7931E;
+            --accent-green: #8BC34A;
+            --accent-green-dark: #7CB342;
+            --neutral-dark: #2D3748;
+            --neutral-light: #F7FAFC;
+            --success: #4CAF50;
+            --warning: #FFC107;
+        }
+
         .hero-section {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, var(--primary-orange) 0%, var(--secondary-orange) 100%);
             color: white;
             padding: 4rem 0;
         }
         .feature-card {
-            transition: transform 0.2s;
+            transition: all 0.3s ease;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
         }
         .feature-card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-8px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
         }
         .navbar-brand {
             font-weight: bold;
         }
         .btn-primary {
-            background-color: #667eea;
-            border-color: #667eea;
+            background: linear-gradient(135deg, var(--primary-orange) 0%, var(--secondary-orange) 100%);
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            transition: all 0.3s ease;
         }
         .btn-primary:hover {
-            background-color: #5a67d8;
-            border-color: #5a67d8;
+            background: linear-gradient(135deg, var(--primary-orange-dark) 0%, #E8890B 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
+        }
+        .btn-outline-primary {
+            border-color: var(--primary-orange);
+            color: var(--primary-orange);
+            border-radius: 12px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .btn-outline-primary:hover {
+            background: linear-gradient(135deg, var(--primary-orange) 0%, var(--secondary-orange) 100%);
+            border-color: var(--primary-orange);
+            transform: translateY(-2px);
+        }
+        .text-primary {
+            color: var(--primary-orange) !important;
+        }
+        .bg-primary {
+            background: linear-gradient(135deg, var(--primary-orange) 0%, var(--secondary-orange) 100%) !important;
+        }
+
+        /* Typography improvements */
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: var(--neutral-dark);
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            line-height: 1.3;
+            margin-bottom: 1rem;
+        }
+
+        h1 { font-size: 2.5rem; }
+        h2 { font-size: 2rem; }
+        h3 { font-size: 1.5rem; }
+
+        .lead {
+            font-size: 1.25rem;
+            font-weight: 400;
+            line-height: 1.6;
+        }
+
+        .display-4 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        .display-5 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        /* Mobile-first оптимизации */
+        @media (max-width: 768px) {
+            .hero-section {
+                padding: 3rem 0;
+                text-align: center;
+            }
+
+            .display-4 {
+                font-size: 2.5rem;
+            }
+
+            .display-5 {
+                font-size: 2rem;
+            }
+
+            .feature-card {
+                margin-bottom: 1.5rem;
+            }
+
+            .btn-lg {
+                padding: 1rem 2rem;
+                font-size: 1.1rem;
+                width: 100%;
+                margin-bottom: 1rem;
+            }
+
+            .btn-group-mobile {
+                display: flex;
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .navbar-brand {
+                font-size: 1.1rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .hero-section {
+                padding: 2rem 0;
+            }
+
+            .display-4 {
+                font-size: 2rem;
+            }
+
+            .display-5 {
+                font-size: 1.75rem;
+            }
+
+            .lead {
+                font-size: 1.1rem;
+            }
+
+            .feature-card .rounded-circle {
+                width: 70px !important;
+                height: 70px !important;
+            }
+
+            .feature-card .bi {
+                font-size: 1.5rem !important;
+            }
+        }
+
+        /* Touch-friendly interactions */
+        @media (hover: none) and (pointer: coarse) {
+            .feature-card:hover {
+                transform: none;
+            }
+
+            .btn-primary:hover,
+            .btn-outline-primary:hover {
+                transform: none;
+            }
+        }
+
+        /* High contrast mode support */
+        @media (prefers-contrast: high) {
+            :root {
+                --primary-orange: #C53030;
+                --accent-green: #2F855A;
+                --neutral-dark: #1A202C;
+            }
+        }
+
+        /* Reduced motion support */
+        @media (prefers-reduced-motion: reduce) {
+            .feature-card,
+            .btn-primary,
+            .btn-outline-primary {
+                transition: none;
+            }
+
+            .feature-card:hover {
+                transform: none;
+            }
         }
     </style>
 </head>
 <body>
+    <!-- Skip to main content link for accessibility -->
+    <a href="#main-content" class="sr-only sr-only-focusable btn btn-primary position-fixed" style="top: 10px; left: 10px; z-index: 1050;">
+        Перейти к основному контенту
+    </a>
+
     <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary" role="navigation" aria-label="Основная навигация">
         <div class="container">
             <a class="navbar-brand" href="/">
                 <i class="bi bi-robot"></i> AI Recipe Bot
@@ -97,12 +287,12 @@
     </nav>
 
     <!-- Main Content -->
-    <main>
+    <main id="main-content" role="main">
         {% block content %}{% endblock %}
     </main>
 
     <!-- Footer -->
-    <footer class="bg-dark text-light py-4 mt-5">
+    <footer class="bg-dark text-light py-4 mt-5" role="contentinfo">
         <div class="container">
             <div class="row">
                 <div class="col-md-6">
@@ -126,9 +316,212 @@
             // Для HTMX запросов добавляем необходимые headers
             evt.detail.headers['Content-Type'] = 'application/x-www-form-urlencoded';
         });
+
+        // Loading states для HTMX
+        document.body.addEventListener('htmx:beforeRequest', function(evt) {
+            const target = evt.target;
+            if (target) {
+                target.style.opacity = '0.7';
+                target.style.pointerEvents = 'none';
+            }
+        });
+
+        document.body.addEventListener('htmx:afterRequest', function(evt) {
+            const target = evt.target;
+            if (target) {
+                target.style.opacity = '1';
+                target.style.pointerEvents = 'auto';
+            }
+        });
+
+        // Error handling для HTMX
+        document.body.addEventListener('htmx:responseError', function(evt) {
+            console.error('HTMX Error:', evt.detail);
+            // Показываем toast с ошибкой
+            showToast('Произошла ошибка. Попробуйте еще раз.', 'error');
+        });
+
+        // Success feedback
+        document.body.addEventListener('htmx:afterSwap', function(evt) {
+            if (evt.detail.target.id === 'search-results' && evt.detail.xhr.status === 200) {
+                // Добавляем fade-in анимацию для результатов
+                const results = evt.detail.target;
+                results.style.opacity = '0';
+                results.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    results.style.transition = 'all 0.3s ease';
+                    results.style.opacity = '1';
+                    results.style.transform = 'translateY(0)';
+                }, 50);
+            }
+        });
+
+        // Toast notifications
+        function showToast(message, type = 'info') {
+            const toastColors = {
+                success: '#4CAF50',
+                error: '#F44336',
+                warning: '#FF9800',
+                info: '#2196F3'
+            };
+
+            const toast = document.createElement('div');
+            toast.textContent = message;
+            toast.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${toastColors[type]};
+                color: white;
+                padding: 1rem 1.5rem;
+                border-radius: 8px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                z-index: 9999;
+                font-family: 'Inter', sans-serif;
+                font-weight: 500;
+                animation: slideIn 0.3s ease;
+            `;
+
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // CSS animations for toasts
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // PWA functionality
+        let deferredPrompt;
+
+        // Register service worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/static/sw.js')
+                    .then(registration => {
+                        console.log('SW registered: ', registration);
+                    })
+                    .catch(registrationError => {
+                        console.log('SW registration failed: ', registrationError);
+                    });
+            });
+        }
+
+        // Handle PWA install prompt
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+
+            // Show install button if not already installed
+            if (!isAppInstalled()) {
+                showInstallPrompt();
+            }
+        });
+
+        // Check if app is already installed
+        function isAppInstalled() {
+            return window.matchMedia('(display-mode: standalone)').matches ||
+                   window.navigator.standalone === true;
+        }
+
+        // Show install prompt
+        function showInstallPrompt() {
+            const installBanner = document.createElement('div');
+            installBanner.id = 'pwa-install-banner';
+            installBanner.innerHTML = `
+                <div class="alert alert-info alert-dismissible fade show position-fixed bottom-0 start-50 translate-middle-x mb-3" role="alert" style="z-index: 1050; min-width: 300px;">
+                    <i class="bi bi-download me-2"></i>
+                    <strong>Установите AI Recipe Bot!</strong> Работает оффлайн и на главном экране.
+                    <button type="button" class="btn btn-sm btn-primary me-2" onclick="installPWA()">
+                        <i class="bi bi-check-circle"></i> Установить
+                    </button>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            `;
+
+            document.body.appendChild(installBanner);
+
+            // Auto-hide after 10 seconds
+            setTimeout(() => {
+                const banner = document.getElementById('pwa-install-banner');
+                if (banner) {
+                    banner.remove();
+                }
+            }, 10000);
+        }
+
+        // Install PWA
+        async function installPWA() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+
+                if (outcome === 'accepted') {
+                    console.log('User accepted the install prompt');
+                    showToast('Приложение установлено!', 'success');
+                } else {
+                    console.log('User dismissed the install prompt');
+                }
+
+                deferredPrompt = null;
+
+                // Hide install banner
+                const banner = document.getElementById('pwa-install-banner');
+                if (banner) {
+                    banner.remove();
+                }
+            }
+        }
+
+        // Handle app installed event
+        window.addEventListener('appinstalled', (evt) => {
+            console.log('App was installed successfully');
+            showToast('Приложение успешно установлено!', 'success');
+        });
+
+        // Request notification permission
+        function requestNotificationPermission() {
+            if ('Notification' in window && navigator.serviceWorker) {
+                Notification.requestPermission().then(permission => {
+                    if (permission === 'granted') {
+                        console.log('Notification permission granted');
+                        showToast('Уведомления включены', 'success');
+                    }
+                });
+            }
+        }
+
+        // Show PWA install button in navbar for mobile
+        if (!isAppInstalled() && window.innerWidth < 768) {
+            setTimeout(() => {
+                const navbar = document.querySelector('.navbar');
+                if (navbar && deferredPrompt) {
+                    const installBtn = document.createElement('button');
+                    installBtn.className = 'btn btn-outline-light btn-sm ms-2 d-md-none';
+                    installBtn.innerHTML = '<i class="bi bi-download"></i>';
+                    installBtn.onclick = installPWA;
+                    installBtn.title = 'Установить приложение';
+                    navbar.querySelector('.navbar-nav').appendChild(installBtn);
+                }
+            }, 3000);
+        }
     </script>
 
     {% block scripts %}{% endblock %}
 </body>
 </html>
+
 

@@ -12,14 +12,16 @@
                     Просто загрузи фото продуктов и получи готовый рецепт с точным расчетом КБЖУ!
                 </p>
                 {% if not user %}
-                <a href="/auth/register" class="btn btn-light btn-lg me-3">
-                    <i class="bi bi-person-plus"></i> Начать бесплатно
-                </a>
-                <a href="/auth/login" class="btn btn-outline-light btn-lg">
-                    <i class="bi bi-box-arrow-in-right"></i> Войти
-                </a>
+                <div class="btn-group-mobile d-block d-sm-inline">
+                    <a href="/auth/register" class="btn btn-light btn-lg me-3 shadow">
+                        <i class="bi bi-person-plus"></i> Начать бесплатно
+                    </a>
+                    <a href="/auth/login" class="btn btn-outline-light btn-lg">
+                        <i class="bi bi-box-arrow-in-right"></i> Войти
+                    </a>
+                </div>
                 {% else %}
-                <a href="/recipes/create" class="btn btn-light btn-lg me-3">
+                <a href="/recipes/create" class="btn btn-light btn-lg me-3 shadow">
                     <i class="bi bi-plus-circle"></i> Создать рецепт
                 </a>
                 <a href="/meal-plans/create" class="btn btn-outline-light btn-lg">
@@ -52,11 +54,12 @@
             <div class="col-md-4">
                 <div class="card feature-card h-100 border-0 shadow-sm">
                     <div class="card-body text-center p-4">
-                        <div class="bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                        <div class="bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3 position-relative" style="width: 80px; height: 80px;">
                             <i class="bi bi-camera-fill" style="font-size: 2rem;"></i>
+                            <div class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-white text-primary" style="font-size: 0.7rem; padding: 0.25em 0.5em;">1</div>
                         </div>
-                        <h5 class="card-title fw-bold">1. Загрузи фото</h5>
-                        <p class="card-text text-muted">
+                        <h5 class="card-title fw-bold text-primary">Загрузи фото</h5>
+                        <p class="card-text">
                             Сфотографируй продукты, которые у тебя есть, и загрузи изображение в приложение.
                         </p>
                     </div>
@@ -66,11 +69,12 @@
             <div class="col-md-4">
                 <div class="card feature-card h-100 border-0 shadow-sm">
                     <div class="card-body text-center p-4">
-                        <div class="bg-success text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                        <div class="bg-success text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3 position-relative" style="width: 80px; height: 80px;">
                             <i class="bi bi-robot" style="font-size: 2rem;"></i>
+                            <div class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-white text-success" style="font-size: 0.7rem; padding: 0.25em 0.5em;">2</div>
                         </div>
-                        <h5 class="card-title fw-bold">2. ИИ анализирует</h5>
-                        <p class="card-text text-muted">
+                        <h5 class="card-title fw-bold text-success">ИИ анализирует</h5>
+                        <p class="card-text">
                             Искусственный интеллект распознает продукты и предлагает варианты уточнения.
                         </p>
                     </div>
@@ -80,11 +84,12 @@
             <div class="col-md-4">
                 <div class="card feature-card h-100 border-0 shadow-sm">
                     <div class="card-body text-center p-4">
-                        <div class="bg-warning text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 80px; height: 80px;">
+                        <div class="bg-warning text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3 position-relative" style="width: 80px; height: 80px;">
                             <i class="bi bi-star-fill" style="font-size: 2rem;"></i>
+                            <div class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-white text-warning" style="font-size: 0.7rem; padding: 0.25em 0.5em;">3</div>
                         </div>
-                        <h5 class="card-title fw-bold">3. Получи рецепт</h5>
-                        <p class="card-text text-muted">
+                        <h5 class="card-title fw-bold text-warning">Получи рецепт</h5>
+                        <p class="card-text">
                             Готовый рецепт с точным расчетом калорий, белков, жиров и углеводов.
                         </p>
                     </div>
@@ -130,12 +135,12 @@
                     Присоединяйся к тысячам пользователей, которые уже используют AI Recipe Bot для создания вкусных и здоровых блюд.
                 </p>
                 {% if not user %}
-                <a href="/auth/register" class="btn btn-primary btn-lg px-5">
+                <a href="/auth/register" class="btn btn-primary btn-lg px-5 shadow">
                     <i class="bi bi-rocket-takeoff"></i> Начать прямо сейчас
                 </a>
                 {% else %}
                 <div class="d-flex justify-content-center gap-3">
-                    <a href="/recipes/create" class="btn btn-primary btn-lg px-4">
+                    <a href="/recipes/create" class="btn btn-primary btn-lg px-4 shadow">
                         <i class="bi bi-plus-circle"></i> Создать рецепт
                     </a>
                     <a href="/meal-plans/create" class="btn btn-outline-primary btn-lg px-4">
@@ -148,4 +153,5 @@
     </div>
 </section>
 {% endblock %}
+
 

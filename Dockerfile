@@ -36,3 +36,4 @@ EXPOSE 8000
 # Команда запуска
 CMD ["python", "main.py"]
 
+

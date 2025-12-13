@@ -1,0 +1,32 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle -->
+  <circle cx="256" cy="256" r="256" fill="#FF6B35"/>
+
+  <!-- Robot head -->
+  <rect x="156" y="156" width="200" height="160" rx="20" fill="#FFFFFF"/>
+  <rect x="176" y="176" width="160" height="120" rx="10" fill="#2D3748"/>
+
+  <!-- Eyes -->
+  <circle cx="216" cy="226" r="12" fill="#FF6B35"/>
+  <circle cx="296" cy="226" r="12" fill="#FF6B35"/>
+  <circle cx="216" cy="226" r="6" fill="#FFFFFF"/>
+  <circle cx="296" cy="226" r="6" fill="#FFFFFF"/>
+
+  <!-- Mouth -->
+  <rect x="236" y="266" width="40" height="8" rx="4" fill="#FFFFFF"/>
+
+  <!-- Antennas -->
+  <line x1="256" y1="156" x2="256" y2="136" stroke="#FFFFFF" stroke-width="4"/>
+  <circle cx="256" cy="132" r="6" fill="#FFFFFF"/>
+  <circle cx="256" cy="128" r="3" fill="#FF6B35"/>
+
+  <!-- Recipe book -->
+  <rect x="206" y="346" width="100" height="80" rx="8" fill="#FFFFFF"/>
+  <rect x="216" y="356" width="80" height="60" rx="4" fill="#F7FAFC"/>
+  <line x1="216" y1="376" x2="296" y2="376" stroke="#FF6B35" stroke-width="2"/>
+  <line x1="216" y1="396" x2="296" y2="396" stroke="#FF6B35" stroke-width="2"/>
+
+  <!-- Cooking spoon -->
+  <path d="M 136 306 L 156 326 L 156 366 L 136 346 Z" fill="#FFFFFF"/>
+  <rect x="136" y="346" width="20" height="40" rx="2" fill="#FFFFFF"/>
+</svg>
