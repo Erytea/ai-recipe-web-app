@@ -96,14 +96,21 @@ async def home(
     current_user: User | None = Depends(get_current_user_optional)
 ):
     """Главная страница"""
-    return templates.TemplateResponse(
-        "index.html",
-        {
-            "request": request,
-            "user": current_user,
-            "title": "AI Recipe Bot"
-        }
-    )
+    context = {
+        "request": request,
+        "user": current_user,
+        "title": "AI Recipe Bot"
+    }
+    
+    # Подсчитываем статистику для авторизованного пользователя
+    if current_user:
+        from bot.core.models import Recipe, MealPlan
+        recipes_count = await Recipe.filter(user=current_user).count()
+        meal_plans_count = await MealPlan.filter(user=current_user).count()
+        context["recipes_count"] = recipes_count
+        context["meal_plans_count"] = meal_plans_count
+    
+    return templates.TemplateResponse("index.html", context)
 
 
 @app.get("/health")

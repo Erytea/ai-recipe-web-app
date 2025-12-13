@@ -105,11 +105,11 @@
     <div class="container">
         <div class="row text-center">
             <div class="col-md-3">
-                <div class="h2 fw-bold text-primary mb-2">{{ user.recipes.count() if user.recipes else 0 }}</div>
+                <div class="h2 fw-bold text-primary mb-2">{{ recipes_count or 0 }}</div>
                 <p class="text-muted mb-0">Созданных рецептов</p>
             </div>
             <div class="col-md-3">
-                <div class="h2 fw-bold text-success mb-2">{{ user.meal_plans.count() if user.meal_plans else 0 }}</div>
+                <div class="h2 fw-bold text-success mb-2">{{ meal_plans_count or 0 }}</div>
                 <p class="text-muted mb-0">Планов питания</p>
             </div>
             <div class="col-md-3">
