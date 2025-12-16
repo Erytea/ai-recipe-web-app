@@ -5,6 +5,7 @@
 from datetime import datetime, timedelta
 from typing import Optional
 from uuid import UUID
+import hashlib
 
 from fastapi import Depends, HTTPException, status, Cookie
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
@@ -21,14 +22,29 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 security = HTTPBearer(auto_error=False)
 
 
+def _prehash_password(password: str) -> str:
+    """
+    Предварительно хеширует пароль через SHA-256 для обхода ограничения bcrypt в 72 байта.
+    Это позволяет использовать пароли любой длины без ограничений.
+    """
+    # Хешируем пароль через SHA-256 (всегда 32 байта, что меньше 72 байт)
+    sha256_hash = hashlib.sha256(password.encode('utf-8')).hexdigest()
+    return sha256_hash
+
+
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     """Проверяет пароль"""
-    return pwd_context.verify(plain_password, hashed_password)
+    # Предварительно хешируем пароль через SHA-256 перед проверкой через bcrypt
+    prehashed = _prehash_password(plain_password)
+    return pwd_context.verify(prehashed, hashed_password)
 
 
 def get_password_hash(password: str) -> str:
     """Хэширует пароль"""
-    return pwd_context.hash(password)
+    # Предварительно хешируем пароль через SHA-256 перед bcrypt
+    # Это позволяет использовать пароли любой длины
+    prehashed = _prehash_password(password)
+    return pwd_context.hash(prehashed)
 
 
 def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
@@ -144,5 +160,6 @@ async def get_current_user_from_token(
         )
 
     return user
+
 
 
