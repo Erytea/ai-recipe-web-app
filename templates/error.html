@@ -1,0 +1,61 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="text-center mb-5">
+                <i class="bi bi-exclamation-triangle text-danger" style="font-size: 5rem;"></i>
+                <h1 class="display-4 mt-3 mb-3">Ошибка</h1>
+                <p class="lead text-muted">Произошла непредвиденная ошибка</p>
+            </div>
+
+            <div class="card shadow">
+                <div class="card-body p-5">
+                    {% if error %}
+                    <div class="alert alert-danger" role="alert">
+                        <h4 class="alert-heading">
+                            <i class="bi bi-x-circle"></i>
+                            Детали ошибки:
+                        </h4>
+                        <p class="mb-0">{{ error }}</p>
+                    </div>
+                    {% else %}
+                    <div class="alert alert-warning" role="alert">
+                        <h4 class="alert-heading">
+                            <i class="bi bi-exclamation-triangle"></i>
+                            Что-то пошло не так
+                        </h4>
+                        <p class="mb-0">
+                            Произошла ошибка при обработке запроса. 
+                            Пожалуйста, попробуйте позже или обратитесь в поддержку.
+                        </p>
+                    </div>
+                    {% endif %}
+
+                    <div class="mt-4">
+                        <h5>Что можно сделать:</h5>
+                        <ul>
+                            <li>Вернуться на <a href="/">главную страницу</a></li>
+                            <li>Попробовать выполнить действие еще раз</li>
+                            <li>Проверить, что все данные введены корректно</li>
+                            <li>Если ошибка повторяется, обратиться в поддержку</li>
+                        </ul>
+                    </div>
+
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-center mt-4">
+                        <a href="/" class="btn btn-primary btn-lg">
+                            <i class="bi bi-house"></i> На главную
+                        </a>
+                        <button onclick="history.back()" class="btn btn-outline-secondary btn-lg">
+                            <i class="bi bi-arrow-left"></i> Назад
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+

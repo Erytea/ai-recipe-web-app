@@ -49,28 +49,41 @@ class OpenAIService:
         Будь точным и конкретным в определении продуктов.
         """
         
-        response = await self.client.chat.completions.create(
-            model="gpt-4o",  # Модель с поддержкой изображений
-            messages=[
-                {
-                    "role": "user",
-                    "content": [
-                        {"type": "text", "text": prompt},
-                        {
-                            "type": "image_url",
-                            "image_url": {
-                                "url": f"data:image/jpeg;base64,{base64_image}"
+        try:
+            response = await self.client.chat.completions.create(
+                model="gpt-4o",  # Модель с поддержкой изображений
+                messages=[
+                    {
+                        "role": "user",
+                        "content": [
+                            {"type": "text", "text": prompt},
+                            {
+                                "type": "image_url",
+                                "image_url": {
+                                    "url": f"data:image/jpeg;base64,{base64_image}"
+                                }
                             }
-                        }
-                    ]
-                }
-            ],
-            response_format={"type": "json_object"},
-            max_tokens=1000
-        )
-        
-        result = json.loads(response.choices[0].message.content)
-        return result
+                        ]
+                    }
+                ],
+                response_format={"type": "json_object"},
+                max_tokens=1000,
+                timeout=30.0  # Таймаут 30 секунд
+            )
+            
+            result = json.loads(response.choices[0].message.content)
+            return result
+        except Exception as e:
+            # Обработка ошибок OpenAI API
+            error_msg = str(e)
+            if "rate_limit" in error_msg.lower():
+                raise Exception("Превышен лимит запросов к OpenAI. Попробуй позже.")
+            elif "timeout" in error_msg.lower():
+                raise Exception("Превышено время ожидания ответа от OpenAI. Попробуй еще раз.")
+            elif "invalid_api_key" in error_msg.lower() or "authentication" in error_msg.lower():
+                raise Exception("Ошибка аутентификации OpenAI API. Проверь настройки.")
+            else:
+                raise Exception(f"Ошибка при обращении к OpenAI: {error_msg}")
     
     async def generate_recipe(
         self,
@@ -142,25 +155,35 @@ class OpenAIService:
         Будь точным в расчетах КБЖУ и весе продуктов.
         """
         
-        response = await self.client.chat.completions.create(
-            model="gpt-4o",
-            messages=[
-                {
-                    "role": "system",
-                    "content": "Ты опытный шеф-повар и диетолог. Ты умеешь точно рассчитывать КБЖУ блюд."
-                },
-                {
-                    "role": "user",
-                    "content": prompt
-                }
-            ],
-            response_format={"type": "json_object"},
-            temperature=0.7,
-            max_tokens=2000
-        )
-        
-        result = json.loads(response.choices[0].message.content)
-        return result
+        try:
+            response = await self.client.chat.completions.create(
+                model="gpt-4o",
+                messages=[
+                    {
+                        "role": "system",
+                        "content": "Ты опытный шеф-повар и диетолог. Ты умеешь точно рассчитывать КБЖУ блюд."
+                    },
+                    {
+                        "role": "user",
+                        "content": prompt
+                    }
+                ],
+                response_format={"type": "json_object"},
+                temperature=0.7,
+                max_tokens=2000,
+                timeout=60.0  # Таймаут 60 секунд для генерации рецепта
+            )
+            
+            result = json.loads(response.choices[0].message.content)
+            return result
+        except Exception as e:
+            error_msg = str(e)
+            if "rate_limit" in error_msg.lower():
+                raise Exception("Превышен лимит запросов к OpenAI. Попробуй позже.")
+            elif "timeout" in error_msg.lower():
+                raise Exception("Превышено время ожидания ответа от OpenAI. Попробуй еще раз.")
+            else:
+                raise Exception(f"Ошибка при генерации рецепта: {error_msg}")
     
     @staticmethod
     def format_recipe_response(recipe_data: Dict) -> str:
@@ -323,29 +346,39 @@ class OpenAIService:
         Будь профессионалом! Создавай РЕАЛЬНЫЕ сочетания продуктов, как в настоящем меню!
         """
         
-        response = await self.client.chat.completions.create(
-            model="gpt-4o",
-            messages=[
-                {
-                    "role": "system",
-                    "content": (
-                        "Ты профессиональный диетолог с 15-летним стажем. "
-                        "Ты составляешь рационы для реальных людей. "
-                        "Ты знаешь, как правильно сочетать продукты. "
-                        "Ты НИКОГДА не создашь абсурдные комбинации типа 'яйца + малина' или 'арбуз + лук'."
-                    )
-                },
-                {
-                    "role": "user",
-                    "content": prompt
-                }
-            ],
-            response_format={"type": "json_object"},
-            temperature=0.3,  # Снизили температуру для более предсказуемых результатов
-            max_tokens=2000
-        )
-        
-        gpt_result = json.loads(response.choices[0].message.content)
+        try:
+            response = await self.client.chat.completions.create(
+                model="gpt-4o",
+                messages=[
+                    {
+                        "role": "system",
+                        "content": (
+                            "Ты профессиональный диетолог с 15-летним стажем. "
+                            "Ты составляешь рационы для реальных людей. "
+                            "Ты знаешь, как правильно сочетать продукты. "
+                            "Ты НИКОГДА не создашь абсурдные комбинации типа 'яйца + малина' или 'арбуз + лук'."
+                        )
+                    },
+                    {
+                        "role": "user",
+                        "content": prompt
+                    }
+                ],
+                response_format={"type": "json_object"},
+                temperature=0.3,  # Снизили температуру для более предсказуемых результатов
+                max_tokens=2000,
+                timeout=60.0  # Таймаут 60 секунд
+            )
+            
+            gpt_result = json.loads(response.choices[0].message.content)
+        except Exception as e:
+            error_msg = str(e)
+            if "rate_limit" in error_msg.lower():
+                raise Exception("Превышен лимит запросов к OpenAI. Попробуй позже.")
+            elif "timeout" in error_msg.lower():
+                raise Exception("Превышено время ожидания ответа от OpenAI. Попробуй еще раз.")
+            else:
+                raise Exception(f"Ошибка при генерации плана питания: {error_msg}")
         
         # Теперь ТОЧНО рассчитываем КБЖУ из нашей базы данных
         meals_with_nutrition = []

@@ -1,0 +1,100 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="h2 mb-0">
+                    <i class="bi bi-person-circle"></i> Мой профиль
+                </h1>
+                <a href="/profile/edit" class="btn btn-outline-primary">
+                    <i class="bi bi-pencil"></i> Редактировать
+                </a>
+            </div>
+
+            <div class="card shadow mb-4">
+                <div class="card-body p-4">
+                    <h3 class="card-title mb-4">Личная информация</h3>
+                    
+                    <div class="row mb-3">
+                        <div class="col-sm-4 fw-bold">Email:</div>
+                        <div class="col-sm-8">{{ user.email }}</div>
+                    </div>
+
+                    {% if user.username %}
+                    <div class="row mb-3">
+                        <div class="col-sm-4 fw-bold">Имя пользователя:</div>
+                        <div class="col-sm-8">{{ user.username }}</div>
+                    </div>
+                    {% endif %}
+
+                    {% if user.first_name %}
+                    <div class="row mb-3">
+                        <div class="col-sm-4 fw-bold">Имя:</div>
+                        <div class="col-sm-8">{{ user.first_name }}</div>
+                    </div>
+                    {% endif %}
+
+                    {% if user.last_name %}
+                    <div class="row mb-3">
+                        <div class="col-sm-4 fw-bold">Фамилия:</div>
+                        <div class="col-sm-8">{{ user.last_name }}</div>
+                    </div>
+                    {% endif %}
+
+                    <div class="row mb-3">
+                        <div class="col-sm-4 fw-bold">Дата регистрации:</div>
+                        <div class="col-sm-8">{{ user.created_at.strftime('%d.%m.%Y') }}</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Statistics -->
+            <div class="row mb-4">
+                <div class="col-md-6 mb-3">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-body text-center">
+                            <i class="bi bi-book text-primary" style="font-size: 3rem;"></i>
+                            <h2 class="mt-3 mb-0">{{ recipes_count or 0 }}</h2>
+                            <p class="text-muted mb-0">Созданных рецептов</p>
+                            <a href="/recipes" class="btn btn-outline-primary btn-sm mt-3">
+                                <i class="bi bi-arrow-right"></i> Посмотреть
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-body text-center">
+                            <i class="bi bi-calendar-week text-success" style="font-size: 3rem;"></i>
+                            <h2 class="mt-3 mb-0">{{ meal_plans_count or 0 }}</h2>
+                            <p class="text-muted mb-0">Планов питания</p>
+                            <a href="/meal-plans" class="btn btn-outline-success btn-sm mt-3">
+                                <i class="bi bi-arrow-right"></i> Посмотреть
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="card shadow">
+                <div class="card-body p-4">
+                    <h3 class="card-title mb-4">Действия</h3>
+                    <div class="d-grid gap-2">
+                        <a href="/profile/edit" class="btn btn-outline-primary">
+                            <i class="bi bi-pencil"></i> Редактировать профиль
+                        </a>
+                        <a href="/profile/change-password" class="btn btn-outline-warning">
+                            <i class="bi bi-key"></i> Сменить пароль
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+

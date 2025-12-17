@@ -191,6 +191,20 @@ class MealPlan(Model):
         )
 
 
+# --- Конфигурация Tortoise ORM для Aerich ---
+TORTOISE_ORM = {
+    "connections": {
+        "default": "sqlite://db.sqlite3"  # Будет переопределено из settings
+    },
+    "apps": {
+        "models": {
+            "models": ["bot.core.models"],
+            "default_connection": "default",
+        },
+    },
+}
+
+
 # --- Вспомогательные функции инициализации БД ---
 async def init_db(db_url: str):
     """Инициализация подключения к базе"""

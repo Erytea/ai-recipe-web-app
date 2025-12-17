@@ -1,0 +1,129 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="text-center mb-5">
+                <h1 class="display-4 mb-3">
+                    <i class="bi bi-info-circle text-primary"></i>
+                    О приложении
+                </h1>
+                <p class="lead text-muted">
+                    AI Recipe Bot - создавай персонализированные рецепты с помощью искусственного интеллекта
+                </p>
+            </div>
+
+            <div class="card shadow mb-4">
+                <div class="card-body p-5">
+                    <h2 class="mb-4">
+                        <i class="bi bi-lightbulb text-warning"></i>
+                        Что это такое?
+                    </h2>
+                    <p class="lead">
+                        AI Recipe Bot - это веб-приложение, которое помогает создавать персональные рецепты 
+                        на основе фотографий продуктов с точным расчетом калорий, белков, жиров и углеводов.
+                    </p>
+                </div>
+            </div>
+
+            <div class="row mb-4">
+                <div class="col-md-6 mb-3">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-body">
+                            <h3 class="card-title">
+                                <i class="bi bi-camera text-primary"></i>
+                                Распознавание продуктов
+                            </h3>
+                            <p class="card-text">
+                                Загрузи фото продуктов, и искусственный интеллект автоматически определит, 
+                                что на изображении. Поддерживаются все популярные форматы изображений.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-body">
+                            <h3 class="card-title">
+                                <i class="bi bi-calculator text-success"></i>
+                                Точный расчет КБЖУ
+                            </h3>
+                            <p class="card-text">
+                                Приложение использует базу данных из 500+ продуктов с точными значениями 
+                                калорий, белков, жиров и углеводов для каждого продукта.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mb-4">
+                <div class="col-md-6 mb-3">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-body">
+                            <h3 class="card-title">
+                                <i class="bi bi-robot text-info"></i>
+                                Генерация рецептов
+                            </h3>
+                            <p class="card-text">
+                                Искусственный интеллект создает рецепты с учетом твоих предпочтений 
+                                по калориям и макронутриентам. Каждый рецепт уникален и персонализирован.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <div class="card shadow-sm h-100">
+                        <div class="card-body">
+                            <h3 class="card-title">
+                                <i class="bi bi-calendar-week text-danger"></i>
+                                Планы питания
+                            </h3>
+                            <p class="card-text">
+                                Создавай полноценные планы питания на день с несколькими приемами пищи, 
+                                сбалансированные по КБЖУ и распределенные по времени суток.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card shadow">
+                <div class="card-body p-5">
+                    <h2 class="mb-4">
+                        <i class="bi bi-gear text-secondary"></i>
+                        Технологии
+                    </h2>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h5>Backend:</h5>
+                            <ul>
+                                <li>FastAPI - современный веб-фреймворк</li>
+                                <li>Tortoise ORM - асинхронная работа с БД</li>
+                                <li>OpenAI API - распознавание изображений и генерация текста</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <h5>Frontend:</h5>
+                            <ul>
+                                <li>Bootstrap 5 - адаптивный дизайн</li>
+                                <li>Jinja2 - шаблонизатор</li>
+                                <li>Vanilla JavaScript - интерактивность</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-5">
+                <a href="/" class="btn btn-primary btn-lg">
+                    <i class="bi bi-house"></i> На главную
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+

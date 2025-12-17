@@ -22,9 +22,7 @@ line_length = 88
 max-line-length = 88
 extend-ignore = ["E203", "W503"]
 
-
-
-
-
-
-
+[tool.aerich]
+tortoise_orm = "bot.core.models.TORTOISE_ORM"
+location = "./migrations"
+src_folder = "./."

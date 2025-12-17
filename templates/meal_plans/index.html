@@ -1,0 +1,98 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="h2 mb-1">
+                <i class="bi bi-calendar-week"></i> Мои планы питания
+            </h1>
+            <p class="text-muted mb-0">Персональные рационы питания на день</p>
+        </div>
+        <a href="/meal-plans/create" class="btn btn-primary btn-lg">
+            <i class="bi bi-plus-circle"></i> Создать план питания
+        </a>
+    </div>
+
+    {% if meal_plans %}
+    <div class="row">
+        {% for meal_plan in meal_plans %}
+        <div class="col-md-6 col-lg-4 mb-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">
+                        <a href="/meal-plans/{{ meal_plan.id }}" class="text-decoration-none">
+                            План питания на день
+                        </a>
+                    </h5>
+
+                    <div class="mb-3">
+                        <small class="text-muted">
+                            <i class="bi bi-calendar"></i>
+                            {{ meal_plan.created_at.strftime('%d.%m.%Y') }}
+                        </small>
+                        <br>
+                        <small class="text-muted">
+                            <i class="bi bi-utensils"></i>
+                            {{ meal_plan.meals_count }} приемов пищи
+                        </small>
+                    </div>
+
+                    <!-- Nutrition preview -->
+                    {% if meal_plan.calculated_daily_calories %}
+                    <div class="row text-center mb-3 small">
+                        <div class="col-3">
+                            <div class="text-danger fw-bold">{{ meal_plan.calculated_daily_calories|int }}</div>
+                            <div class="text-muted">ккал</div>
+                        </div>
+                        <div class="col-3">
+                            <div class="text-primary fw-bold">{{ meal_plan.calculated_daily_protein|int }}г</div>
+                            <div class="text-muted">Б</div>
+                        </div>
+                        <div class="col-3">
+                            <div class="text-warning fw-bold">{{ meal_plan.calculated_daily_fat|int }}г</div>
+                            <div class="text-muted">Ж</div>
+                        </div>
+                        <div class="col-3">
+                            <div class="text-info fw-bold">{{ meal_plan.calculated_daily_carbs|int }}г</div>
+                            <div class="text-muted">У</div>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <div class="mt-auto">
+                        <a href="/meal-plans/{{ meal_plan.id }}" class="btn btn-outline-primary btn-sm w-100">
+                            <i class="bi bi-eye"></i> Посмотреть план
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    {% if meal_plans|length >= 10 %}
+    <div class="text-center mt-4">
+        <p class="text-muted">Показаны последние 10 планов питания</p>
+    </div>
+    {% endif %}
+
+    {% else %}
+    <!-- Empty state -->
+    <div class="text-center py-5">
+        <div class="mb-4">
+            <i class="bi bi-calendar-week text-muted" style="font-size: 4rem;"></i>
+        </div>
+        <h3 class="text-muted mb-3">У тебя пока нет планов питания</h3>
+        <p class="text-muted mb-4">
+            Создай свой первый план питания на день с помощью искусственного интеллекта!
+        </p>
+        <a href="/meal-plans/create" class="btn btn-primary btn-lg">
+            <i class="bi bi-plus-circle"></i> Создать первый план питания
+        </a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+

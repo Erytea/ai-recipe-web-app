@@ -32,15 +32,20 @@ async def meal_plans_home(
     # Получаем планы питания пользователя
     meal_plans = await MealPlan.filter(user=current_user).order_by("-created_at").limit(10)
 
-    return templates.TemplateResponse(
-        "meal_plans/index.html",
-        {
-            "request": request,
-            "user": current_user,
-            "title": "Мои планы питания",
-            "meal_plans": meal_plans
-        }
-    )
+    context = {
+        "request": request,
+        "user": current_user,
+        "title": "Мои планы питания",
+        "meal_plans": meal_plans
+    }
+    
+    # Получаем flash сообщение
+    flash = get_flash_message(request)
+    if flash:
+        context["flash_message"] = flash[0]
+        context["flash_type"] = flash[1]
+
+    return templates.TemplateResponse("meal_plans/index.html", context)
 
 
 @router.get("/create", response_class=HTMLResponse)
@@ -49,14 +54,19 @@ async def create_meal_plan_page(
     current_user: User = Depends(get_current_user)
 ):
     """Страница создания плана питания - шаг 1: загрузка фото"""
-    return templates.TemplateResponse(
-        "meal_plans/create/step1.html",
-        {
-            "request": request,
-            "user": current_user,
-            "title": "Создать план питания - Загрузка фото"
-        }
-    )
+    context = {
+        "request": request,
+        "user": current_user,
+        "title": "Создать план питания - Загрузка фото"
+    }
+    
+    # Получаем flash сообщение
+    flash = get_flash_message(request)
+    if flash:
+        context["flash_message"] = flash[0]
+        context["flash_type"] = flash[1]
+    
+    return templates.TemplateResponse("meal_plans/create/step1.html", context)
 
 
 @router.post("/create/step1")
@@ -66,8 +76,35 @@ async def process_meal_plan_photo_upload(
     photo: UploadFile = File(...)
 ):
     """Обработка загруженного фото продуктов"""
-    if not photo.content_type.startswith('image/'):
-        raise HTTPException(status_code=400, detail="Файл должен быть изображением")
+    from bot.core.config import settings
+    
+    # Проверка типа файла
+    if not photo.content_type or not photo.content_type.startswith('image/'):
+        raise HTTPException(
+            status_code=400,
+            detail="Файл должен быть изображением (JPEG, PNG, WebP)"
+        )
+    
+    # Проверка расширения
+    file_extension = os.path.splitext(photo.filename)[1].lower()
+    allowed_extensions = ['.jpg', '.jpeg', '.png', '.webp']
+    if file_extension not in allowed_extensions:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Неподдерживаемый формат. Разрешены: {', '.join(allowed_extensions)}"
+        )
+    
+    # Читаем файл один раз для проверки размера и сохранения
+    content = await photo.read()
+    file_size = len(content)
+    
+    # Проверка размера
+    if file_size > settings.max_upload_size:
+        max_size_mb = settings.max_upload_size / 1024 / 1024
+        raise HTTPException(
+            status_code=400,
+            detail=f"Файл слишком большой. Максимальный размер: {max_size_mb:.1f} МБ"
+        )
 
     # Сохраняем фото
     file_extension = os.path.splitext(photo.filename)[1]
@@ -75,7 +112,6 @@ async def process_meal_plan_photo_upload(
     file_path = UPLOAD_DIR / file_name
 
     with open(file_path, "wb") as buffer:
-        content = await photo.read()
         buffer.write(content)
 
     # Сохраняем путь к фото в сессии
@@ -98,7 +134,9 @@ async def analyze_meal_plan_photo_page(
     # Получаем фото из сессии
     photo_path = request.cookies.get(f"meal_plan_photo_{current_user.id}")
     if not photo_path:
-        return RedirectResponse(url="/meal-plans/create", status_code=302)
+        response = RedirectResponse(url="/meal-plans/create", status_code=302)
+        set_flash_message(response, "Сначала загрузи фото продуктов", "warning")
+        return response
 
     # Анализируем фото
     full_path = Path("static") / photo_path
@@ -109,19 +147,29 @@ async def analyze_meal_plan_photo_page(
         with open(full_path, "rb") as f:
             analysis = await openai_service.analyze_food_image(f.read())
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Ошибка анализа: {str(e)}")
+        error_msg = str(e)
+        if "OpenAI" in error_msg or "rate_limit" in error_msg.lower():
+            response = RedirectResponse(url="/meal-plans/create", status_code=302)
+            set_flash_message(response, "Ошибка при анализе фото. Попробуй позже.", "error")
+            return response
+        raise HTTPException(status_code=500, detail=f"Ошибка анализа: {error_msg}")
 
     # Сохраняем анализ в сессии
-    response = templates.TemplateResponse(
-        "meal_plans/create/step2.html",
-        {
-            "request": request,
-            "user": current_user,
-            "title": "Анализ продуктов",
-            "analysis": analysis,
-            "photo_path": photo_path
-        }
-    )
+    context = {
+        "request": request,
+        "user": current_user,
+        "title": "Анализ продуктов",
+        "analysis": analysis,
+        "photo_path": photo_path
+    }
+    
+    # Получаем flash сообщение
+    flash = get_flash_message(request)
+    if flash:
+        context["flash_message"] = flash[0]
+        context["flash_type"] = flash[1]
+    
+    response = templates.TemplateResponse("meal_plans/create/step2.html", context)
 
     # Сохраняем анализ в куки
     response.set_cookie(
@@ -158,14 +206,19 @@ async def meal_plan_parameters_page(
     current_user: User = Depends(get_current_user)
 ):
     """Ввод параметров для плана питания - шаг 3"""
-    return templates.TemplateResponse(
-        "meal_plans/create/step3.html",
-        {
-            "request": request,
-            "user": current_user,
-            "title": "Параметры плана питания"
-        }
-    )
+    context = {
+        "request": request,
+        "user": current_user,
+        "title": "Параметры плана питания"
+    }
+    
+    # Получаем flash сообщение
+    flash = get_flash_message(request)
+    if flash:
+        context["flash_message"] = flash[0]
+        context["flash_type"] = flash[1]
+    
+    return templates.TemplateResponse("meal_plans/create/step3.html", context)
 
 
 @router.post("/create/step3")
@@ -180,6 +233,42 @@ async def process_meal_plan_parameters(
     daily_greens_weight: float = Form(...)
 ):
     """Обработка параметров и генерация плана питания"""
+    # Валидация диапазонов
+    if not (1 <= meals_count <= 6):
+        raise HTTPException(
+            status_code=400,
+            detail="Количество приемов пищи должно быть от 1 до 6"
+        )
+    
+    if not (500 <= target_daily_calories <= 5000):
+        raise HTTPException(
+            status_code=400,
+            detail="Калории за день должны быть от 500 до 5000"
+        )
+    
+    if not (0 <= target_daily_protein <= 500):
+        raise HTTPException(
+            status_code=400,
+            detail="Белки за день должны быть от 0 до 500 г"
+        )
+    
+    if not (0 <= target_daily_fat <= 300):
+        raise HTTPException(
+            status_code=400,
+            detail="Жиры за день должны быть от 0 до 300 г"
+        )
+    
+    if not (0 <= target_daily_carbs <= 600):
+        raise HTTPException(
+            status_code=400,
+            detail="Углеводы за день должны быть от 0 до 600 г"
+        )
+    
+    if not (0 <= daily_greens_weight <= 2000):
+        raise HTTPException(
+            status_code=400,
+            detail="Вес растительности за день должен быть от 0 до 2000 г"
+        )
     # Получаем данные из сессии
     photo_path = request.cookies.get(f"meal_plan_photo_{current_user.id}")
     analysis_json = request.cookies.get(f"meal_plan_analysis_{current_user.id}")
@@ -228,6 +317,7 @@ async def process_meal_plan_parameters(
 
         # Очищаем сессию и перенаправляем на результат
         response = RedirectResponse(url=f"/meal-plans/{meal_plan.id}", status_code=302)
+        set_flash_message(response, "План питания успешно создан!", "success")
 
         # Очищаем куки
         response.delete_cookie(f"meal_plan_photo_{current_user.id}")
@@ -237,7 +327,9 @@ async def process_meal_plan_parameters(
         return response
 
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Ошибка генерации плана: {str(e)}")
+        response = RedirectResponse(url="/meal-plans/create", status_code=302)
+        set_flash_message(response, f"Ошибка генерации плана: {str(e)}", "error")
+        return response
 
 
 @router.get("/{meal_plan_id}", response_class=HTMLResponse)

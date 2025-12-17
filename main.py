@@ -8,7 +8,7 @@ import sys
 from contextlib import asynccontextmanager
 from pathlib import Path
 
-from fastapi import FastAPI, Request, Depends, HTTPException, status
+from fastapi import FastAPI, Request, Response, Depends, HTTPException, status
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from fastapi.middleware.cors import CORSMiddleware
@@ -17,7 +17,7 @@ from tortoise import Tortoise
 
 from bot.core.config import settings
 from bot.core.models import init_db, close_db
-from bot.web.routes import auth, recipes, meal_plans, main
+from bot.web.routes import auth, recipes, meal_plans, main, api
 from bot.web.dependencies import get_current_user_optional
 from bot.core.models import User
 
@@ -88,6 +88,7 @@ app.include_router(main.router, tags=["main"])
 app.include_router(auth.router, prefix="/auth", tags=["auth"])
 app.include_router(recipes.router, prefix="/recipes", tags=["recipes"])
 app.include_router(meal_plans.router, prefix="/meal-plans", tags=["meal-plans"])
+app.include_router(api.router, tags=["api"])
 
 
 @app.get("/", response_class=HTMLResponse)
@@ -96,11 +97,26 @@ async def home(
     current_user: User | None = Depends(get_current_user_optional)
 ):
     """Главная страница"""
+    from bot.web.flash_messages import get_flash_message
+    from bot.web.csrf import get_csrf_token, generate_csrf_token, set_csrf_token
+    
     context = {
         "request": request,
         "user": current_user,
         "title": "AI Recipe Bot"
     }
+    
+    # Получаем или генерируем CSRF токен
+    csrf_token = get_csrf_token(request)
+    if not csrf_token:
+        csrf_token = generate_csrf_token()
+    context["csrf_token"] = csrf_token
+    
+    # Получаем flash сообщение
+    flash = get_flash_message(request)
+    if flash:
+        context["flash_message"] = flash[0]
+        context["flash_type"] = flash[1]
     
     # Подсчитываем статистику для авторизованного пользователя
     if current_user:
@@ -110,7 +126,13 @@ async def home(
         context["recipes_count"] = recipes_count
         context["meal_plans_count"] = meal_plans_count
     
-    return templates.TemplateResponse("index.html", context)
+    response = templates.TemplateResponse("index.html", context)
+    
+    # Устанавливаем CSRF токен в cookie если его нет
+    if not get_csrf_token(request):
+        set_csrf_token(response, csrf_token)
+    
+    return response
 
 
 @app.get("/health")
@@ -149,16 +171,55 @@ async def app_status():
         }
 
 
+@app.exception_handler(HTTPException)
+async def http_exception_handler(request: Request, exc: HTTPException):
+    """Обработчик HTTP исключений"""
+    logger.warning(f"HTTP исключение: {exc.status_code} - {exc.detail}")
+    
+    # Для 404 ошибок показываем специальную страницу
+    if exc.status_code == 404:
+        return templates.TemplateResponse(
+            "error.html",
+            {
+                "request": request,
+                "error": "Страница не найдена",
+                "title": "404 - Не найдено"
+            },
+            status_code=404
+        )
+    
+    # Для других HTTP ошибок
+    return templates.TemplateResponse(
+        "error.html",
+        {
+            "request": request,
+            "error": exc.detail or "Произошла ошибка",
+            "title": f"Ошибка {exc.status_code}"
+        },
+        status_code=exc.status_code
+    )
+
+
 @app.exception_handler(Exception)
 async def global_exception_handler(request: Request, exc: Exception):
     """Глобальный обработчик исключений"""
     logger.error(f"Необработанное исключение: {exc}", exc_info=True)
+    
+    # Определяем тип ошибки для более понятного сообщения
+    error_message = str(exc)
+    if "OpenAI" in str(type(exc)) or "openai" in error_message.lower():
+        error_message = "Ошибка при обращении к OpenAI API. Проверь подключение к интернету и попробуй позже."
+    elif "database" in error_message.lower() or "sql" in error_message.lower():
+        error_message = "Ошибка базы данных. Попробуй позже."
+    elif "timeout" in error_message.lower():
+        error_message = "Превышено время ожидания. Попробуй еще раз."
+    
     try:
         return templates.TemplateResponse(
             "error.html",
             {
                 "request": request,
-                "error": str(exc),
+                "error": error_message,
                 "title": "Ошибка"
             },
             status_code=500
@@ -167,7 +228,7 @@ async def global_exception_handler(request: Request, exc: Exception):
         # Если даже шаблон ошибки не загрузился, возвращаем простой текст
         from fastapi.responses import PlainTextResponse
         return PlainTextResponse(
-            f"Внутренняя ошибка сервера: {str(exc)}",
+            f"Внутренняя ошибка сервера: {error_message}",
             status_code=500
         )
 

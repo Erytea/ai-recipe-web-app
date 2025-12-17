@@ -41,9 +41,9 @@ class Settings(BaseSettings):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         # Проверяем, что секретные ключи не являются значениями по умолчанию
-        if self.secret_key == "your-secret-key-change-in-production":
+        if self.secret_key == "your-super-secret-key-change-in-production-min-32-chars":
             raise ValueError("SECRET_KEY должен быть установлен в переменных окружения!")
-        if self.jwt_secret_key == "jwt-secret-key":
+        if self.jwt_secret_key == "your-jwt-secret-key-change-in-production":
             raise ValueError("JWT_SECRET_KEY должен быть установлен в переменных окружения!")
 
 
