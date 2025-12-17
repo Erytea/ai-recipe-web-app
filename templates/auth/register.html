@@ -27,7 +27,12 @@
                         <div class="mb-3">
                             <label for="password" class="form-label">Пароль *</label>
                             <input type="password" class="form-control" id="password" name="password"
-                                   placeholder="Минимум 6 символов" minlength="6" required>
+                                   placeholder="8+ символов, буквы (A-Z) и цифры (0-9)" minlength="8" maxlength="128" required>
+                            <div class="form-text">
+                                <small class="text-muted">
+                                    <i class="bi bi-info-circle"></i> Требования: минимум 8 символов, максимум 128, должна быть хотя бы одна буква (A-Z, a-z) и одна цифра (0-9)
+                                </small>
+                            </div>
                         </div>
 
                         <div class="mb-3">
