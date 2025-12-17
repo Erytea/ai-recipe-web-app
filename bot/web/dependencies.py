@@ -30,20 +30,29 @@ def _prehash_password(password: str) -> str:
     """
     # Кодируем пароль в UTF-8 байты
     password_bytes = password.encode('utf-8')
-    
+
     # Хешируем пароль через SHA-256 (всегда 32 байта)
     sha256_digest = hashlib.sha256(password_bytes).digest()
-    
+
     # Кодируем в base64 (32 байта = 44 символа base64, что меньше 72 байт в UTF-8)
     # Используем base64.urlsafe_b64encode для избежания проблем с символами
     prehashed = base64.urlsafe_b64encode(sha256_digest).decode('ascii')
-    
-    # Убеждаемся, что длина в байтах не превышает 72
+
+    # Гарантируем, что результат не превышает 72 байта в UTF-8
     prehashed_bytes = prehashed.encode('utf-8')
     if len(prehashed_bytes) > 72:
-        # Это не должно произойти (44 < 72), но на всякий случай усекаем
-        prehashed = prehashed_bytes[:72].decode('utf-8', errors='ignore')
-    
+        # Усекаем строку до 72 байт, но сохраняем валидность UTF-8
+        truncated_bytes = prehashed_bytes[:72]
+        # Находим последний полный UTF-8 символ
+        while truncated_bytes:
+            try:
+                truncated_str = truncated_bytes.decode('utf-8')
+                prehashed = truncated_str
+                break
+            except UnicodeDecodeError:
+                # Убираем последний байт, который сломал UTF-8 символ
+                truncated_bytes = truncated_bytes[:-1]
+
     return prehashed
 
 
@@ -70,28 +79,13 @@ def get_password_hash(password: str) -> str:
     # Сначала убеждаемся, что пароль не пустой
     if not password:
         raise ValueError("Пароль не может быть пустым")
-    
+
     # Предварительно хешируем пароль через SHA-256 перед bcrypt
-    # Это позволяет использовать пароли любой длины
+    # Это позволяет использовать пароли любой длины и гарантирует <72 байт
     prehashed = _prehash_password(password)
-    
-    # Финальная проверка: убеждаемся, что длина в байтах не превышает 72
-    final_bytes = prehashed.encode('utf-8')
-    if len(final_bytes) > 72:
-        # Если все равно превышает (не должно произойти), усекаем до 72 байт
-        final_bytes = final_bytes[:72]
-        prehashed = final_bytes.decode('utf-8', errors='ignore')
-    
-    try:
-        return pwd_context.hash(prehashed)
-    except ValueError as e:
-        # Если все равно возникает ошибка о длине, используем более короткий хеш
-        error_str = str(e).lower()
-        if "72" in str(e) or "bytes" in error_str or "truncate" in error_str:
-            # Используем только первые 50 символов (все еще меньше 72 байт)
-            short_hash = prehashed[:50]
-            return pwd_context.hash(short_hash)
-        raise
+
+    # Поскольку _prehash_password гарантирует <72 байт, хешируем напрямую
+    return pwd_context.hash(prehashed)
 
 
 def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):

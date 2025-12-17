@@ -150,20 +150,19 @@ async def register_page(
 def validate_password(password: str) -> tuple[bool, str]:
     """Проверяет пароль и возвращает (валиден, сообщение об ошибке)"""
     import re
-    
+
     if len(password) < 8:
         return False, "Пароль должен быть не менее 8 символов"
-    
-    if len(password) > 128:
-        return False, "Пароль слишком длинный (максимум 128 символов)"
-    
+
+    # Убираем ограничение на максимальную длину, поскольку используем предварительное хэширование
+
     # Требуем буквы и цифры
     if not re.search(r'[A-Za-z]', password):
         return False, "Пароль должен содержать хотя бы одну букву"
-    
+
     if not re.search(r'[0-9]', password):
         return False, "Пароль должен содержать хотя бы одну цифру"
-    
+
     return True, ""
 
 
