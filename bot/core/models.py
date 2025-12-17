@@ -25,6 +25,7 @@ class User(Model):
 
     # Мета
     is_active = fields.BooleanField(default=True, description="Активен ли аккаунт")
+    is_admin = fields.BooleanField(default=False, description="Является ли пользователь администратором")
     created_at = fields.DatetimeField(auto_now_add=True, description="Дата регистрации")
     updated_at = fields.DatetimeField(auto_now=True, description="Дата последнего обновления")
 

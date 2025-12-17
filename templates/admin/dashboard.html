@@ -1,0 +1,202 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h2 mb-0">
+            <i class="bi bi-shield-check"></i> Админ панель
+        </h1>
+        <small class="text-muted">Добро пожаловать, {{ user.email }}</small>
+    </div>
+
+    <!-- Статистика -->
+    <div class="row mb-4">
+        <div class="col-md-3 mb-3">
+            <div class="card shadow-sm h-100">
+                <div class="card-body text-center">
+                    <i class="bi bi-people text-primary" style="font-size: 3rem;"></i>
+                    <h2 class="mt-3 mb-0">{{ stats.users }}</h2>
+                    <p class="text-muted mb-0">Пользователей</p>
+                    <a href="/admin/users" class="btn btn-outline-primary btn-sm mt-2">
+                        Управление
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card shadow-sm h-100">
+                <div class="card-body text-center">
+                    <i class="bi bi-book text-success" style="font-size: 3rem;"></i>
+                    <h2 class="mt-3 mb-0">{{ stats.recipes }}</h2>
+                    <p class="text-muted mb-0">Личных рецептов</p>
+                    <a href="/admin/recipes" class="btn btn-outline-success btn-sm mt-2">
+                        Управление
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card shadow-sm h-100">
+                <div class="card-body text-center">
+                    <i class="bi bi-database text-warning" style="font-size: 3rem;"></i>
+                    <h2 class="mt-3 mb-0">{{ stats.recipes_base }}</h2>
+                    <p class="text-muted mb-0">Рецептов в базе</p>
+                    <a href="/admin/recipes-base" class="btn btn-outline-warning btn-sm mt-2">
+                        Управление
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card shadow-sm h-100">
+                <div class="card-body text-center">
+                    <i class="bi bi-calendar-week text-info" style="font-size: 3rem;"></i>
+                    <h2 class="mt-3 mb-0">{{ stats.meal_plans }}</h2>
+                    <p class="text-muted mb-0">Планов питания</p>
+                    <a href="/admin/meal-plans" class="btn btn-outline-info btn-sm mt-2">
+                        Управление
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Быстрые действия -->
+    <div class="card shadow mb-4">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">
+                <i class="bi bi-lightning-charge"></i> Быстрые действия
+            </h5>
+        </div>
+        <div class="card-body">
+            <div class="row g-2">
+                <div class="col-md-3">
+                    <a href="/admin/users" class="btn btn-primary w-100 d-flex align-items-center justify-content-center gap-2">
+                        <i class="bi bi-people"></i>
+                        <span>Пользователи</span>
+                    </a>
+                </div>
+                <div class="col-md-3">
+                    <a href="/admin/recipes" class="btn btn-success w-100 d-flex align-items-center justify-content-center gap-2">
+                        <i class="bi bi-book"></i>
+                        <span>Рецепты</span>
+                    </a>
+                </div>
+                <div class="col-md-3">
+                    <a href="/admin/recipes-base" class="btn btn-warning w-100 d-flex align-items-center justify-content-center gap-2">
+                        <i class="bi bi-database"></i>
+                        <span>База рецептов</span>
+                    </a>
+                </div>
+                <div class="col-md-3">
+                    <a href="/admin/stats" class="btn btn-info w-100 d-flex align-items-center justify-content-center gap-2">
+                        <i class="bi bi-bar-chart"></i>
+                        <span>Статистика</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Последние действия -->
+    <div class="row">
+        <!-- Новые пользователи -->
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">
+                        <i class="bi bi-person-plus"></i> Последние пользователи
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% if recent_users %}
+                        {% for user in recent_users %}
+                        <div class="d-flex justify-content-between align-items-center mb-3 pb-3 border-bottom">
+                            <div>
+                                <h6 class="mb-1">{{ user.email }}</h6>
+                                <small class="text-muted">
+                                    {{ user.created_at.strftime('%d.%m.%Y %H:%M') }}
+                                    {% if user.is_admin %}
+                                    <span class="badge bg-warning">Админ</span>
+                                    {% endif %}
+                                    {% if not user.is_active %}
+                                    <span class="badge bg-danger">Неактивен</span>
+                                    {% endif %}
+                                </small>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="bi bi-person-x text-muted" style="font-size: 3rem;"></i>
+                            <p class="text-muted mt-3 mb-0">Нет пользователей</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Новые рецепты -->
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">
+                        <i class="bi bi-bookmark-plus"></i> Последние рецепты
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% if recent_recipes %}
+                        {% for recipe in recent_recipes %}
+                        <div class="d-flex justify-content-between align-items-center mb-3 pb-3 border-bottom">
+                            <div>
+                                <h6 class="mb-1">Рецепт #{{ recipe.id }}</h6>
+                                <small class="text-muted">
+                                    {{ recipe.user.email }} • {{ recipe.created_at.strftime('%d.%m.%Y %H:%M') }}
+                                </small>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="bi bi-journal-x text-muted" style="font-size: 3rem;"></i>
+                            <p class="text-muted mt-3 mb-0">Нет рецептов</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Новые планы питания -->
+    <div class="row">
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">
+                        <i class="bi bi-calendar-plus"></i> Последние планы питания
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% if recent_meal_plans %}
+                        {% for meal_plan in recent_meal_plans %}
+                        <div class="d-flex justify-content-between align-items-center mb-3 pb-3 border-bottom">
+                            <div>
+                                <h6 class="mb-1">План #{{ meal_plan.id }}</h6>
+                                <small class="text-muted">
+                                    {{ meal_plan.user.email }} • {{ meal_plan.created_at.strftime('%d.%m.%Y %H:%M') }}
+                                </small>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="text-center py-4">
+                            <i class="bi bi-calendar-x text-muted" style="font-size: 3rem;"></i>
+                            <p class="text-muted mt-3 mb-0">Нет планов питания</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

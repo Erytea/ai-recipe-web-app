@@ -233,4 +233,19 @@ async def get_current_user_from_token(
     return user
 
 
+async def get_current_admin_user(
+    access_token: Optional[str] = Cookie(None, alias="access_token")
+) -> User:
+    """
+    Получает текущего пользователя из cookie и проверяет, что он администратор
+    Вызывает исключение если пользователь не авторизован или не является админом
+    """
+    user = await get_current_user(access_token)
+    if not user.is_admin:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Недостаточно прав доступа. Требуются права администратора."
+        )
+    return user
+
 

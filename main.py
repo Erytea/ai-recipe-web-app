@@ -17,7 +17,7 @@ from tortoise import Tortoise
 
 from bot.core.config import settings
 from bot.core.models import init_db, close_db
-from bot.web.routes import auth, recipes, meal_plans, main, api
+from bot.web.routes import auth, recipes, meal_plans, main, api, admin
 from bot.web.dependencies import get_current_user_optional
 from bot.core.models import User
 
@@ -88,6 +88,7 @@ app.include_router(main.router, tags=["main"])
 app.include_router(auth.router, prefix="/auth", tags=["auth"])
 app.include_router(recipes.router, prefix="/recipes", tags=["recipes"])
 app.include_router(meal_plans.router, prefix="/meal-plans", tags=["meal-plans"])
+app.include_router(admin.router, prefix="/admin", tags=["admin"])
 app.include_router(api.router, tags=["api"])
 
 

@@ -14,6 +14,7 @@ async def upgrade(db: BaseDBAsyncClient) -> str:
             "first_name" VARCHAR(255),
             "last_name" VARCHAR(255),
             "is_active" INT NOT NULL DEFAULT 1,
+            "is_admin" INT NOT NULL DEFAULT 0,
             "created_at" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
             "updated_at" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
         );

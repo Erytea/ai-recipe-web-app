@@ -331,6 +331,9 @@
                         </a>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" href="/profile">ПРОФИЛЬ</a></li>
+                            {% if user.is_admin %}
+                            <li><a class="dropdown-item" href="/admin">АДМИН ПАНЕЛЬ</a></li>
+                            {% endif %}
                             <li><hr class="dropdown-divider"></li>
                             <li><a class="dropdown-item" href="/auth/logout">ВЫЙТИ</a></li>
                         </ul>
