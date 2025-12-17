@@ -79,6 +79,22 @@ python main.py
 # Следуйте инструкциям в терминале
 ```
 
+**👑 Админка на Railway:**
+После развертывания автоматически создается администратор. Данные для входа:
+- **Email:** `admin@railway.app` (или укажите ADMIN_EMAIL)
+- **Пароль:** `secure_admin_password_123` (или укажите ADMIN_PASSWORD)
+
+**Настройка переменных окружения на Railway:**
+```
+OPENAI_API_KEY=your_openai_key
+SECRET_KEY=generated_secret
+JWT_SECRET_KEY=generated_jwt_secret
+DEBUG=False
+ADMIN_EMAIL=your_admin@example.com  # опционально
+ADMIN_PASSWORD=your_secure_password # опционально
+ADMIN_USERNAME=admin               # опционально
+```
+
 #### Вариант 2: Docker
 ```bash
 # Сборка и запуск
