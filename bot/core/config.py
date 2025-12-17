@@ -9,7 +9,7 @@ class Settings(BaseSettings):
     openai_api_key: str = ""  # Необязателен для development
 
     # Database
-    database_url: str = "sqlite://db.sqlite3"
+    database_url: str = "sqlite://db.sqlite3?charset=utf8"
 
     # Web App Settings
     secret_key: str = "production-secret-key-change-in-production-min-32-chars-for-development-only-this-is-a-long-enough-key"  # Для debug режима

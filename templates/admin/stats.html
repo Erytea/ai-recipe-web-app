@@ -1,0 +1,153 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h2 mb-0">
+            <i class="bi bi-bar-chart"></i> Статистика приложения
+        </h1>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a href="/admin">Админ панель</a></li>
+                <li class="breadcrumb-item active">Статистика</li>
+            </ol>
+        </nav>
+    </div>
+
+    <!-- Общая статистика -->
+    <div class="row mb-4">
+        <div class="col-md-6 mb-4">
+            <div class="card shadow h-100">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">
+                        <i class="bi bi-people"></i> Пользователи
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row text-center">
+                        <div class="col-6">
+                            <h3 class="text-primary">{{ stats.total_users }}</h3>
+                            <small class="text-muted">Всего</small>
+                        </div>
+                        <div class="col-6">
+                            <h3 class="text-success">{{ stats.active_users }}</h3>
+                            <small class="text-muted">Активных</small>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row text-center">
+                        <div class="col-6">
+                            <h4 class="text-warning">{{ stats.admin_users }}</h4>
+                            <small class="text-muted">Админов</small>
+                        </div>
+                        <div class="col-6">
+                            <h4 class="text-info">{{ stats.new_users_month }}</h4>
+                            <small class="text-muted">За месяц</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-4">
+            <div class="card shadow h-100">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">
+                        <i class="bi bi-book"></i> Рецепты
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row text-center">
+                        <div class="col-6">
+                            <h3 class="text-success">{{ stats.total_recipes }}</h3>
+                            <small class="text-muted">Личных</small>
+                        </div>
+                        <div class="col-6">
+                            <h3 class="text-warning">{{ stats.total_recipes_base }}</h3>
+                            <small class="text-muted">В базе</small>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="row text-center">
+                        <div class="col-6">
+                            <h4 class="text-primary">{{ stats.new_recipes_month }}</h4>
+                            <small class="text-muted">Новых за месяц</small>
+                        </div>
+                        <div class="col-6">
+                            <h4 class="text-info">{{ stats.new_meal_plans_month }}</h4>
+                            <small class="text-muted">Планов за месяц</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Детальная статистика -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card shadow">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">
+                        <i class="bi bi-graph-up"></i> Детальная статистика
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6>Пользователи</h6>
+                            <ul class="list-unstyled">
+                                <li><strong>Всего зарегистрированных:</strong> {{ stats.total_users }}</li>
+                                <li><strong>Активных аккаунтов:</strong> {{ stats.active_users }}</li>
+                                <li><strong>Администраторов:</strong> {{ stats.admin_users }}</li>
+                                <li><strong>Новых за последний месяц:</strong> {{ stats.new_users_month }}</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>Контент</h6>
+                            <ul class="list-unstyled">
+                                <li><strong>Личных рецептов:</strong> {{ stats.total_recipes }}</li>
+                                <li><strong>Рецептов в общей базе:</strong> {{ stats.total_recipes_base }}</li>
+                                <li><strong>Планов питания:</strong> {{ stats.total_meal_plans }}</li>
+                                <li><strong>Создано за месяц:</strong> {{ stats.new_recipes_month + stats.new_meal_plans_month }}</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Экспорт данных -->
+    <div class="card shadow">
+        <div class="card-header bg-warning text-dark">
+            <h5 class="mb-0">
+                <i class="bi bi-download"></i> Экспорт данных
+            </h5>
+        </div>
+        <div class="card-body">
+            <p class="mb-3">Вы можете экспортировать данные для анализа или резервного копирования:</p>
+            <div class="row g-2">
+                <div class="col-md-4">
+                    <button class="btn btn-outline-primary w-100" disabled>
+                        <i class="bi bi-people"></i> Экспорт пользователей
+                    </button>
+                </div>
+                <div class="col-md-4">
+                    <button class="btn btn-outline-success w-100" disabled>
+                        <i class="bi bi-book"></i> Экспорт рецептов
+                    </button>
+                </div>
+                <div class="col-md-4">
+                    <button class="btn btn-outline-info w-100" disabled>
+                        <i class="bi bi-bar-chart"></i> Экспорт статистики
+                    </button>
+                </div>
+            </div>
+            <small class="text-muted mt-2 d-block">
+                * Функционал экспорта будет добавлен в следующих версиях
+            </small>
+        </div>
+    </div>
+</div>
+{% endblock %}

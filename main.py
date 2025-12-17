@@ -68,6 +68,34 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
+# Middleware для правильной обработки кодировки UTF-8
+@app.middleware("http")
+async def utf8_middleware(request, call_next):
+    """Middleware для обеспечения правильной обработки UTF-8"""
+    # Устанавливаем правильную кодировку для входящих данных
+    if hasattr(request, '_body') and request.headers.get('content-type', '').startswith('application/x-www-form-urlencoded'):
+        # Для form-urlencoded данных убеждаемся в правильной кодировке
+        body = await request.body()
+        if body:
+            try:
+                decoded_body = body.decode('utf-8')
+                # Перекодируем обратно с правильной кодировкой
+                request._body = decoded_body.encode('utf-8')
+            except UnicodeDecodeError:
+                pass  # Если не можем декодировать, оставляем как есть
+
+    response = await call_next(request)
+
+    # Исправляем Content-Type в ответе
+    content_type = response.headers.get("Content-Type", "")
+    if "charset=latin-1" in content_type:
+        response.headers["Content-Type"] = content_type.replace("charset=latin-1", "charset=utf-8")
+    elif "text/" in content_type and "charset=" not in content_type:
+        # Добавляем UTF-8 если charset не указан
+        response.headers["Content-Type"] = content_type + "; charset=utf-8"
+
+    return response
+
 # Настройка CORS
 origins = settings.cors_origins.split(",") if settings.cors_origins != "*" else ["*"]
 app.add_middleware(

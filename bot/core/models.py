@@ -99,7 +99,7 @@ class Recipe(Model):
 # --- Конфигурация Tortoise ORM для Aerich ---
 TORTOISE_ORM = {
     "connections": {
-        "default": "sqlite://db.sqlite3"  # Будет переопределено из settings
+        "default": "sqlite://db.sqlite3?charset=utf8"  # Явно указываем UTF-8 для поддержки Unicode
     },
     "apps": {
         "models": {
