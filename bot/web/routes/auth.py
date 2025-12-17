@@ -85,8 +85,13 @@ async def login(
     # Проверка CSRF токена
     require_csrf_token(request, csrf_token)
     
+    # Проверяем пользователя
     user = await authenticate_user(email, password)
     if not user:
+        # Имитируем задержку для предотвращения timing attacks
+        import asyncio
+        await asyncio.sleep(0.1)
+
         response = RedirectResponse(url="/auth/login", status_code=302)
         set_flash_message(response, "Неверный email или пароль", "error")
         return response
@@ -97,14 +102,15 @@ async def login(
         data={"sub": str(user.id)}, expires_delta=access_token_expires
     )
 
-    # Устанавливаем cookie
+    # Устанавливаем cookie с безопасными настройками (OWASP рекомендации)
     response.set_cookie(
         key="access_token",
         value=access_token,
-        httponly=True,
+        httponly=True,  # Защита от XSS
         secure=not settings.debug,  # HTTPS только в продакшене
         samesite="lax",  # Защита от CSRF
         max_age=24 * 60 * 60,  # 24 часа
+        path="/",  # Доступно для всего сайта
     )
     
     set_flash_message(response, f"Добро пожаловать, {user.email}!", "success")
@@ -226,14 +232,15 @@ async def register(
             data={"sub": str(user.id)}, expires_delta=access_token_expires
         )
 
-        # Устанавливаем cookie
+        # Устанавливаем cookie с безопасными настройками (OWASP рекомендации)
         response.set_cookie(
             key="access_token",
             value=access_token,
-            httponly=True,
+            httponly=True,  # Защита от XSS
             secure=not settings.debug,  # HTTPS только в продакшене
             samesite="lax",  # Защита от CSRF
-            max_age=24 * 60 * 60,
+            max_age=24 * 60 * 60,  # 24 часа
+            path="/",  # Доступно для всего сайта
         )
         
         set_flash_message(response, "Регистрация успешна! Добро пожаловать!", "success")

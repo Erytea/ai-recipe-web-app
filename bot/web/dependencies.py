@@ -8,6 +8,9 @@ from uuid import UUID
 import hashlib
 import base64
 import bcrypt
+import argon2
+import binascii
+import binascii
 
 from fastapi import Depends, HTTPException, status, Cookie
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
@@ -54,40 +57,65 @@ def _prehash_password(password: str) -> str:
 
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
-    """Проверяет пароль"""
+    """Проверяет пароль с поддержкой нескольких алгоритмов"""
     try:
-        # Предварительно хешируем пароль через SHA-256 перед проверкой через bcrypt
+        # Предварительно хешируем пароль через SHA-256
         prehashed = _prehash_password(plain_password)
         prehashed_bytes = prehashed.encode('utf-8')
 
-        # Проверяем новый формат (base64)
-        if bcrypt.checkpw(prehashed_bytes, hashed_password.encode('utf-8')):
-            return True
+        # Сначала пробуем Argon2 (новый стандарт)
+        try:
+            if argon2.PasswordHasher().verify(hashed_password, prehashed_bytes):
+                return True
+        except (argon2.exceptions.VerifyMismatchError, argon2.exceptions.InvalidHash):
+            pass
 
-        # Обратная совместимость: пробуем старый метод (hex) для существующих паролей
+        # Обратная совместимость: пробуем bcrypt с base64
+        try:
+            stored_hash = base64.b64decode(hashed_password)
+            if bcrypt.checkpw(prehashed_bytes, stored_hash):
+                return True
+        except (binascii.Error, ValueError):
+            pass
+
+        # Обратная совместимость: старый метод с hex
         password_bytes = plain_password.encode('utf-8')
         sha256_digest = hashlib.sha256(password_bytes).digest()
         prehashed_hex = sha256_digest.hex()
-        return bcrypt.checkpw(prehashed_hex.encode('utf-8'), hashed_password.encode('utf-8'))
+        try:
+            stored_hash = base64.b64decode(hashed_password)
+            if bcrypt.checkpw(prehashed_hex.encode('utf-8'), stored_hash):
+                return True
+        except (binascii.Error, ValueError):
+            pass
+
+        return False
     except Exception:
         return False
 
 
 def get_password_hash(password: str) -> str:
-    """Хэширует пароль"""
+    """Хэширует пароль с использованием Argon2id (OWASP рекомендация)"""
     # Сначала убеждаемся, что пароль не пустой
     if not password:
         raise ValueError("Пароль не может быть пустым")
 
-    # Предварительно хешируем пароль через SHA-256 перед bcrypt
-    # Это позволяет использовать пароли любой длины и гарантирует <72 байт
+    # Предварительно хешируем пароль через SHA-256
+    # Это позволяет использовать пароли любой длины
     prehashed = _prehash_password(password)
     prehashed_bytes = prehashed.encode('utf-8')
 
-    # Хешируем через bcrypt напрямую
-    salt = bcrypt.gensalt()
-    hashed = bcrypt.hashpw(prehashed_bytes, salt)
-    return hashed.decode('utf-8')
+    # Используем Argon2id с безопасными параметрами (OWASP рекомендация)
+    # memory_cost=19456 (19 MiB), time_cost=2, parallelism=1
+    ph = argon2.PasswordHasher(
+        time_cost=2,
+        memory_cost=19456,  # 19 MiB
+        parallelism=1,
+        hash_len=32,
+        type=argon2.Type.ID
+    )
+
+    return ph.hash(prehashed_bytes)
 
 
 def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
