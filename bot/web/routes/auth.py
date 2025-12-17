@@ -238,7 +238,8 @@ async def register(
         
         set_flash_message(response, "Регистрация успешна! Добро пожаловать!", "success")
 
-        return RedirectResponse(url="/", status_code=302)
+        # Перенаправляем на профиль, чтобы пользователь сразу увидел свой аккаунт
+        return RedirectResponse(url="/profile", status_code=302)
     except Exception as e:
         response = RedirectResponse(url="/auth/register", status_code=302)
         set_flash_message(response, f"Ошибка при регистрации: {str(e)}", "error")

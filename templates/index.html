@@ -1,6 +1,34 @@
 {% extends "layout.html" %}
 
 {% block content %}
+{% if user %}
+<!-- Welcome Section for Authenticated Users -->
+<section class="py-4 bg-light">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body p-4 text-center">
+                        <h3 class="mb-3">Добро пожаловать, {{ user.email }}! 🎉</h3>
+                        <p class="mb-4">Вы успешно зарегистрированы и авторизованы в системе.</p>
+                        <div class="d-flex justify-content-center gap-3">
+                            <a href="/profile" class="btn btn-primary">
+                                <i class="bi bi-person"></i> Перейти в профиль
+                            </a>
+                            <a href="/recipes" class="btn btn-outline-primary">
+                                <i class="bi bi-journal-text"></i> Создать рецепт
+                            </a>
+                            <a href="/meal-plans" class="btn btn-outline-success">
+                                <i class="bi bi-calendar-check"></i> Планировать питание
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
 <!-- Hero Section - Full Width Image -->
 <section class="hero-overlay">
     <img src="/static/images/hero-image.png" alt="Вкусные рецепты" class="hero-full-image"
