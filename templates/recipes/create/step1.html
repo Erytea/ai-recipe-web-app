@@ -61,6 +61,17 @@
                         </p>
                     </div>
 
+                    {% if error_message %}
+                    <div class="alert alert-danger mb-4 animate-fade-in" role="alert">
+                        <h5 class="alert-heading">
+                            <i class="bi bi-exclamation-triangle-fill"></i> Ошибка
+                        </h5>
+                        <p class="mb-0">{{ error_message }}</p>
+                        <hr>
+                        <p class="mb-0 small">Попробуй еще раз или проверь настройки API.</p>
+                    </div>
+                    {% endif %}
+
                     <div class="row g-4">
                         <div class="col-md-6">
                             <div class="border-2 border-dashed rounded-xl p-5 text-center animate-fade-in"

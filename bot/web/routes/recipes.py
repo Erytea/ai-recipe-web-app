@@ -3,9 +3,12 @@
 """
 
 import json
+import logging
 import os
+import traceback
 from pathlib import Path
 from typing import Optional
+from urllib.parse import quote
 import uuid
 
 from fastapi import APIRouter, Request, Response, HTTPException, UploadFile, File, Form
@@ -23,6 +26,7 @@ from bot.services.recipe_search import (
 
 router = APIRouter()
 templates = Jinja2Templates(directory="templates")
+logger = logging.getLogger(__name__)
 
 # Директория для загрузки изображений
 UPLOAD_DIR = Path("static/uploads")
@@ -47,9 +51,12 @@ async def recipes_home(request: Request):
 @router.get("/create", response_class=HTMLResponse)
 async def create_recipe_page(request: Request):
     """Страница создания рецепта - шаг 1: загрузка фото"""
+    error_message = request.query_params.get("error")
+    
     context = {
         "request": request,
-        "title": "Создать рецепт - Загрузка фото"
+        "title": "Создать рецепт - Загрузка фото",
+        "error_message": error_message
     }
 
     return templates.TemplateResponse("recipes/create/step1.html", context)
@@ -261,6 +268,21 @@ async def process_nutrition_parameters(
             greens_weight=greens_weight
         )
 
+        # Валидация структуры данных рецепта
+        if not recipe_data:
+            raise ValueError("Не получены данные рецепта от OpenAI")
+        
+        if 'calculated_nutrition' not in recipe_data:
+            logger.error(f"Отсутствует ключ 'calculated_nutrition' в recipe_data. Доступные ключи: {recipe_data.keys()}")
+            raise ValueError("Неверная структура данных рецепта: отсутствует 'calculated_nutrition'")
+        
+        nutrition = recipe_data['calculated_nutrition']
+        required_nutrition_fields = ['calories', 'protein_g', 'fat_g', 'carbs_g']
+        for field in required_nutrition_fields:
+            if field not in nutrition:
+                logger.error(f"Отсутствует поле '{field}' в calculated_nutrition. Доступные поля: {nutrition.keys()}")
+                raise ValueError(f"Неверная структура данных рецепта: отсутствует '{field}' в calculated_nutrition")
+
         # Сохраняем рецепт в БД
         recipe = await Recipe.create(
             photo_file_id=photo_path,  # Сохраняем путь к фото
@@ -272,10 +294,10 @@ async def process_nutrition_parameters(
             target_carbs=target_carbs,
             greens_weight=greens_weight,
             recipe_text=json.dumps(recipe_data, ensure_ascii=False),
-            calculated_calories=recipe_data['calculated_nutrition']['calories'],
-            calculated_protein=recipe_data['calculated_nutrition']['protein_g'],
-            calculated_fat=recipe_data['calculated_nutrition']['fat_g'],
-            calculated_carbs=recipe_data['calculated_nutrition']['carbs_g']
+            calculated_calories=float(nutrition['calories']),
+            calculated_protein=float(nutrition['protein_g']),
+            calculated_fat=float(nutrition['fat_g']),
+            calculated_carbs=float(nutrition['carbs_g'])
         )
 
         # Очищаем сессию и перенаправляем на результат
@@ -290,8 +312,15 @@ async def process_nutrition_parameters(
         return response
 
     except Exception as e:
-        # В случае ошибки тоже очищаем сессию
-        response = RedirectResponse(url="/recipes/create", status_code=302)
+        # Логируем ошибку
+        error_msg = str(e)
+        logger.error(f"Ошибка при создании рецепта: {error_msg}")
+        logger.error(traceback.format_exc())
+        
+        # В случае ошибки очищаем сессию и показываем сообщение об ошибке
+        error_url = f"/recipes/create?error={quote(error_msg)}"
+        response = RedirectResponse(url=error_url, status_code=302)
+        
         response.delete_cookie("recipe_session_id")
         response.delete_cookie("recipe_photo")
         response.delete_cookie("recipe_analysis")
