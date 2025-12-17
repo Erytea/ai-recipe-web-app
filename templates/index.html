@@ -2,18 +2,18 @@
 
 {% block content %}
 
-<!-- SECTION 1: HERO -->
-<section style="background: #16181A; color: white; padding: 80px 0; min-height: 100vh; display: flex; align-items: center;">
+<!-- SCREEN 1: HERO -->
+<section style="background: white; padding: 80px 0; min-height: 100vh; display: flex; align-items: center;">
     <div class="container">
         <div class="row align-items-center">
             <div class="col-lg-6">
-                <h1 style="font-size: 36px; font-weight: 600; margin-bottom: 1.5rem; line-height: 44px; color: white;">
+                <h1 style="font-size: 36px; font-weight: 600; margin-bottom: 1.5rem; line-height: 44px; color: #212121;">
                     Сфотографируй продукты.<br>Получи рецепт под свои цели.
                 </h1>
-                <p style="font-size: 16px; color: rgba(255,255,255,0.8); margin-bottom: 1rem; line-height: 24px; font-weight: 400;">
+                <p style="font-size: 16px; color: #616161; margin-bottom: 1rem; line-height: 24px; font-weight: 400;">
                     ИИ распознаёт ингредиенты и автоматически считает КБЖУ.
                 </p>
-                <p style="font-size: 16px; color: rgba(255,255,255,0.65); margin-bottom: 3rem; line-height: 24px; font-weight: 400;">
+                <p style="font-size: 16px; color: #9E9E9E; margin-bottom: 3rem; line-height: 24px; font-weight: 400;">
                     Из того, что уже есть дома
                 </p>
                 <a href="/recipes/create" style="background: #576CED; color: white; padding: 1rem 2.5rem; text-decoration: none; border-radius: 12px; font-size: 16px; font-weight: 500; display: inline-block; border: none; transition: all 0.3s ease;">
@@ -58,134 +58,71 @@
     </div>
 </section>
 
-<!-- SECTION 2: HOW IT WORKS -->
-<section style="background: #ECECEC; padding: 80px 0;">
+<!-- SCREEN 2: HOW IT WORKS + VALUE + RESULT -->
+<section style="background: #f5f5f5; padding: 80px 0;">
     <div class="container">
         <div class="row">
             <div class="col-12 text-center mb-5">
-                <h2 style="font-size: 24px; font-weight: 500; color: #212121; margin-bottom: 4rem; line-height: 32px;">Как это работает</h2>
+                <h2 style="font-size: 24px; font-weight: 500; color: #212121; margin-bottom: 3rem; line-height: 32px;">Как это работает</h2>
             </div>
         </div>
-        <div class="row text-center">
-            <div class="col-md-4">
-                <div style="margin-bottom: 2rem;">
-                    <div style="position: relative; width: 80px; height: 80px; margin: 0 auto 1.5rem;">
-                        <div style="position: absolute; top: -4px; left: -4px; width: 24px; height: 24px; background: white; border: 1px solid #9E9E9E; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #616161; font-weight: 500; font-size: 12px; z-index: 1;">1</div>
-                        <div style="width: 80px; height: 80px; background: white; border: 1px solid #E0E0E0; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
-                            <i class="bi bi-camera" style="font-size: 32px; color: #9E9E9E;"></i>
-                        </div>
-                    </div>
-                    <h3 style="font-size: 18px; font-weight: 500; color: #212121; margin-bottom: 0.75rem;">Загрузи фото продуктов</h3>
-                    <p style="color: #616161; line-height: 24px; font-size: 16px; font-weight: 400;">ИИ распознаёт ингредиенты автоматически</p>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div style="margin-bottom: 2rem;">
-                    <div style="position: relative; width: 80px; height: 80px; margin: 0 auto 1.5rem;">
-                        <div style="position: absolute; top: -4px; left: -4px; width: 24px; height: 24px; background: white; border: 1px solid #9E9E9E; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #616161; font-weight: 500; font-size: 12px; z-index: 1;">2</div>
-                        <div style="width: 80px; height: 80px; background: white; border: 1px solid #E0E0E0; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
-                            <i class="bi bi-sliders" style="font-size: 32px; color: #9E9E9E;"></i>
-                        </div>
-                    </div>
-                    <h3 style="font-size: 18px; font-weight: 500; color: #212121; margin-bottom: 0.75rem;">Укажи цель</h3>
-                    <p style="color: #616161; line-height: 24px; font-size: 16px; font-weight: 400;">Калории, КБЖУ или просто что приготовить</p>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div style="margin-bottom: 2rem;">
-                    <div style="position: relative; width: 80px; height: 80px; margin: 0 auto 1.5rem;">
-                        <div style="position: absolute; top: -4px; left: -4px; width: 24px; height: 24px; background: white; border: 1px solid #9E9E9E; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #616161; font-weight: 500; font-size: 12px; z-index: 1;">3</div>
-                        <div style="width: 80px; height: 80px; background: white; border: 1px solid #E0E0E0; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
-                            <i class="bi bi-check-circle" style="font-size: 32px; color: #9E9E9E;"></i>
-                        </div>
-                    </div>
-                    <h3 style="font-size: 18px; font-weight: 500; color: #212121; margin-bottom: 0.75rem;">Получи рецепт</h3>
-                    <p style="color: #616161; line-height: 24px; font-size: 16px; font-weight: 400;">Пошагово, с точными расчётами</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
 
-<!-- SECTION 3: VALUE PROPOSITION -->
-<section style="background: white; padding: 80px 0;">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-4 text-center" style="padding: 0 2rem;">
-                <h3 style="font-size: 18px; font-weight: 500; color: #212121; margin-bottom: 0.75rem; line-height: 24px;">Точный расчёт КБЖУ</h3>
-                <p style="color: #616161; line-height: 24px; font-size: 16px; font-weight: 400;">Без ручного ввода</p>
+        <!-- Steps Grid -->
+        <div class="row text-center mb-5">
+            <div class="col-md-4">
+                <h3 style="font-size: 18px; font-weight: 500; color: #212121; margin-bottom: 0.5rem;">Загрузи фото</h3>
+                <p style="color: #616161; font-size: 14px;">Точный расчёт КБЖУ</p>
             </div>
-            <div class="col-md-4 text-center" style="padding: 0 2rem;">
-                <h3 style="font-size: 18px; font-weight: 500; color: #212121; margin-bottom: 0.75rem; line-height: 24px;">Рецепты из того, что есть</h3>
-                <p style="color: #616161; line-height: 24px; font-size: 16px; font-weight: 400;">Без похода в магазин</p>
+            <div class="col-md-4">
+                <h3 style="font-size: 18px; font-weight: 500; color: #212121; margin-bottom: 0.5rem;">Укажи цель</h3>
+                <p style="color: #616161; font-size: 14px;">Рецепты из того, что есть</p>
             </div>
-            <div class="col-md-4 text-center" style="padding: 0 2rem;">
-                <h3 style="font-size: 18px; font-weight: 500; color: #212121; margin-bottom: 0.75rem; line-height: 24px;">Пошаговая инструкция</h3>
-                <p style="color: #616161; line-height: 24px; font-size: 16px; font-weight: 400;">Коротко и по делу</p>
+            <div class="col-md-4">
+                <h3 style="font-size: 18px; font-weight: 500; color: #212121; margin-bottom: 0.5rem;">Получи рецепт</h3>
+                <p style="color: #616161; font-size: 14px;">Пошаговая инструкция</p>
             </div>
         </div>
-    </div>
-</section>
 
-<!-- SECTION 4: RESULT EXAMPLE -->
-<section style="background: #ECECEC; padding: 80px 0;">
-    <div class="container">
-        <div class="row align-items-center">
-            <div class="col-lg-6">
-                <div style="position: relative; display: inline-block;">
-                    <div style="width: 280px; height: 580px; background: #000; border-radius: 30px; position: relative; margin: 0 auto; box-shadow: 0 8px 24px rgba(0,0,0,0.2);">
-                        <div style="width: 260px; height: 560px; background: white; border-radius: 20px; position: absolute; top: 10px; left: 10px; overflow: hidden;">
-                            <div style="height: 40px; background: #ECECEC; border-bottom: 1px solid #E0E0E0; display: flex; align-items: center; padding: 0 15px;">
-                                <div style="font-size: 12px; color: #616161;">9:41</div>
-                                <div style="margin-left: auto; display: flex; gap: 5px;">
-                                    <div style="width: 15px; height: 6px; background: #616161; border-radius: 3px;"></div>
-                                    <div style="width: 6px; height: 6px; background: #616161; border-radius: 50%;"></div>
-                                </div>
-                            </div>
-                            <div style="padding: 20px;">
-                                <h3 style="font-size: 18px; font-weight: 600; margin-bottom: 15px; color: #212121;">Салат с курицей и авокадо</h3>
-                                <img src="/static/images/product-detail.jpg" alt="Салат с курицей" style="width: 100%; height: 120px; object-fit: cover; border-radius: 8px; margin-bottom: 15px;">
-                                <div style="display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap;">
-                                    <div style="background: #EFF1FD; color: #576CED; padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 500; border: 1px solid #E1DFFB;">280 ккал</div>
-                                    <div style="background: #EFF1FD; color: #576CED; padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 500; border: 1px solid #E1DFFB;">32г Б</div>
-                                    <div style="background: #EFF1FD; color: #576CED; padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 500; border: 1px solid #E1DFFB;">18г Ж</div>
-                                    <div style="background: #EFF1FD; color: #576CED; padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 500; border: 1px solid #E1DFFB;">8г У</div>
-                                </div>
-                                <div style="font-size: 14px; color: #616161; line-height: 20px;">
-                                    <div style="margin-bottom: 8px;"><strong style="color: #212121;">1.</strong> Нарежьте курицу кубиками</div>
-                                    <div style="margin-bottom: 8px;"><strong style="color: #212121;">2.</strong> Смешайте с авокадо и овощами</div>
-                                    <div style="margin-bottom: 8px;"><strong style="color: #212121;">3.</strong> Заправьте оливковым маслом</div>
-                                    <div><strong style="color: #212121;">4.</strong> Посолите и поперчите по вкусу</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-6">
-                <p style="font-size: 16px; color: #212121; line-height: 24px; font-weight: 400;">
+        <!-- Result Example -->
+        <div class="row align-items-center justify-content-center">
+            <div class="col-lg-6 text-center mb-4">
+                <p style="font-size: 16px; color: #212121; margin-bottom: 2rem;">
                     Вот что ты получишь из обычного фото.
                 </p>
             </div>
+            <div class="col-lg-6 text-center">
+                <!-- Smaller Smartphone Mockup -->
+                <div style="position: relative; display: inline-block;">
+                    <div style="width: 240px; height: 480px; background: #000; border-radius: 25px; position: relative; margin: 0 auto; box-shadow: 0 8px 24px rgba(0,0,0,0.2);">
+                        <div style="width: 220px; height: 460px; background: white; border-radius: 15px; position: absolute; top: 10px; left: 10px; overflow: hidden;">
+                            <div style="height: 35px; background: #ECECEC; border-bottom: 1px solid #E0E0E0; display: flex; align-items: center; padding: 0 12px;">
+                                <div style="font-size: 11px; color: #616161;">9:41</div>
+                                <div style="margin-left: auto; display: flex; gap: 4px;">
+                                    <div style="width: 12px; height: 5px; background: #616161; border-radius: 2px;"></div>
+                                    <div style="width: 5px; height: 5px; background: #616161; border-radius: 50%;"></div>
+                                </div>
+                            </div>
+                            <div style="padding: 16px;">
+                                <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 12px; color: #212121;">Салат с курицей</h3>
+                                <img src="/static/images/product-detail.jpg" alt="Салат с курицей" style="width: 100%; height: 100px; object-fit: cover; border-radius: 6px; margin-bottom: 12px;">
+                                <div style="display: flex; gap: 6px; margin-bottom: 16px; flex-wrap: wrap;">
+                                    <div style="background: #EFF1FD; color: #576CED; padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: 500; border: 1px solid #E1DFFB;">280 ккал</div>
+                                    <div style="background: #EFF1FD; color: #576CED; padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: 500; border: 1px solid #E1DFFB;">32г Б</div>
+                                    <div style="background: #EFF1FD; color: #576CED; padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: 500; border: 1px solid #E1DFFB;">18г Ж</div>
+                                    <div style="background: #EFF1FD; color: #576CED; padding: 4px 8px; border-radius: 6px; font-size: 11px; font-weight: 500; border: 1px solid #E1DFFB;">8г У</div>
+                                </div>
+                                <div style="font-size: 12px; color: #616161; line-height: 18px;">
+                                    <div style="margin-bottom: 6px;"><strong style="color: #212121;">1.</strong> Нарежьте курицу</div>
+                                    <div style="margin-bottom: 6px;"><strong style="color: #212121;">2.</strong> Смешайте с овощами</div>
+                                    <div style="margin-bottom: 6px;"><strong style="color: #212121;">3.</strong> Заправьте маслом</div>
+                                    <div><strong style="color: #212121;">4.</strong> Посолите и поперчите</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
-</section>
-
-<!-- SECTION 5: FINAL CTA -->
-<section style="background: #16181A; color: white; padding: 100px 0; text-align: center;">
-    <div class="container">
-        <h2 style="font-size: 32px; font-weight: 600; margin-bottom: 1.5rem; line-height: 44px; color: white;">
-            Готовить проще, чем кажется.
-        </h2>
-        <p style="font-size: 16px; color: rgba(255,255,255,0.8); margin-bottom: 3rem; max-width: 600px; margin-left: auto; margin-right: auto; line-height: 24px; font-weight: 400;">
-            Сфотографируй продукты и попробуй прямо сейчас.
-        </p>
-        <a href="/recipes/create" style="background: #576CED; color: white; padding: 1rem 2.5rem; text-decoration: none; border-radius: 12px; font-size: 16px; font-weight: 500; display: inline-block; border: none; transition: all 0.3s ease;">
-            Создать рецепт
-        </a>
-        <p style="font-size: 14px; color: rgba(255,255,255,0.65); margin-top: 1.5rem; font-weight: 400;">
-            Можно без регистрации
-        </p>
     </div>
 </section>
 
