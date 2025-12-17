@@ -19,12 +19,20 @@ JWT_SECRET_KEY=$(openssl rand -hex 32)
 
 echo "🔑 Сгенерированы секретные ключи"
 
+# Переменные для админа (можно изменить)
+ADMIN_EMAIL=${ADMIN_EMAIL:-"admin@railway.app"}
+ADMIN_PASSWORD=${ADMIN_PASSWORD:-"secure_admin_password_123"}
+ADMIN_USERNAME=${ADMIN_USERNAME:-"admin"}
+
 # Создание .env файла для Railway
 cat > railway.env << EOF
 OPENAI_API_KEY=$OPENAI_API_KEY
 SECRET_KEY=$SECRET_KEY
 JWT_SECRET_KEY=$JWT_SECRET_KEY
 DEBUG=False
+ADMIN_EMAIL=$ADMIN_EMAIL
+ADMIN_PASSWORD=$ADMIN_PASSWORD
+ADMIN_USERNAME=$ADMIN_USERNAME
 EOF
 
 echo "📝 Создан файл railway.env"
@@ -40,14 +48,22 @@ echo "   - OPENAI_API_KEY"
 echo "   - SECRET_KEY"
 echo "   - JWT_SECRET_KEY"
 echo "   - DEBUG=False"
+echo "   - ADMIN_EMAIL (опционально)"
+echo "   - ADMIN_PASSWORD (опционально)"
+echo "   - ADMIN_USERNAME (опционально)"
 echo ""
 echo "5. Railway автоматически развернет приложение!"
 echo ""
 echo "🌐 После развертывания приложение будет доступно по URL от Railway"
 echo ""
+echo "👑 Данные для входа в админку:"
+echo "   📧 Email: $ADMIN_EMAIL"
+echo "   🔒 Пароль: $ADMIN_PASSWORD"
+echo "   👤 Логин: $ADMIN_USERNAME"
+echo ""
 echo "⚠️  Не забудьте:"
 echo "   - Настроить домен (опционально)"
-echo "   - Добавить пользователей через веб-интерфейс"
+echo "   - После первого входа измените пароль админа"
 echo "   - Настроить бэкапы базы данных"
 
 echo ""

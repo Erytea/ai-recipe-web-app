@@ -45,6 +45,40 @@ async def lifespan(app: FastAPI):
     try:
         await init_db(settings.database_url)
         logger.info("База данных инициализирована успешно")
+
+        # Создаем администратора при первом запуске
+        logger.info("Проверка администратора...")
+        from bot.core.models import User
+        admin_count = await User.filter(is_admin=True).count()
+        if admin_count == 0:
+            logger.info("Создание начального администратора...")
+            from bot.web.dependencies import get_password_hash
+
+            admin_email = os.getenv("ADMIN_EMAIL", "admin@railway.app")
+            admin_password = os.getenv("ADMIN_PASSWORD", "admin123")
+            admin_username = os.getenv("ADMIN_USERNAME", "admin")
+
+            # Проверяем, существует ли пользователь
+            existing = await User.get_or_none(email=admin_email)
+            if not existing:
+                hashed_password = get_password_hash(admin_password)
+                admin_user = await User.create(
+                    email=admin_email,
+                    password_hash=hashed_password,
+                    username=admin_username,
+                    first_name="Администратор",
+                    last_name="Railway",
+                    is_admin=True,
+                    is_active=True
+                )
+                logger.info(f"Создан администратор: {admin_email}")
+            else:
+                existing.is_admin = True
+                await existing.save()
+                logger.info(f"Назначен администратор: {admin_email}")
+        else:
+            logger.info("Администратор уже существует")
+
     except Exception as e:
         logger.error(f"Ошибка инициализации базы данных: {e}", exc_info=True)
         raise
