@@ -24,8 +24,8 @@ async def create_initial_admin():
             return
 
         # Создаем администратора
-        admin_email = os.getenv("ADMIN_EMAIL", "admin@example.com")
-        admin_password = os.getenv("ADMIN_PASSWORD", "admin123")
+        admin_email = os.getenv("ADMIN_EMAIL", "admin@railway.app")
+        admin_password = os.getenv("ADMIN_PASSWORD", "secure_admin_password_123")
         admin_username = os.getenv("ADMIN_USERNAME", "admin")
 
         # Проверяем, существует ли пользователь с таким email

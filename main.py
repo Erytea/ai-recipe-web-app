@@ -55,7 +55,7 @@ async def lifespan(app: FastAPI):
             from bot.web.dependencies import get_password_hash
 
             admin_email = os.getenv("ADMIN_EMAIL", "admin@railway.app")
-            admin_password = os.getenv("ADMIN_PASSWORD", "admin123")
+            admin_password = os.getenv("ADMIN_PASSWORD", "secure_admin_password_123")
             admin_username = os.getenv("ADMIN_USERNAME", "admin")
 
             # Проверяем, существует ли пользователь
