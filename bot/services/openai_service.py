@@ -11,8 +11,11 @@ class OpenAIService:
     """Сервис для работы с OpenAI API"""
     
     def __init__(self):
-        # Создаем клиент с минимальными параметрами
-        self.client = AsyncOpenAI(api_key=settings.openai_api_key)
+        # Создаем клиент только если есть API ключ
+        if settings.openai_api_key:
+            self.client = AsyncOpenAI(api_key=settings.openai_api_key)
+        else:
+            self.client = None
     
     async def analyze_food_image(self, image_data: bytes) -> Dict:
         """
