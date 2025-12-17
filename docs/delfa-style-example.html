@@ -13,30 +13,11 @@
     <link rel="stylesheet" href="/static/css/design-system.css">
 </head>
 <body>
-    <!-- Brand Identity Section -->
-    <section class="brand-identity-section">
-        <div class="container">
-            <div class="brand-identity-content">
-                <div class="brand-identity-block">
-                    <h3>Ключевые элементы бренда:</h3>
-                    <ul>
-                        <li>Чистые линии и минимализм</li>
-                        <li>Сферические формы как символы полноты и баланса</li>
-                        <li>Деликатные текстуры камня, создающие глубину и тактильность</li>
-                    </ul>
-                </div>
-                <div class="brand-identity-block">
-                    <p>Сфера — это не просто графический элемент: она символизирует идеальный баланс, необходимый в дизайне интерьера.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
     <!-- Hero Section with Overlay -->
     <section class="hero-with-overlay">
         <img src="/static/images/hero-image.png" alt="Hero" 
              onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-        <div style="display:none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, var(--high-orange-100) 0%, var(--bright-blue-300) 100%); z-index: 1;"></div>
+        <div style="display:none; position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background: linear-gradient(135deg, var(--high-orange-100) 0%, var(--bright-blue-300) 100%); z-index: 1;"></div>
         <div class="hero-overlay-content">
             <h1 class="hero-overlay-title">КОМФОРТ В ТВОЕМ ДОМЕ</h1>
             <p class="hero-overlay-subtitle">Слова были не нужны — дома сами раскрывали ему свою суть.</p>

@@ -421,14 +421,27 @@
 
 /* ===== КОМПОНЕНТЫ В СТИЛЕ DELFA ===== */
 
+/* Body стили для фиксированного hero */
+body.has-fixed-hero {
+  margin: 0;
+  padding: 0;
+}
+
+body.has-fixed-hero > .hero-with-overlay {
+  position: fixed;
+}
+
 /* Hero секция с текстовым оверлеем */
 .hero-with-overlay {
-  position: relative;
+  position: fixed;
+  top: 0;
+  left: 0;
   width: 100%;
-  min-height: 70vh;
+  height: 100vh;
   display: flex;
   align-items: flex-end;
   overflow: hidden;
+  z-index: 0;
 }
 
 .hero-with-overlay img {
@@ -442,11 +455,26 @@
 }
 
 .hero-overlay-content {
-  position: relative;
+  position: absolute;
+  bottom: 0;
+  left: 0;
   z-index: 2;
   padding: var(--space-12) var(--space-8);
   max-width: 600px;
   color: white;
+  pointer-events: none;
+}
+
+.hero-overlay-content > * {
+  pointer-events: auto;
+}
+
+/* Отступ для контента после фиксированного hero */
+.hero-with-overlay + * {
+  position: relative;
+  z-index: 1;
+  margin-top: 100vh;
+  background: var(--background);
 }
 
 .hero-overlay-title {
