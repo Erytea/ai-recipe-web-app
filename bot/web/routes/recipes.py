@@ -302,10 +302,17 @@ async def process_nutrition_parameters(
                 raise ValueError(f"Неверная структура данных рецепта: отсутствует '{field}' в calculated_nutrition")
 
         # Сохраняем рецепт в БД
+        # Формируем строку уточнений с правильной кодировкой
+        clarifications_combined = f"{clarifications or ''}; Cooking: {cooking_tags or ''}".strip('; ')
+        if clarifications_combined:
+            clarifications_combined = clarifications_combined.strip()
+        else:
+            clarifications_combined = None
+
         recipe = await Recipe.create(
             photo_file_id=photo_path,  # Сохраняем путь к фото
             ingredients_detected=json.dumps(ingredients, ensure_ascii=False),
-            clarifications=f"{clarifications or ''}; Cooking: {cooking_tags or ''}".strip('; '),
+            clarifications=clarifications_combined,
             target_calories=target_calories,
             target_protein=target_protein if target_protein > 0 else 0,
             target_fat=target_fat if target_fat > 0 else 0,
@@ -334,9 +341,15 @@ async def process_nutrition_parameters(
         error_msg = str(e)
         logger.error(f"Ошибка при создании рецепта: {error_msg}")
         logger.error(traceback.format_exc())
-        
+
         # В случае ошибки очищаем сессию и показываем сообщение об ошибке
-        error_url = f"/recipes/create?error={quote(error_msg)}"
+        # Кодируем сообщение об ошибке для URL (для поддержки Unicode)
+        try:
+            error_url = f"/recipes/create?error={quote(error_msg, safe='')}"
+        except UnicodeEncodeError:
+            # Если quote не справляется, используем простое сообщение
+            error_url = f"/recipes/create?error={quote('Произошла ошибка при создании рецепта', safe='')}"
+
         response = RedirectResponse(url=error_url, status_code=302)
         
         response.delete_cookie("recipe_session_id")
