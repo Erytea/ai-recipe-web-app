@@ -54,14 +54,24 @@ async def profile(
     recipes_count = await current_user.recipes.all().count()
     meal_plans_count = await current_user.meal_plans.all().count()
 
+    # Получаем последние рецепты (последние 3)
+    from bot.core.models import Recipe
+    recent_recipes = await Recipe.filter(user=current_user).order_by("-created_at").limit(3).prefetch_related("user")
+
+    # Получаем последние планы питания (последние 3)
+    from bot.core.models import MealPlan
+    recent_meal_plans = await MealPlan.filter(user=current_user).order_by("-created_at").limit(3).prefetch_related("user")
+
     context = {
         "request": request,
         "user": current_user,
         "title": "Профиль",
         "recipes_count": recipes_count,
-        "meal_plans_count": meal_plans_count
+        "meal_plans_count": meal_plans_count,
+        "recent_recipes": recent_recipes,
+        "recent_meal_plans": recent_meal_plans
     }
-    
+
     # Получаем flash сообщение
     flash = get_flash_message(request)
     if flash:

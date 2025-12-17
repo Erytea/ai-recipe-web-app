@@ -78,10 +78,132 @@
                 </div>
             </div>
 
-            <!-- Actions -->
+            <!-- Recent Activity -->
+            <div class="row mb-4">
+                <!-- Recent Recipes -->
+                <div class="col-lg-6 mb-4">
+                    <div class="card shadow">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="mb-0">
+                                <i class="bi bi-clock-history"></i> Последние рецепты
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            {% if recent_recipes %}
+                                {% for recipe in recent_recipes %}
+                                <div class="d-flex justify-content-between align-items-center mb-3 pb-3 border-bottom">
+                                    <div>
+                                        <h6 class="mb-1">Рецепт #{{ recipe.id }}</h6>
+                                        <small class="text-muted">
+                                            {{ recipe.created_at.strftime('%d.%m.%Y %H:%M') }}
+                                        </small>
+                                    </div>
+                                    <a href="/recipes/{{ recipe.id }}" class="btn btn-sm btn-outline-primary">
+                                        <i class="bi bi-eye"></i> Просмотр
+                                    </a>
+                                </div>
+                                {% endfor %}
+                                <div class="text-center">
+                                    <a href="/recipes" class="btn btn-outline-primary">
+                                        <i class="bi bi-arrow-right"></i> Все рецепты
+                                    </a>
+                                </div>
+                            {% else %}
+                                <div class="text-center py-4">
+                                    <i class="bi bi-journal-x text-muted" style="font-size: 3rem;"></i>
+                                    <p class="text-muted mt-3 mb-3">У вас пока нет рецептов</p>
+                                    <a href="/recipes/create" class="btn btn-primary">
+                                        <i class="bi bi-plus-circle"></i> Создать первый рецепт
+                                    </a>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Meal Plans -->
+                <div class="col-lg-6 mb-4">
+                    <div class="card shadow">
+                        <div class="card-header bg-success text-white">
+                            <h5 class="mb-0">
+                                <i class="bi bi-calendar-event"></i> Последние планы питания
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            {% if recent_meal_plans %}
+                                {% for meal_plan in recent_meal_plans %}
+                                <div class="d-flex justify-content-between align-items-center mb-3 pb-3 border-bottom">
+                                    <div>
+                                        <h6 class="mb-1">План #{{ meal_plan.id }}</h6>
+                                        <small class="text-muted">
+                                            {{ meal_plan.created_at.strftime('%d.%m.%Y %H:%M') }}
+                                        </small>
+                                    </div>
+                                    <a href="/meal-plans/{{ meal_plan.id }}" class="btn btn-sm btn-outline-success">
+                                        <i class="bi bi-eye"></i> Просмотр
+                                    </a>
+                                </div>
+                                {% endfor %}
+                                <div class="text-center">
+                                    <a href="/meal-plans" class="btn btn-outline-success">
+                                        <i class="bi bi-arrow-right"></i> Все планы
+                                    </a>
+                                </div>
+                            {% else %}
+                                <div class="text-center py-4">
+                                    <i class="bi bi-calendar-x text-muted" style="font-size: 3rem;"></i>
+                                    <p class="text-muted mt-3 mb-3">У вас пока нет планов питания</p>
+                                    <a href="/meal-plans/create" class="btn btn-success">
+                                        <i class="bi bi-plus-circle"></i> Создать первый план
+                                    </a>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="card shadow mb-4">
+                <div class="card-body p-4">
+                    <h3 class="card-title mb-4">
+                        <i class="bi bi-lightning-charge"></i> Быстрые действия
+                    </h3>
+                    <div class="row g-2">
+                        <div class="col-md-6">
+                            <a href="/recipes/create" class="btn btn-primary w-100 d-flex align-items-center justify-content-center gap-2">
+                                <i class="bi bi-plus-circle"></i>
+                                <span>Создать рецепт</span>
+                            </a>
+                        </div>
+                        <div class="col-md-6">
+                            <a href="/meal-plans/create" class="btn btn-success w-100 d-flex align-items-center justify-content-center gap-2">
+                                <i class="bi bi-calendar-plus"></i>
+                                <span>Создать план питания</span>
+                            </a>
+                        </div>
+                        <div class="col-md-6">
+                            <a href="/recipes" class="btn btn-outline-primary w-100 d-flex align-items-center justify-content-center gap-2">
+                                <i class="bi bi-journal-text"></i>
+                                <span>Мои рецепты</span>
+                            </a>
+                        </div>
+                        <div class="col-md-6">
+                            <a href="/meal-plans" class="btn btn-outline-success w-100 d-flex align-items-center justify-content-center gap-2">
+                                <i class="bi bi-calendar-check"></i>
+                                <span>Мои планы</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Account Actions -->
             <div class="card shadow">
                 <div class="card-body p-4">
-                    <h3 class="card-title mb-4">Действия</h3>
+                    <h3 class="card-title mb-4">
+                        <i class="bi bi-gear"></i> Настройки аккаунта
+                    </h3>
                     <div class="d-grid gap-2">
                         <a href="/profile/edit" class="btn btn-outline-primary">
                             <i class="bi bi-pencil"></i> Редактировать профиль

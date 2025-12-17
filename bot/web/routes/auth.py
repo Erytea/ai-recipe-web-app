@@ -34,6 +34,8 @@ class RegisterRequest(BaseModel):
     email: EmailStr
     password: str
     username: str
+    first_name: Optional[str] = None
+    last_name: Optional[str] = None
 
 
 @router.get("/login", response_class=HTMLResponse)
@@ -179,6 +181,8 @@ async def register(
     email: str = Form(...),
     password: str = Form(...),
     username: str = Form(...),
+    first_name: str = Form(None),
+    last_name: str = Form(None),
     csrf_token: str = Form(None)
 ):
     """Регистрация нового пользователя"""
@@ -223,7 +227,9 @@ async def register(
         user = await User.create(
             email=email,
             password_hash=password_hash,
-            username=username
+            username=username,
+            first_name=first_name.strip() if first_name else None,
+            last_name=last_name.strip() if last_name else None
         )
 
         # Создаем токен и логиним
@@ -322,7 +328,9 @@ async def api_register(register_data: RegisterRequest):
     user = await User.create(
         email=register_data.email,
         password_hash=password_hash,
-        username=username
+        username=username,
+        first_name=register_data.first_name,
+        last_name=register_data.last_name
     )
 
     access_token_expires = timedelta(hours=24)
