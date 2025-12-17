@@ -205,10 +205,11 @@ async def nutrition_parameters_page(request: Request):
 async def process_nutrition_parameters(
     request: Request,
     target_calories: float = Form(...),
-    target_protein: float = Form(...),
-    target_fat: float = Form(...),
-    target_carbs: float = Form(...),
-    greens_weight: float = Form(...)
+    target_protein: float = Form(0),
+    target_fat: float = Form(0),
+    target_carbs: float = Form(0),
+    greens_weight: float = Form(0),
+    cooking_tags: str = Form("")
 ):
     """Обработка параметров КБЖУ и генерация рецепта"""
     # Валидация диапазонов
@@ -218,25 +219,26 @@ async def process_nutrition_parameters(
             detail="Калории должны быть от 0 до 10000"
         )
 
-    if not (0 <= target_protein <= 1000):
+    # Опциональные параметры - проверяем только если указаны
+    if target_protein > 0 and not (0 < target_protein <= 1000):
         raise HTTPException(
             status_code=400,
             detail="Белки должны быть от 0 до 1000 г"
         )
 
-    if not (0 <= target_fat <= 1000):
+    if target_fat > 0 and not (0 < target_fat <= 1000):
         raise HTTPException(
             status_code=400,
             detail="Жиры должны быть от 0 до 1000 г"
         )
 
-    if not (0 <= target_carbs <= 1000):
+    if target_carbs > 0 and not (0 < target_carbs <= 1000):
         raise HTTPException(
             status_code=400,
             detail="Углеводы должны быть от 0 до 1000 г"
         )
 
-    if not (0 <= greens_weight <= 2000):
+    if greens_weight > 0 and not (0 < greens_weight <= 2000):
         raise HTTPException(
             status_code=400,
             detail="Вес растительности должен быть от 0 до 2000 г"
@@ -254,19 +256,34 @@ async def process_nutrition_parameters(
 
     # Формируем список ингредиентов
     ingredients = analysis.get("ingredients", [])
+
+    # Добавляем уточнения пользователя
     if clarifications:
         ingredients.append(f"Уточнения: {clarifications}")
 
+    # Добавляем предпочтения по приготовлению
+    if cooking_tags:
+        ingredients.append(f"Способы приготовления: {cooking_tags}")
+
+    # Формируем параметры для AI (только указанные пользователем)
+    ai_params = {
+        "ingredients": ingredients,
+        "target_calories": target_calories
+    }
+
+    # Добавляем опциональные параметры только если они указаны
+    if target_protein > 0:
+        ai_params["target_protein"] = target_protein
+    if target_fat > 0:
+        ai_params["target_fat"] = target_fat
+    if target_carbs > 0:
+        ai_params["target_carbs"] = target_carbs
+    if greens_weight > 0:
+        ai_params["greens_weight"] = greens_weight
+
     try:
         # Генерируем рецепт
-        recipe_data = await openai_service.generate_recipe(
-            ingredients=ingredients,
-            target_calories=target_calories,
-            target_protein=target_protein,
-            target_fat=target_fat,
-            target_carbs=target_carbs,
-            greens_weight=greens_weight
-        )
+        recipe_data = await openai_service.generate_recipe(**ai_params)
 
         # Валидация структуры данных рецепта
         if not recipe_data:
@@ -287,12 +304,12 @@ async def process_nutrition_parameters(
         recipe = await Recipe.create(
             photo_file_id=photo_path,  # Сохраняем путь к фото
             ingredients_detected=json.dumps(ingredients, ensure_ascii=False),
-            clarifications=clarifications,
+            clarifications=f"{clarifications or ''}; Cooking: {cooking_tags or ''}".strip('; '),
             target_calories=target_calories,
-            target_protein=target_protein,
-            target_fat=target_fat,
-            target_carbs=target_carbs,
-            greens_weight=greens_weight,
+            target_protein=target_protein if target_protein > 0 else 0,
+            target_fat=target_fat if target_fat > 0 else 0,
+            target_carbs=target_carbs if target_carbs > 0 else 0,
+            greens_weight=greens_weight if greens_weight > 0 else 0,
             recipe_text=json.dumps(recipe_data, ensure_ascii=False),
             calculated_calories=float(nutrition['calories']),
             calculated_protein=float(nutrition['protein_g']),

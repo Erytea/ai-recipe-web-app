@@ -1,226 +1,487 @@
-{% extends "layout.html" %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Параметры - AI Recipe</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <style>
+        body {
+            background: #1a1a1a;
+            color: #ffffff;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            min-height: 100vh;
+            padding: 2rem;
+            margin: 0;
+        }
 
-{% block content %}
-<div class="container py-5 animate-fade-in">
-    <div class="row justify-content-center">
-        <div class="col-lg-10">
-            <!-- Progress Bar -->
-            <div class="mb-5">
-                <div class="row g-2">
-                    <div class="col-3">
-                        <div class="text-center p-3 rounded-lg animate-slide-up" style="background: var(--success); color: white;">
-                            <div class="mb-2">
-                                <i class="bi bi-check-circle-fill" style="font-size: 24px;"></i>
-                            </div>
-                            <div class="body-small fw-bold">ШАГ 1</div>
-                            <div class="body-small">Загрузка фото</div>
-                        </div>
-                    </div>
-                    <div class="col-3">
-                        <div class="text-center p-3 rounded-lg animate-slide-up" style="background: var(--success); color: white;">
-                            <div class="mb-2">
-                                <i class="bi bi-check-circle-fill" style="font-size: 24px;"></i>
-                            </div>
-                            <div class="body-small fw-bold">ШАГ 2</div>
-                            <div class="body-small">Анализ</div>
-                        </div>
-                    </div>
-                    <div class="col-3">
-                        <div class="text-center p-3 rounded-lg animate-slide-up" style="background: var(--primary); color: white;">
-                            <div class="mb-2">
-                                <i class="bi bi-calculator" style="font-size: 24px;"></i>
-                            </div>
-                            <div class="body-small fw-bold">ШАГ 3</div>
-                            <div class="body-small">Параметры</div>
-                        </div>
-                    </div>
-                    <div class="col-3">
-                        <div class="text-center p-3 rounded-lg animate-slide-up" style="background: var(--surface-hover); border: 2px solid var(--border);">
-                            <div class="mb-2">
-                                <i class="bi bi-star" style="font-size: 24px; color: var(--text-disabled);"></i>
-                            </div>
-                            <div class="body-small" style="color: var(--text-disabled);">ГОТОВО!</div>
-                            <div class="body-small" style="color: var(--text-disabled);">-</div>
-                        </div>
-                    </div>
+        .main-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .step-indicator {
+            font-size: 0.875rem;
+            color: #888;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .main-headline {
+            font-size: 2rem;
+            font-weight: 600;
+            color: #ffffff;
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+
+        .sub-headline {
+            font-size: 1rem;
+            color: #b0b0b0;
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .content-section {
+            background: #2a2a2a;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 1.5rem;
+        }
+
+        .calories-section {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .calories-input-container {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+
+        .calories-input {
+            background: #333;
+            border: 2px solid #576CED;
+            border-radius: 8px;
+            color: #ffffff;
+            font-size: 2rem;
+            font-weight: 600;
+            padding: 1rem 3rem 1rem 1rem;
+            width: 200px;
+            text-align: center;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        .calories-input:focus {
+            border-color: #7c8ce9;
+        }
+
+        .calories-unit {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #b0b0b0;
+            font-weight: 500;
+        }
+
+        .required-badge {
+            background: #dc3545;
+            color: white;
+            font-size: 0.75rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            margin-left: 0.5rem;
+        }
+
+        .cooking-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            margin-bottom: 2rem;
+        }
+
+        .tag-chip {
+            background: #333;
+            color: #e5e7eb;
+            border: 1px solid #444;
+            padding: 0.75rem 1.25rem;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .tag-chip:hover {
+            background: #444;
+            border-color: #555;
+        }
+
+        .tag-chip.selected {
+            background: #576CED;
+            border-color: #576CED;
+            color: white;
+        }
+
+        .advanced-toggle {
+            background: #333;
+            color: #e5e7eb;
+            border: 1px solid #444;
+            padding: 0.75rem 1.25rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.9rem;
+            width: 100%;
+            text-align: left;
+            margin-bottom: 1rem;
+        }
+
+        .advanced-toggle:hover {
+            background: #444;
+            border-color: #555;
+        }
+
+        .advanced-toggle.active {
+            background: #444;
+            border-color: #555;
+        }
+
+        .advanced-content {
+            display: none;
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #444;
+        }
+
+        .advanced-content.show {
+            display: block;
+        }
+
+        .advanced-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .input-group-advanced {
+            display: flex;
+            align-items: center;
+        }
+
+        .input-advanced {
+            background: #333;
+            border: 1px solid #444;
+            color: #ffffff;
+            padding: 0.5rem;
+            border-radius: 6px;
+            outline: none;
+            flex: 1;
+            margin-right: 0.5rem;
+        }
+
+        .input-advanced:focus {
+            border-color: #576CED;
+        }
+
+        .unit-text {
+            color: #b0b0b0;
+            font-size: 0.9rem;
+            min-width: 20px;
+        }
+
+        .preview-section {
+            display: none;
+            background: #333;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .preview-section.show {
+            display: block;
+        }
+
+        .preview-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .preview-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            text-align: center;
+        }
+
+        .preview-item {
+            padding: 0.5rem;
+        }
+
+        .preview-value {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #576CED;
+            margin-bottom: 0.25rem;
+        }
+
+        .preview-label {
+            font-size: 0.8rem;
+            color: #b0b0b0;
+        }
+
+        .cta-section {
+            text-align: center;
+            margin-top: 3rem;
+        }
+
+        .primary-btn {
+            background: #576CED;
+            color: white;
+            border: none;
+            padding: 1rem 3rem;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .primary-btn:hover {
+            background: #4a5fd5;
+            transform: translateY(-1px);
+        }
+
+        .primary-btn:disabled {
+            background: #444;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        @media (max-width: 768px) {
+            .advanced-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .preview-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .calories-input {
+                width: 150px;
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <div class="step-indicator">Шаг 3 из 3</div>
+
+        <h1 class="main-headline">Задай ограничения (по желанию)</h1>
+        <p class="sub-headline">Калории обязательны. Остальное можно пропустить.</p>
+
+        <div class="content-section">
+            <!-- Calories Section -->
+            <div class="calories-section">
+                <div class="calories-input-container">
+                    <input type="number" id="target_calories" name="target_calories"
+                           class="calories-input" placeholder="500" min="50" max="5000" required>
+                    <span class="calories-unit">ккал</span>
                 </div>
             </div>
 
-            <div class="card animate-scale-in">
-                <div class="card-body p-5">
-                    <div class="text-center mb-5">
-                        <div class="mb-3">
-                            <div class="rounded-circle d-inline-flex align-items-center justify-content-center"
-                                 style="width: 100px; height: 100px; background: var(--primary);">
-                                <i class="bi bi-calculator text-white" style="font-size: 40px;"></i>
-                            </div>
-                        </div>
-                        <h2 class="headline-large mt-3 mb-2">Настрой параметры питания</h2>
-                        <p class="body-large" style="color: var(--text-secondary);">
-                            Укажи желаемые калории и соотношение макронутриентов
-                        </p>
+            <!-- Cooking Tags Section -->
+            <h2 class="section-title">Как готовить?</h2>
+            <div class="cooking-tags">
+                <div class="tag-chip" data-tag="варить">варить</div>
+                <div class="tag-chip" data-tag="жарить">жарить</div>
+                <div class="tag-chip" data-tag="запекать">запекать</div>
+                <div class="tag-chip" data-tag="только сырое">только сырое</div>
+                <div class="tag-chip" data-tag="просто смешать">просто смешать</div>
+            </div>
+
+            <!-- Advanced Options Toggle -->
+            <button class="advanced-toggle" id="advancedToggle">
+                <i class="bi bi-chevron-down me-2"></i>
+                Хочу точнее настроить
+            </button>
+
+            <!-- Advanced Options Content -->
+            <div class="advanced-content" id="advancedContent">
+                <div class="advanced-grid">
+                    <div class="input-group-advanced">
+                        <input type="number" id="target_protein" name="target_protein"
+                               class="input-advanced" placeholder="Белки" min="0" max="500" step="0.5">
+                        <span class="unit-text">г</span>
                     </div>
+                    <div class="input-group-advanced">
+                        <input type="number" id="target_fat" name="target_fat"
+                               class="input-advanced" placeholder="Жиры" min="0" max="500" step="0.5">
+                        <span class="unit-text">г</span>
+                    </div>
+                    <div class="input-group-advanced">
+                        <input type="number" id="target_carbs" name="target_carbs"
+                               class="input-advanced" placeholder="Углеводы" min="0" max="1000" step="0.5">
+                        <span class="unit-text">г</span>
+                    </div>
+                    <div class="input-group-advanced">
+                        <input type="number" id="greens_weight" name="greens_weight"
+                               class="input-advanced" placeholder="Растительность" min="0" max="1000" step="10">
+                        <span class="unit-text">г</span>
+                    </div>
+                </div>
 
-                    <form method="post" action="/recipes/create/step3">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <h5 class="fw-bold mb-3">
-                                    <i class="bi bi-fire text-danger"></i> Энергетическая ценность
-                                </h5>
-
-                                <div class="mb-4">
-                                    <label for="target_calories" class="form-label">
-                                        Калории <span class="text-danger">*</span>
-                                    </label>
-                                    <div class="input-group">
-                                        <input type="number" class="form-control form-control-lg"
-                                               id="target_calories" name="target_calories"
-                                               min="50" max="2000" step="10" placeholder="500" required>
-                                        <span class="input-group-text">ккал</span>
-                                    </div>
-                                    <div class="form-text">Общее количество калорий в блюде</div>
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <h5 class="fw-bold mb-3">
-                                    <i class="bi bi-activity text-info"></i> Макронутриенты
-                                </h5>
-
-                                <div class="mb-3">
-                                    <label for="target_protein" class="form-label">
-                                        Белки <span class="text-danger">*</span>
-                                    </label>
-                                    <div class="input-group">
-                                        <input type="number" class="form-control" id="target_protein"
-                                               name="target_protein" min="0" max="200" step="0.5"
-                                               placeholder="30" required>
-                                        <span class="input-group-text">г</span>
-                                    </div>
-                                </div>
-
-                                <div class="mb-3">
-                                    <label for="target_fat" class="form-label">
-                                        Жиры <span class="text-danger">*</span>
-                                    </label>
-                                    <div class="input-group">
-                                        <input type="number" class="form-control" id="target_fat"
-                                               name="target_fat" min="0" max="200" step="0.5"
-                                               placeholder="20" required>
-                                        <span class="input-group-text">г</span>
-                                    </div>
-                                </div>
-
-                                <div class="mb-3">
-                                    <label for="target_carbs" class="form-label">
-                                        Углеводы <span class="text-danger">*</span>
-                                    </label>
-                                    <div class="input-group">
-                                        <input type="number" class="form-control" id="target_carbs"
-                                               name="target_carbs" min="0" max="300" step="0.5"
-                                               placeholder="40" required>
-                                        <span class="input-group-text">г</span>
-                                    </div>
-                                </div>
-                            </div>
+                <!-- Preview Section (only shown when values are entered) -->
+                <div class="preview-section" id="previewSection">
+                    <h3 class="preview-title">Предварительный расчёт</h3>
+                    <div class="preview-grid">
+                        <div class="preview-item">
+                            <div class="preview-value" id="preview-calories">-</div>
+                            <div class="preview-label">ккал</div>
                         </div>
-
-                        <div class="row mt-4">
-                            <div class="col-12">
-                                <h5 class="fw-bold mb-3">
-                                    <i class="bi bi-leaf text-success"></i> Растительность
-                                </h5>
-
-                                <div class="mb-4">
-                                    <label for="greens_weight" class="form-label">
-                                        Количество зелени/овощей/фруктов <span class="text-danger">*</span>
-                                    </label>
-                                    <div class="input-group">
-                                        <input type="number" class="form-control form-control-lg"
-                                               id="greens_weight" name="greens_weight"
-                                               min="0" max="1000" step="10" placeholder="100" required>
-                                        <span class="input-group-text">г</span>
-                                    </div>
-                                    <div class="form-text">
-                                        Сколько грамм растительной пищи включить в рецепт (зелень, овощи, фрукты)
-                                    </div>
-                                </div>
-                            </div>
+                        <div class="preview-item">
+                            <div class="preview-value" id="preview-protein">-</div>
+                            <div class="preview-label">белки</div>
                         </div>
-
-                        <!-- Preview Card -->
-                        <div class="card bg-light mb-4">
-                            <div class="card-body">
-                                <h6 class="card-title">
-                                    <i class="bi bi-eye"></i> Предварительный расчёт
-                                </h6>
-                                <div class="row text-center">
-                                    <div class="col-3">
-                                        <div class="fw-bold text-danger" id="preview-calories">-</div>
-                                        <small class="text-muted">ккал</small>
-                                    </div>
-                                    <div class="col-3">
-                                        <div class="fw-bold text-primary" id="preview-protein">-</div>
-                                        <small class="text-muted">белки</small>
-                                    </div>
-                                    <div class="col-3">
-                                        <div class="fw-bold text-warning" id="preview-fat">-</div>
-                                        <small class="text-muted">жиры</small>
-                                    </div>
-                                    <div class="col-3">
-                                        <div class="fw-bold text-info" id="preview-carbs">-</div>
-                                        <small class="text-muted">углеводы</small>
-                                    </div>
-                                </div>
-                            </div>
+                        <div class="preview-item">
+                            <div class="preview-value" id="preview-fat">-</div>
+                            <div class="preview-label">жиры</div>
                         </div>
-
-                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                            <a href="/recipes/create/step2" class="btn btn-outline-secondary">
-                                <i class="bi bi-arrow-left"></i> Назад
-                            </a>
-                            <button type="submit" class="btn btn-success btn-lg px-5">
-                                <i class="bi bi-magic"></i> Создать рецепт
-                            </button>
+                        <div class="preview-item">
+                            <div class="preview-value" id="preview-carbs">-</div>
+                            <div class="preview-label">углеводы</div>
                         </div>
-                    </form>
+                    </div>
                 </div>
             </div>
         </div>
+
+        <!-- CTA Section -->
+        <div class="cta-section">
+            <button class="primary-btn" id="createBtn" disabled>Создать рецепт</button>
+        </div>
     </div>
-</div>
 
-{% block scripts %}
-<script>
-// Обновление предварительного расчёта
-function updatePreview() {
-    const calories = parseFloat(document.getElementById('target_calories').value) || 0;
-    const protein = parseFloat(document.getElementById('target_protein').value) || 0;
-    const fat = parseFloat(document.getElementById('target_fat').value) || 0;
-    const carbs = parseFloat(document.getElementById('target_carbs').value) || 0;
+    <form id="recipeForm" method="post" action="/recipes/create/step3" style="display: none;">
+        <input type="hidden" id="form_target_calories" name="target_calories">
+        <input type="hidden" id="form_target_protein" name="target_protein">
+        <input type="hidden" id="form_target_fat" name="target_fat">
+        <input type="hidden" id="form_target_carbs" name="target_carbs">
+        <input type="hidden" id="form_greens_weight" name="greens_weight">
+        <input type="hidden" id="form_cooking_tags" name="cooking_tags">
+    </form>
 
-    document.getElementById('preview-calories').textContent = calories;
-    document.getElementById('preview-protein').textContent = protein + 'г';
-    document.getElementById('preview-fat').textContent = fat + 'г';
-    document.getElementById('preview-carbs').textContent = carbs + 'г';
-}
+    <script>
+        // Cooking tags selection
+        const tagChips = document.querySelectorAll('.tag-chip');
+        const selectedTags = new Set();
 
-// Слушатели событий для полей ввода
-document.getElementById('target_calories').addEventListener('input', updatePreview);
-document.getElementById('target_protein').addEventListener('input', updatePreview);
-document.getElementById('target_fat').addEventListener('input', updatePreview);
-document.getElementById('target_carbs').addEventListener('input', updatePreview);
+        tagChips.forEach(chip => {
+            chip.addEventListener('click', function() {
+                const tag = this.dataset.tag;
+                if (selectedTags.has(tag)) {
+                    selectedTags.delete(tag);
+                    this.classList.remove('selected');
+                } else {
+                    selectedTags.add(tag);
+                    this.classList.add('selected');
+                }
+                updateCreateButton();
+            });
+        });
 
-// Предустановленные значения
-document.getElementById('target_calories').value = '500';
-document.getElementById('target_protein').value = '30';
-document.getElementById('target_fat').value = '20';
-document.getElementById('target_carbs').value = '40';
-document.getElementById('greens_weight').value = '100';
-updatePreview();
-</script>
-{% endblock %}
-{% endblock %}
+        // Advanced options toggle
+        const advancedToggle = document.getElementById('advancedToggle');
+        const advancedContent = document.getElementById('advancedContent');
+
+        advancedToggle.addEventListener('click', function() {
+            const isActive = advancedContent.classList.contains('show');
+            if (isActive) {
+                advancedContent.classList.remove('show');
+                this.innerHTML = '<i class="bi bi-chevron-down me-2"></i>Хочу точнее настроить';
+                this.classList.remove('active');
+            } else {
+                advancedContent.classList.add('show');
+                this.innerHTML = '<i class="bi bi-chevron-up me-2"></i>Свернуть настройки';
+                this.classList.add('active');
+            }
+        });
+
+        // Calories input validation and button enable
+        const caloriesInput = document.getElementById('target_calories');
+        const createBtn = document.getElementById('createBtn');
+
+        caloriesInput.addEventListener('input', function() {
+            updateCreateButton();
+        });
+
+        function updateCreateButton() {
+            const hasCalories = caloriesInput.value.trim() !== '';
+            createBtn.disabled = !hasCalories;
+        }
+
+        // Preview update for advanced options
+        const advancedInputs = document.querySelectorAll('.input-advanced');
+        const previewSection = document.getElementById('previewSection');
+
+        advancedInputs.forEach(input => {
+            input.addEventListener('input', updatePreview);
+        });
+
+        function updatePreview() {
+            const calories = parseFloat(caloriesInput.value) || 0;
+            const protein = parseFloat(document.getElementById('target_protein').value) || 0;
+            const fat = parseFloat(document.getElementById('target_fat').value) || 0;
+            const carbs = parseFloat(document.getElementById('target_carbs').value) || 0;
+
+            // Show preview only if any advanced values are entered
+            const hasAdvancedValues = protein > 0 || fat > 0 || carbs > 0;
+            if (hasAdvancedValues) {
+                previewSection.classList.add('show');
+                document.getElementById('preview-calories').textContent = calories;
+                document.getElementById('preview-protein').textContent = protein + 'г';
+                document.getElementById('preview-fat').textContent = fat + 'г';
+                document.getElementById('preview-carbs').textContent = carbs + 'г';
+            } else {
+                previewSection.classList.remove('show');
+            }
+        }
+
+        // Form submission
+        createBtn.addEventListener('click', function() {
+            // Set form values
+            document.getElementById('form_target_calories').value = caloriesInput.value;
+            document.getElementById('form_target_protein').value = document.getElementById('target_protein').value || '';
+            document.getElementById('form_target_fat').value = document.getElementById('target_fat').value || '';
+            document.getElementById('form_target_carbs').value = document.getElementById('target_carbs').value || '';
+            document.getElementById('form_greens_weight').value = document.getElementById('greens_weight').value || '';
+            document.getElementById('form_cooking_tags').value = Array.from(selectedTags).join(',');
+
+            // Submit form
+            document.getElementById('recipeForm').submit();
+        });
+
+        // Initialize
+        updateCreateButton();
+        updatePreview();
+    </script>
+</body>
+</html>
 
 
 
