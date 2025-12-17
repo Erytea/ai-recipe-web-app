@@ -10,10 +10,13 @@
                 <h1 style="font-size: 3.5rem; font-weight: 700; margin-bottom: 1.5rem; line-height: 1.1;">
                     Сфотографируй продукты.<br>Получи рецепт под свои цели.
                 </h1>
-                <p style="font-size: 1.25rem; color: rgba(255,255,255,0.8); margin-bottom: 3rem; line-height: 1.6;">
+                <p style="font-size: 1.25rem; color: rgba(255,255,255,0.8); margin-bottom: 1rem; line-height: 1.6;">
                     ИИ распознаёт ингредиенты и автоматически считает КБЖУ.
                 </p>
-                <a href="/recipes/create" style="background: #c41e3a; color: white; padding: 1rem 2.5rem; text-decoration: none; border-radius: 50px; font-size: 1.125rem; font-weight: 600; display: inline-block; border: 2px solid #c41e3a; transition: all 0.3s ease;">
+                <p style="font-size: 1rem; color: rgba(255,255,255,0.65); margin-bottom: 3rem; line-height: 1.5;">
+                    Из того, что уже есть дома
+                </p>
+                <a href="/recipes/create" style="background: #c41e3a; color: white; padding: 1rem 2.5rem; text-decoration: none; border-radius: 50px; font-size: 1.125rem; font-weight: 600; display: inline-block; border: 2px solid #c41e3a; transition: all 0.3s ease; box-shadow: 0 4px 12px rgba(196, 30, 58, 0.3);">
                     Создать рецепт
                 </a>
             </div>
@@ -56,21 +59,24 @@
 </section>
 
 <!-- SECTION 2: HOW IT WORKS -->
-<section style="background: white; padding: 80px 0;">
+<section style="background: white; padding: 60px 0;">
     <div class="container">
         <div class="row">
             <div class="col-12 text-center mb-5">
-                <h2 style="font-size: 2.5rem; font-weight: 600; color: #333; margin-bottom: 3rem;">Как это работает</h2>
+                <h2 style="font-size: 2.5rem; font-weight: 600; color: #333; margin-bottom: 4rem;">Как это работает</h2>
             </div>
         </div>
         <div class="row text-center">
             <div class="col-md-4">
                 <div style="margin-bottom: 2rem;">
-                    <div style="width: 80px; height: 80px; background: #f5f5f5; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem;">
-                        <svg width="32" height="32" fill="currentColor" viewBox="0 0 16 16" style="color: #666;">
-                            <path d="M10.5 8.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"/>
-                            <path d="M2 4a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-1.172a2 2 0 0 1-1.414-.586l-.828-.828A2 2 0 0 0 9.172 2H6.828a2 2 0 0 0-1.414.586l-.828.828A2 2 0 0 1 3.172 4H2zm.5 2a.5.5 0 1 1 0-1 .5.5 0 0 1 0 1zm9 2.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0z"/>
-                        </svg>
+                    <div style="position: relative; width: 80px; height: 80px; margin: 0 auto 1.5rem;">
+                        <div style="position: absolute; top: -8px; left: -8px; width: 32px; height: 32px; background: #c41e3a; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 0.875rem; z-index: 1;">1</div>
+                        <div style="width: 80px; height: 80px; background: #f5f5f5; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                            <svg width="32" height="32" fill="currentColor" viewBox="0 0 16 16" style="color: #666;">
+                                <path d="M10.5 8.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"/>
+                                <path d="M2 4a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-1.172a2 2 0 0 1-1.414-.586l-.828-.828A2 2 0 0 0 9.172 2H6.828a2 2 0 0 0-1.414.586l-.828.828A2 2 0 0 1 3.172 4H2zm.5 2a.5.5 0 1 1 0-1 .5.5 0 0 1 0 1zm9 2.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0z"/>
+                            </svg>
+                        </div>
                     </div>
                     <h3 style="font-size: 1.25rem; font-weight: 600; color: #333; margin-bottom: 1rem;">Загрузи фото продуктов</h3>
                     <p style="color: #666; line-height: 1.6;">ИИ распознаёт ингредиенты автоматически</p>
@@ -78,11 +84,14 @@
             </div>
             <div class="col-md-4">
                 <div style="margin-bottom: 2rem;">
-                    <div style="width: 80px; height: 80px; background: #f5f5f5; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem;">
-                        <svg width="32" height="32" fill="currentColor" viewBox="0 0 16 16" style="color: #666;">
-                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-                            <path d="M8 4.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H7.5V4.5a.5.5 0 0 1 .5-.5z"/>
-                        </svg>
+                    <div style="position: relative; width: 80px; height: 80px; margin: 0 auto 1.5rem;">
+                        <div style="position: absolute; top: -8px; left: -8px; width: 32px; height: 32px; background: #c41e3a; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 0.875rem; z-index: 1;">2</div>
+                        <div style="width: 80px; height: 80px; background: #f5f5f5; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                            <svg width="32" height="32" fill="currentColor" viewBox="0 0 16 16" style="color: #666;">
+                                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                <path d="M8 4.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H7.5V4.5a.5.5 0 0 1 .5-.5z"/>
+                            </svg>
+                        </div>
                     </div>
                     <h3 style="font-size: 1.25rem; font-weight: 600; color: #333; margin-bottom: 1rem;">Укажи цель</h3>
                     <p style="color: #666; line-height: 1.6;">Калории, КБЖУ или просто что приготовить</p>
@@ -90,11 +99,14 @@
             </div>
             <div class="col-md-4">
                 <div style="margin-bottom: 2rem;">
-                    <div style="width: 80px; height: 80px; background: #f5f5f5; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem;">
-                        <svg width="32" height="32" fill="currentColor" viewBox="0 0 16 16" style="color: #666;">
-                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-                            <path d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z"/>
-                        </svg>
+                    <div style="position: relative; width: 80px; height: 80px; margin: 0 auto 1.5rem;">
+                        <div style="position: absolute; top: -8px; left: -8px; width: 32px; height: 32px; background: #c41e3a; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 0.875rem; z-index: 1;">3</div>
+                        <div style="width: 80px; height: 80px; background: #f5f5f5; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                            <svg width="32" height="32" fill="currentColor" viewBox="0 0 16 16" style="color: #666;">
+                                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                                <path d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z"/>
+                            </svg>
+                        </div>
                     </div>
                     <h3 style="font-size: 1.25rem; font-weight: 600; color: #333; margin-bottom: 1rem;">Получи рецепт</h3>
                     <p style="color: #666; line-height: 1.6;">Пошагово, с точными расчётами</p>
@@ -105,12 +117,12 @@
 </section>
 
 <!-- SECTION 3: VALUE PROPOSITION -->
-<section style="background: #f8f8f8; padding: 80px 0;">
+<section style="background: #f8f8f8; padding: 60px 0;">
     <div class="container">
         <div class="row">
             <div class="col-md-4 text-center">
                 <h3 style="font-size: 1.5rem; font-weight: 600; color: #333; margin-bottom: 1rem;">Точный расчёт КБЖУ</h3>
-                <p style="color: #666; line-height: 1.6;">Без ручного ввода и угадываний</p>
+                <p style="color: #666; line-height: 1.6;">Без ручного ввода</p>
             </div>
             <div class="col-md-4 text-center">
                 <h3 style="font-size: 1.5rem; font-weight: 600; color: #333; margin-bottom: 1rem;">Рецепты из того, что есть</h3>
@@ -125,7 +137,7 @@
 </section>
 
 <!-- SECTION 4: RESULT EXAMPLE -->
-<section style="background: white; padding: 80px 0;">
+<section style="background: white; padding: 60px 0;">
     <div class="container">
         <div class="row align-items-center">
             <div class="col-lg-6">
@@ -160,8 +172,8 @@
                 </div>
             </div>
             <div class="col-lg-6">
-                <p style="font-size: 1.125rem; color: #666; line-height: 1.6;">
-                    Пример рецепта, который ты получишь из обычного фото.
+                <p style="font-size: 1.125rem; color: #333; line-height: 1.6; font-weight: 500;">
+                    Вот что ты получишь из обычного фото.
                 </p>
             </div>
         </div>
@@ -174,13 +186,13 @@
         <h2 style="font-size: 3rem; font-weight: 600; margin-bottom: 1.5rem;">
             Готовить проще, чем кажется.
         </h2>
-        <p style="font-size: 1.25rem; color: rgba(255,255,255,0.8); margin-bottom: 3rem; max-width: 600px; margin-left: auto; margin-right: auto;">
+        <p style="font-size: 1.25rem; color: rgba(255,255,255,0.8); margin-bottom: 4rem; max-width: 600px; margin-left: auto; margin-right: auto;">
             Сфотографируй продукты и попробуй прямо сейчас.
         </p>
-        <a href="/recipes/create" style="background: #c41e3a; color: white; padding: 1rem 2.5rem; text-decoration: none; border-radius: 50px; font-size: 1.125rem; font-weight: 600; display: inline-block; border: 2px solid #c41e3a; transition: all 0.3s ease;">
+        <a href="/recipes/create" style="background: #c41e3a; color: white; padding: 1rem 2.5rem; text-decoration: none; border-radius: 50px; font-size: 1.125rem; font-weight: 600; display: inline-block; border: 2px solid #c41e3a; transition: all 0.3s ease; box-shadow: 0 4px 12px rgba(196, 30, 58, 0.3);">
             Создать рецепт
         </a>
-        <p style="font-size: 0.875rem; color: rgba(255,255,255,0.6); margin-top: 1rem;">
+        <p style="font-size: 0.875rem; color: rgba(255,255,255,0.65); margin-top: 1.5rem; letter-spacing: 0.01em;">
             Можно без регистрации
         </p>
     </div>
