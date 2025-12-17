@@ -1,186 +1,191 @@
 {% extends "layout.html" %}
 
 {% block content %}
-<!-- Hero Section - Full Width Image -->
-<section class="hero-overlay">
-    <img src="/static/images/hero-image.png" alt="Вкусные рецепты" class="hero-full-image animate-fade-in"
-         onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-    <div class="red-bg animate-fade-in" style="display:none; position: fixed; top: 0; left: 0; width: 100%; height: 100vh; z-index: 1;">
-        <div class="d-flex align-items-center justify-content-center h-100">
-            <i class="bi bi-camera-fill" style="font-size: 8rem; color: rgba(255,255,255,0.3);"></i>
-        </div>
-    </div>
-    <div class="hero-logo animate-slide-up">AI RECIPE</div>
-</section>
 
-<!-- Concept Section -->
-<section class="section-white">
+<!-- SECTION 1: HERO -->
+<section style="background: #1a1a1a; color: white; padding: 80px 0; min-height: 100vh; display: flex; align-items: center;">
     <div class="container">
-        <div class="row">
-            <div class="col-12 text-center">
-                <h2 class="section-title animate-fade-in">КОНЦЕПЦИЯ = ИИ + РЕЦЕПТЫ</h2>
-                <p class="section-subtitle animate-fade-in">Три простых шага к идеальному рецепту</p>
-            </div>
-        </div>
-        <div class="row g-4 mb-5">
-            <div class="col-md-4">
-                <div class="card animate-scale-in">
-                    <img src="/static/images/concept-1.jpg" alt="Загрузка фото" class="concept-image card-img-top"
-                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                    <div class="d-none align-items-center justify-content-center" style="height: 300px; background: var(--surface-hover); border-radius: var(--radius-lg) var(--radius-lg) 0 0;">
-                        <i class="bi bi-camera-fill" style="font-size: 4rem; color: var(--text-disabled);"></i>
-                    </div>
-                    <div class="card-body">
-                        <h5 class="title-large mb-3" style="color: var(--primary);">
-                            <span class="badge" style="background: var(--primary); color: white; padding: var(--space-1) var(--space-2); border-radius: var(--radius-full); margin-right: var(--space-2);">1</span>
-                            ЗАГРУЗИ ФОТО
-                        </h5>
-                        <p class="concept-text">
-                            Сфотографируй продукты, которые у тебя есть, и загрузи изображение в приложение.
-                            ИИ распознает все ингредиенты автоматически.
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card animate-scale-in">
-                    <img src="/static/images/concept-2.jpg" alt="Анализ ИИ" class="concept-image card-img-top"
-                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                    <div class="d-none align-items-center justify-content-center" style="height: 300px; background: var(--surface-hover); border-radius: var(--radius-lg) var(--radius-lg) 0 0;">
-                        <i class="bi bi-robot" style="font-size: 4rem; color: var(--text-disabled);"></i>
-                    </div>
-                    <div class="card-body">
-                        <h5 class="title-large mb-3" style="color: var(--primary);">
-                            <span class="badge" style="background: var(--secondary); color: white; padding: var(--space-1) var(--space-2); border-radius: var(--radius-full); margin-right: var(--space-2);">2</span>
-                            ИИ АНАЛИЗИРУЕТ
-                        </h5>
-                        <p class="concept-text">
-                            Искусственный интеллект распознает продукты, предлагает варианты уточнения
-                            и подбирает оптимальные рецепты на основе твоих предпочтений.
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card animate-scale-in">
-                    <img src="/static/images/concept-3.jpg" alt="Готовый рецепт" class="concept-image card-img-top"
-                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                    <div class="d-none align-items-center justify-content-center" style="height: 300px; background: var(--surface-hover); border-radius: var(--radius-lg) var(--radius-lg) 0 0;">
-                        <i class="bi bi-star-fill" style="font-size: 4rem; color: var(--text-disabled);"></i>
-                    </div>
-                    <div class="card-body">
-                        <h5 class="title-large mb-3" style="color: var(--primary);">
-                            <span class="badge" style="background: var(--success); color: white; padding: var(--space-1) var(--space-2); border-radius: var(--radius-full); margin-right: var(--space-2);">3</span>
-                            ПОЛУЧИ РЕЦЕПТ
-                        </h5>
-                        <p class="concept-text">
-                            Готовый рецепт с пошаговой инструкцией и точным расчетом калорий,
-                            белков, жиров и углеводов. Все готово к приготовлению!
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="text-center">
-            <a href="/recipes/create" class="learn-more animate-fade-in">
-                СОЗДАТЬ РЕЦЕПТ <i class="bi bi-arrow-right"></i>
-            </a>
-        </div>
-    </div>
-</section>
-
-<!-- Product Section -->
-<section class="section-white" style="background: var(--surface-hover);">
-    <div class="container">
-        <div class="row">
-            <div class="col-12 text-center">
-                <h2 class="section-title animate-fade-in">ПРОДУКТ</h2>
-                <p class="section-subtitle animate-fade-in">Персонализированные рецепты с точным расчетом КБЖУ</p>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-lg-10 mx-auto">
-                <div class="product-image-wrapper animate-scale-in">
-                    <img src="/static/images/product-detail.jpg" alt="Детали рецепта" class="product-image"
-                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                    <div class="d-none align-items-center justify-content-center" style="min-height: 400px; background: var(--surface); border-radius: var(--radius-xl);">
-                        <i class="bi bi-image" style="font-size: 6rem; color: var(--text-disabled);"></i>
-                    </div>
-                </div>
-                <div class="row g-4 mt-4">
-                    <div class="col-md-4 text-center">
-                        <div class="card animate-slide-up" style="border: none; background: transparent;">
-                            <div class="card-body">
-                                <div class="mb-3">
-                                    <div class="rounded-circle d-inline-flex align-items-center justify-content-center"
-                                         style="width: 60px; height: 60px; background: var(--primary);">
-                                        <i class="bi bi-camera text-white" style="font-size: 24px;"></i>
-                                    </div>
-                                </div>
-                                <h6 class="title-medium mb-2">ФОТО ПРОДУКТОВ</h6>
-                                <p class="body-small" style="color: var(--text-secondary);">Загрузи фото ингредиентов, которые у тебя есть</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4 text-center">
-                        <div class="card animate-slide-up" style="border: none; background: transparent;">
-                            <div class="card-body">
-                                <div class="mb-3">
-                                    <div class="rounded-circle d-inline-flex align-items-center justify-content-center"
-                                         style="width: 60px; height: 60px; background: var(--secondary);">
-                                        <i class="bi bi-calculator text-white" style="font-size: 24px;"></i>
-                                    </div>
-                                </div>
-                                <h6 class="title-medium mb-2">РАСЧЕТ КБЖУ</h6>
-                                <p class="body-small" style="color: var(--text-secondary);">Точный расчет калорий, белков, жиров и углеводов</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4 text-center">
-                        <div class="card animate-slide-up" style="border: none; background: transparent;">
-                            <div class="card-body">
-                                <div class="mb-3">
-                                    <div class="rounded-circle d-inline-flex align-items-center justify-content-center"
-                                         style="width: 60px; height: 60px; background: var(--success);">
-                                        <i class="bi bi-list-check text-white" style="font-size: 24px;"></i>
-                                    </div>
-                                </div>
-                                <h6 class="title-medium mb-2">ПОШАГОВАЯ ИНСТРУКЦИЯ</h6>
-                                <p class="body-small" style="color: var(--text-secondary);">Подробные шаги приготовления от ИИ</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="text-center mt-4">
-                    <a href="/recipes/create" class="learn-more animate-fade-in">
-                        СОЗДАТЬ РЕЦЕПТ <i class="bi bi-arrow-right"></i>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-
-<!-- CTA Section -->
-<section class="red-bg animate-fade-in" style="padding: var(--space-24) 0; color: white;">
-    <div class="container text-center">
-        <div class="row justify-content-center">
-            <div class="col-lg-8">
-                <h2 class="display-large mb-4 animate-slide-up" style="color: white; letter-spacing: var(--letter-spacing-wide);">
-                    ГОТОВ СОЗДАТЬ РЕЦЕПТ?
-                </h2>
-                <p class="body-large mb-5 animate-slide-up" style="color: rgba(255,255,255,0.9);">
-                    Присоединяйся к тысячам пользователей, которые уже используют AI Recipe Bot
-                    для создания вкусных и здоровых блюд.
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h1 style="font-size: 3.5rem; font-weight: 700; margin-bottom: 1.5rem; line-height: 1.1;">
+                    Сфотографируй продукты.<br>Получи рецепт под свои цели.
+                </h1>
+                <p style="font-size: 1.25rem; color: rgba(255,255,255,0.8); margin-bottom: 3rem; line-height: 1.6;">
+                    ИИ распознаёт ингредиенты и автоматически считает КБЖУ.
                 </p>
-                <a href="/recipes/create" class="btn btn-primary animate-scale-in" style="background: white; color: var(--primary); border-color: white;">
-                    СОЗДАТЬ РЕЦЕПТ
+                <a href="/recipes/create" style="background: #c41e3a; color: white; padding: 1rem 2.5rem; text-decoration: none; border-radius: 50px; font-size: 1.125rem; font-weight: 600; display: inline-block; border: 2px solid #c41e3a; transition: all 0.3s ease;">
+                    Создать рецепт
                 </a>
             </div>
+            <div class="col-lg-6 text-center">
+                <!-- Smartphone Mockup -->
+                <div style="position: relative; display: inline-block;">
+                    <div style="width: 280px; height: 580px; background: #000; border-radius: 30px; position: relative; margin: 0 auto; box-shadow: 0 20px 60px rgba(0,0,0,0.3);">
+                        <!-- Screen -->
+                        <div style="width: 260px; height: 560px; background: white; border-radius: 20px; position: absolute; top: 10px; left: 10px; overflow: hidden;">
+                            <!-- Status bar -->
+                            <div style="height: 40px; background: #f8f8f8; border-bottom: 1px solid #e0e0e0; display: flex; align-items: center; padding: 0 15px;">
+                                <div style="font-size: 12px; color: #666;">9:41</div>
+                                <div style="margin-left: auto; display: flex; gap: 5px;">
+                                    <div style="width: 15px; height: 6px; background: #666; border-radius: 3px;"></div>
+                                    <div style="width: 6px; height: 6px; background: #666; border-radius: 50%;"></div>
+                                </div>
+                            </div>
+                            <!-- Recipe content -->
+                            <div style="padding: 20px;">
+                                <h3 style="font-size: 18px; font-weight: 600; margin-bottom: 15px; color: #333;">Паста с овощами</h3>
+                                <img src="/static/images/hero-image.png" alt="Паста с овощами" style="width: 100%; height: 120px; object-fit: cover; border-radius: 8px; margin-bottom: 15px;">
+                                <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+                                    <div style="background: #e8f5e8; color: #2e7d32; padding: 4px 8px; border-radius: 12px; font-size: 12px; font-weight: 500;">320 ккал</div>
+                                    <div style="background: #fff3e0; color: #f57c00; padding: 4px 8px; border-radius: 12px; font-size: 12px; font-weight: 500;">25г Б</div>
+                                    <div style="background: #fce4ec; color: #c2185b; padding: 4px 8px; border-radius: 12px; font-size: 12px; font-weight: 500;">12г Ж</div>
+                                    <div style="background: #e3f2fd; color: #1976d2; padding: 4px 8px; border-radius: 12px; font-size: 12px; font-weight: 500;">45г У</div>
+                                </div>
+                                <div style="font-size: 14px; color: #666; line-height: 1.4;">
+                                    <div style="margin-bottom: 10px;"><strong>1.</strong> Отварите пасту согласно инструкции</div>
+                                    <div style="margin-bottom: 10px;"><strong>2.</strong> Обжарьте овощи на оливковом масле</div>
+                                    <div><strong>3.</strong> Смешайте и подавайте горячим</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </section>
+
+<!-- SECTION 2: HOW IT WORKS -->
+<section style="background: white; padding: 80px 0;">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 text-center mb-5">
+                <h2 style="font-size: 2.5rem; font-weight: 600; color: #333; margin-bottom: 3rem;">Как это работает</h2>
+            </div>
+        </div>
+        <div class="row text-center">
+            <div class="col-md-4">
+                <div style="margin-bottom: 2rem;">
+                    <div style="width: 80px; height: 80px; background: #f5f5f5; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem;">
+                        <svg width="32" height="32" fill="currentColor" viewBox="0 0 16 16" style="color: #666;">
+                            <path d="M10.5 8.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"/>
+                            <path d="M2 4a2 2 0 0 0-2 2v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-1.172a2 2 0 0 1-1.414-.586l-.828-.828A2 2 0 0 0 9.172 2H6.828a2 2 0 0 0-1.414.586l-.828.828A2 2 0 0 1 3.172 4H2zm.5 2a.5.5 0 1 1 0-1 .5.5 0 0 1 0 1zm9 2.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0z"/>
+                        </svg>
+                    </div>
+                    <h3 style="font-size: 1.25rem; font-weight: 600; color: #333; margin-bottom: 1rem;">Загрузи фото продуктов</h3>
+                    <p style="color: #666; line-height: 1.6;">ИИ распознаёт ингредиенты автоматически</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div style="margin-bottom: 2rem;">
+                    <div style="width: 80px; height: 80px; background: #f5f5f5; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem;">
+                        <svg width="32" height="32" fill="currentColor" viewBox="0 0 16 16" style="color: #666;">
+                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                            <path d="M8 4.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H7.5V4.5a.5.5 0 0 1 .5-.5z"/>
+                        </svg>
+                    </div>
+                    <h3 style="font-size: 1.25rem; font-weight: 600; color: #333; margin-bottom: 1rem;">Укажи цель</h3>
+                    <p style="color: #666; line-height: 1.6;">Калории, КБЖУ или просто что приготовить</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div style="margin-bottom: 2rem;">
+                    <div style="width: 80px; height: 80px; background: #f5f5f5; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.5rem;">
+                        <svg width="32" height="32" fill="currentColor" viewBox="0 0 16 16" style="color: #666;">
+                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                            <path d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z"/>
+                        </svg>
+                    </div>
+                    <h3 style="font-size: 1.25rem; font-weight: 600; color: #333; margin-bottom: 1rem;">Получи рецепт</h3>
+                    <p style="color: #666; line-height: 1.6;">Пошагово, с точными расчётами</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- SECTION 3: VALUE PROPOSITION -->
+<section style="background: #f8f8f8; padding: 80px 0;">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 text-center">
+                <h3 style="font-size: 1.5rem; font-weight: 600; color: #333; margin-bottom: 1rem;">Точный расчёт КБЖУ</h3>
+                <p style="color: #666; line-height: 1.6;">Без ручного ввода и угадываний</p>
+            </div>
+            <div class="col-md-4 text-center">
+                <h3 style="font-size: 1.5rem; font-weight: 600; color: #333; margin-bottom: 1rem;">Рецепты из того, что есть</h3>
+                <p style="color: #666; line-height: 1.6;">Без похода в магазин</p>
+            </div>
+            <div class="col-md-4 text-center">
+                <h3 style="font-size: 1.5rem; font-weight: 600; color: #333; margin-bottom: 1rem;">Пошаговая инструкция</h3>
+                <p style="color: #666; line-height: 1.6;">Коротко и по делу</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- SECTION 4: RESULT EXAMPLE -->
+<section style="background: white; padding: 80px 0;">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <div style="position: relative; display: inline-block;">
+                    <div style="width: 280px; height: 580px; background: #000; border-radius: 30px; position: relative; margin: 0 auto; box-shadow: 0 20px 60px rgba(0,0,0,0.3);">
+                        <div style="width: 260px; height: 560px; background: white; border-radius: 20px; position: absolute; top: 10px; left: 10px; overflow: hidden;">
+                            <div style="height: 40px; background: #f8f8f8; border-bottom: 1px solid #e0e0e0; display: flex; align-items: center; padding: 0 15px;">
+                                <div style="font-size: 12px; color: #666;">9:41</div>
+                                <div style="margin-left: auto; display: flex; gap: 5px;">
+                                    <div style="width: 15px; height: 6px; background: #666; border-radius: 3px;"></div>
+                                    <div style="width: 6px; height: 6px; background: #666; border-radius: 50%;"></div>
+                                </div>
+                            </div>
+                            <div style="padding: 20px;">
+                                <h3 style="font-size: 18px; font-weight: 600; margin-bottom: 15px; color: #333;">Салат с курицей и авокадо</h3>
+                                <img src="/static/images/product-detail.jpg" alt="Салат с курицей" style="width: 100%; height: 120px; object-fit: cover; border-radius: 8px; margin-bottom: 15px;">
+                                <div style="display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap;">
+                                    <div style="background: #e8f5e8; color: #2e7d32; padding: 4px 8px; border-radius: 12px; font-size: 12px; font-weight: 500;">280 ккал</div>
+                                    <div style="background: #fff3e0; color: #f57c00; padding: 4px 8px; border-radius: 12px; font-size: 12px; font-weight: 500;">32г Б</div>
+                                    <div style="background: #fce4ec; color: #c2185b; padding: 4px 8px; border-radius: 12px; font-size: 12px; font-weight: 500;">18г Ж</div>
+                                    <div style="background: #e3f2fd; color: #1976d2; padding: 4px 8px; border-radius: 12px; font-size: 12px; font-weight: 500;">8г У</div>
+                                </div>
+                                <div style="font-size: 14px; color: #666; line-height: 1.4;">
+                                    <div style="margin-bottom: 8px;"><strong>1.</strong> Нарежьте курицу кубиками</div>
+                                    <div style="margin-bottom: 8px;"><strong>2.</strong> Смешайте с авокадо и овощами</div>
+                                    <div style="margin-bottom: 8px;"><strong>3.</strong> Заправьте оливковым маслом</div>
+                                    <div><strong>4.</strong> Посолите и поперчите по вкусу</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <p style="font-size: 1.125rem; color: #666; line-height: 1.6;">
+                    Пример рецепта, который ты получишь из обычного фото.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- SECTION 5: FINAL CTA -->
+<section style="background: #1a1a1a; color: white; padding: 80px 0; text-align: center;">
+    <div class="container">
+        <h2 style="font-size: 3rem; font-weight: 600; margin-bottom: 1.5rem;">
+            Готовить проще, чем кажется.
+        </h2>
+        <p style="font-size: 1.25rem; color: rgba(255,255,255,0.8); margin-bottom: 3rem; max-width: 600px; margin-left: auto; margin-right: auto;">
+            Сфотографируй продукты и попробуй прямо сейчас.
+        </p>
+        <a href="/recipes/create" style="background: #c41e3a; color: white; padding: 1rem 2.5rem; text-decoration: none; border-radius: 50px; font-size: 1.125rem; font-weight: 600; display: inline-block; border: 2px solid #c41e3a; transition: all 0.3s ease;">
+            Создать рецепт
+        </a>
+        <p style="font-size: 0.875rem; color: rgba(255,255,255,0.6); margin-top: 1rem;">
+            Можно без регистрации
+        </p>
+    </div>
+</section>
+
 {% endblock %}
 
 
