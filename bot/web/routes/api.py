@@ -1,15 +1,16 @@
 """
-API endpoints для мобильных приложений
+API endpoints для генерации рецептов
 """
 
-from fastapi import APIRouter, Depends, HTTPException, status, UploadFile, File, Form
+from fastapi import APIRouter, HTTPException, status, UploadFile, File, Form
 from fastapi.responses import JSONResponse
 from typing import Optional, List
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel
 import json
+import os
+from pathlib import Path
 
-from bot.core.models import User, Recipe, MealPlan, RecipeBase
-from bot.web.dependencies import get_current_user
+from bot.core.models import Recipe, RecipeBase
 from bot.services.openai_service import openai_service
 from bot.services.recipe_search import (
     find_recipes_by_kbzhu,
@@ -19,6 +20,10 @@ from bot.services.recipe_search import (
 )
 
 router = APIRouter(prefix="/api/v1", tags=["api"])
+
+# Директория для загрузки изображений
+UPLOAD_DIR = Path("static/uploads")
+UPLOAD_DIR.mkdir(exist_ok=True)
 
 
 # --- Pydantic модели для валидации ---
@@ -85,162 +90,15 @@ class RecipeBaseResponse(BaseModel):
         from_attributes = True
 
 
-# --- Аутентификация ---
-
-@router.get("/me")
-async def get_current_user_info(
-    current_user: User = Depends(get_current_user)
-):
-    """Получить информацию о текущем пользователе"""
-    return {
-        "id": str(current_user.id),
-        "email": current_user.email,
-        "username": current_user.username,
-        "first_name": current_user.first_name,
-        "last_name": current_user.last_name,
-        "created_at": current_user.created_at.isoformat() if current_user.created_at else None
-    }
-
-
-# --- Рецепты пользователя ---
-
-@router.get("/recipes", response_model=List[RecipeResponse])
-async def get_user_recipes(
-    current_user: User = Depends(get_current_user),
-    limit: int = 20,
-    offset: int = 0
-):
-    """Получить список рецептов пользователя"""
-    recipes = await Recipe.filter(user=current_user).offset(offset).limit(limit).order_by("-created_at")
-    
-    result = []
-    for recipe in recipes:
-        recipe_data = json.loads(recipe.recipe_text) if recipe.recipe_text else {}
-        result.append(RecipeResponse(
-            id=str(recipe.id),
-            title=recipe_data.get("recipe_title"),
-            ingredients_detected=recipe.ingredients_detected,
-            clarifications=recipe.clarifications,
-            target_calories=recipe.target_calories,
-            target_protein=recipe.target_protein,
-            target_fat=recipe.target_fat,
-            target_carbs=recipe.target_carbs,
-            greens_weight=recipe.greens_weight,
-            recipe_text=recipe_data,
-            calculated_calories=recipe.calculated_calories,
-            calculated_protein=recipe.calculated_protein,
-            calculated_fat=recipe.calculated_fat,
-            calculated_carbs=recipe.calculated_carbs,
-            created_at=recipe.created_at.isoformat() if recipe.created_at else ""
-        ))
-    
-    return result
-
-
-@router.get("/recipes/{recipe_id}", response_model=RecipeResponse)
-async def get_user_recipe(
-    recipe_id: str,
-    current_user: User = Depends(get_current_user)
-):
-    """Получить конкретный рецепт пользователя"""
-    try:
-        recipe = await Recipe.get(id=recipe_id, user=current_user)
-        recipe_data = json.loads(recipe.recipe_text) if recipe.recipe_text else {}
-        
-        return RecipeResponse(
-            id=str(recipe.id),
-            title=recipe_data.get("recipe_title"),
-            ingredients_detected=recipe.ingredients_detected,
-            clarifications=recipe.clarifications,
-            target_calories=recipe.target_calories,
-            target_protein=recipe.target_protein,
-            target_fat=recipe.target_fat,
-            target_carbs=recipe.target_carbs,
-            greens_weight=recipe.greens_weight,
-            recipe_text=recipe_data,
-            calculated_calories=recipe.calculated_calories,
-            calculated_protein=recipe.calculated_protein,
-            calculated_fat=recipe.calculated_fat,
-            calculated_carbs=recipe.calculated_carbs,
-            created_at=recipe.created_at.isoformat() if recipe.created_at else ""
-        )
-    except Recipe.DoesNotExist:
-        raise HTTPException(status_code=404, detail="Рецепт не найден")
-
-
-# --- Планы питания ---
-
-@router.get("/meal-plans", response_model=List[MealPlanResponse])
-async def get_user_meal_plans(
-    current_user: User = Depends(get_current_user),
-    limit: int = 20,
-    offset: int = 0
-):
-    """Получить список планов питания пользователя"""
-    meal_plans = await MealPlan.filter(user=current_user).offset(offset).limit(limit).order_by("-created_at")
-    
-    result = []
-    for meal_plan in meal_plans:
-        meal_plan_data = json.loads(meal_plan.meal_plan_text) if meal_plan.meal_plan_text else {}
-        result.append(MealPlanResponse(
-            id=str(meal_plan.id),
-            meals_count=meal_plan.meals_count,
-            target_daily_calories=meal_plan.target_daily_calories,
-            target_daily_protein=meal_plan.target_daily_protein,
-            target_daily_fat=meal_plan.target_daily_fat,
-            target_daily_carbs=meal_plan.target_daily_carbs,
-            daily_greens_weight=meal_plan.daily_greens_weight,
-            meal_plan_text=meal_plan_data,
-            calculated_daily_calories=meal_plan.calculated_daily_calories,
-            calculated_daily_protein=meal_plan.calculated_daily_protein,
-            calculated_daily_fat=meal_plan.calculated_daily_fat,
-            calculated_daily_carbs=meal_plan.calculated_daily_carbs,
-            created_at=meal_plan.created_at.isoformat() if meal_plan.created_at else ""
-        ))
-    
-    return result
-
-
-@router.get("/meal-plans/{meal_plan_id}", response_model=MealPlanResponse)
-async def get_user_meal_plan(
-    meal_plan_id: str,
-    current_user: User = Depends(get_current_user)
-):
-    """Получить конкретный план питания пользователя"""
-    try:
-        meal_plan = await MealPlan.get(id=meal_plan_id, user=current_user)
-        meal_plan_data = json.loads(meal_plan.meal_plan_text) if meal_plan.meal_plan_text else {}
-        
-        return MealPlanResponse(
-            id=str(meal_plan.id),
-            meals_count=meal_plan.meals_count,
-            target_daily_calories=meal_plan.target_daily_calories,
-            target_daily_protein=meal_plan.target_daily_protein,
-            target_daily_fat=meal_plan.target_daily_fat,
-            target_daily_carbs=meal_plan.target_daily_carbs,
-            daily_greens_weight=meal_plan.daily_greens_weight,
-            meal_plan_text=meal_plan_data,
-            calculated_daily_calories=meal_plan.calculated_daily_calories,
-            calculated_daily_protein=meal_plan.calculated_daily_protein,
-            calculated_daily_fat=meal_plan.calculated_daily_fat,
-            calculated_daily_carbs=meal_plan.calculated_daily_carbs,
-            created_at=meal_plan.created_at.isoformat() if meal_plan.created_at else ""
-        )
-    except MealPlan.DoesNotExist:
-        raise HTTPException(status_code=404, detail="План питания не найден")
 
 
 # --- Общая база рецептов ---
 
 @router.get("/recipes-base", response_model=List[RecipeBaseResponse])
-async def get_base_recipes(
-    current_user: User = Depends(get_current_user),
-    limit: int = 20,
-    offset: int = 0
-):
+async def get_base_recipes(limit: int = 20, offset: int = 0):
     """Получить список рецептов из общей базы"""
     recipes = await RecipeBase.all().offset(offset).limit(limit).order_by("-created_at")
-    
+
     result = []
     for recipe in recipes:
         result.append(RecipeBaseResponse(
@@ -258,19 +116,16 @@ async def get_base_recipes(
             notes=recipe.notes,
             created_at=recipe.created_at.isoformat() if recipe.created_at else ""
         ))
-    
+
     return result
 
 
 @router.get("/recipes-base/{recipe_id}", response_model=RecipeBaseResponse)
-async def get_base_recipe(
-    recipe_id: str,
-    current_user: User = Depends(get_current_user)
-):
+async def get_base_recipe(recipe_id: str):
     """Получить конкретный рецепт из общей базы"""
     try:
         recipe = await RecipeBase.get(id=recipe_id)
-        
+
         return RecipeBaseResponse(
             id=str(recipe.id),
             title=recipe.title,
@@ -292,7 +147,6 @@ async def get_base_recipe(
 
 @router.post("/recipes-base/search")
 async def search_base_recipes(
-    current_user: User = Depends(get_current_user),
     search_type: str = Form(...),
     query: Optional[str] = Form(None),
     calories: Optional[float] = Form(None),
@@ -303,7 +157,7 @@ async def search_base_recipes(
 ):
     """Поиск рецептов в общей базе"""
     recipes = []
-    
+
     if search_type == "kbzhu" and calories:
         recipes = await find_recipes_by_kbzhu(
             target_calories=calories,
@@ -316,7 +170,7 @@ async def search_base_recipes(
         recipes = await find_recipes_by_tags(tag_list)
     elif search_type == "title" and query:
         recipes = await find_recipes_by_title(query)
-    
+
     result = []
     for recipe in recipes:
         result.append(RecipeBaseResponse(
@@ -334,18 +188,15 @@ async def search_base_recipes(
             notes=recipe.notes,
             created_at=recipe.created_at.isoformat() if recipe.created_at else ""
         ))
-    
+
     return result
 
 
 @router.get("/recipes-base/random", response_model=List[RecipeBaseResponse])
-async def get_random_base_recipes(
-    current_user: User = Depends(get_current_user),
-    limit: int = 5
-):
+async def get_random_base_recipes(limit: int = 5):
     """Получить случайные рецепты из общей базы"""
     recipes = await get_random_recipes(limit=limit)
-    
+
     result = []
     for recipe in recipes:
         result.append(RecipeBaseResponse(
@@ -363,6 +214,153 @@ async def get_random_base_recipes(
             notes=recipe.notes,
             created_at=recipe.created_at.isoformat() if recipe.created_at else ""
         ))
-    
+
     return result
+
+
+# --- Генерация рецептов ---
+
+@router.post("/generate-recipe")
+async def generate_recipe(
+    photo: UploadFile = File(...),
+    clarifications: str = Form(""),
+    target_calories: float = Form(...),
+    target_protein: float = Form(...),
+    target_fat: float = Form(...),
+    target_carbs: float = Form(...),
+    greens_weight: float = Form(...)
+):
+    """Генерировать рецепт на основе фото"""
+    from bot.core.config import settings
+
+    # Проверка типа файла
+    if not photo.content_type or not photo.content_type.startswith('image/'):
+        raise HTTPException(
+            status_code=400,
+            detail="Файл должен быть изображением (JPEG, PNG, WebP)"
+        )
+
+    # Проверка расширения
+    file_extension = os.path.splitext(photo.filename)[1].lower()
+    allowed_extensions = ['.jpg', '.jpeg', '.png', '.webp']
+    if file_extension not in allowed_extensions:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Неподдерживаемый формат. Разрешены: {', '.join(allowed_extensions)}"
+        )
+
+    # Читаем файл
+    content = await photo.read()
+    file_size = len(content)
+
+    # Проверка размера
+    if file_size > settings.max_upload_size:
+        max_size_mb = settings.max_upload_size / 1024 / 1024
+        raise HTTPException(
+            status_code=400,
+            detail=f"Файл слишком большой. Максимальный размер: {max_size_mb:.1f} МБ"
+        )
+
+    # Валидация параметров
+    if not (0 < target_calories <= 10000):
+        raise HTTPException(
+            status_code=400,
+            detail="Калории должны быть от 0 до 10000"
+        )
+
+    if not (0 <= target_protein <= 1000):
+        raise HTTPException(
+            status_code=400,
+            detail="Белки должны быть от 0 до 1000 г"
+        )
+
+    if not (0 <= target_fat <= 1000):
+        raise HTTPException(
+            status_code=400,
+            detail="Жиры должны быть от 0 до 1000 г"
+        )
+
+    if not (0 <= target_carbs <= 1000):
+        raise HTTPException(
+            status_code=400,
+            detail="Углеводы должны быть от 0 до 1000 г"
+        )
+
+    if not (0 <= greens_weight <= 2000):
+        raise HTTPException(
+            status_code=400,
+            detail="Вес растительности должен быть от 0 до 2000 г"
+        )
+
+    try:
+        # Анализируем фото
+        analysis = await openai_service.analyze_food_image(content)
+
+        # Формируем список ингредиентов
+        ingredients = analysis.get("ingredients", [])
+        if clarifications:
+            ingredients.append(f"Уточнения: {clarifications}")
+
+        # Генерируем рецепт
+        recipe_data = await openai_service.generate_recipe(
+            ingredients=ingredients,
+            target_calories=target_calories,
+            target_protein=target_protein,
+            target_fat=target_fat,
+            target_carbs=target_carbs,
+            greens_weight=greens_weight
+        )
+
+        # Сохраняем рецепт в БД
+        recipe = await Recipe.create(
+            photo_file_id="",  # Не сохраняем фото в файловой системе
+            ingredients_detected=json.dumps(ingredients, ensure_ascii=False),
+            clarifications=clarifications,
+            target_calories=target_calories,
+            target_protein=target_protein,
+            target_fat=target_fat,
+            target_carbs=target_carbs,
+            greens_weight=greens_weight,
+            recipe_text=json.dumps(recipe_data, ensure_ascii=False),
+            calculated_calories=recipe_data['calculated_nutrition']['calories'],
+            calculated_protein=recipe_data['calculated_nutrition']['protein_g'],
+            calculated_fat=recipe_data['calculated_nutrition']['fat_g'],
+            calculated_carbs=recipe_data['calculated_nutrition']['carbs_g']
+        )
+
+        return {
+            "recipe_id": str(recipe.id),
+            "recipe": recipe_data,
+            "analysis": analysis
+        }
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Ошибка генерации рецепта: {str(e)}")
+
+
+@router.get("/recipe/{recipe_id}")
+async def get_recipe(recipe_id: str):
+    """Получить рецепт по ID"""
+    try:
+        recipe = await Recipe.get(id=recipe_id)
+        recipe_data = json.loads(recipe.recipe_text) if recipe.recipe_text else {}
+
+        return {
+            "id": str(recipe.id),
+            "recipe": recipe_data,
+            "ingredients_detected": recipe.ingredients_detected,
+            "clarifications": recipe.clarifications,
+            "target_calories": recipe.target_calories,
+            "target_protein": recipe.target_protein,
+            "target_fat": recipe.target_fat,
+            "target_carbs": recipe.target_carbs,
+            "greens_weight": recipe.greens_weight,
+            "calculated_calories": recipe.calculated_calories,
+            "calculated_protein": recipe.calculated_protein,
+            "calculated_fat": recipe.calculated_fat,
+            "calculated_carbs": recipe.calculated_carbs,
+            "created_at": recipe.created_at.isoformat() if recipe.created_at else ""
+        }
+    except Recipe.DoesNotExist:
+        raise HTTPException(status_code=404, detail="Рецепт не найден")
 

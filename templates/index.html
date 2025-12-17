@@ -1,34 +1,6 @@
 {% extends "layout.html" %}
 
 {% block content %}
-{% if user %}
-<!-- Welcome Section for Authenticated Users -->
-<section class="py-4" style="background-color: var(--surface-hover);">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-lg-8">
-                <div class="card animate-scale-in">
-                    <div class="card-body p-4 text-center">
-                        <h3 class="headline-medium mb-3" style="color: var(--primary);">Добро пожаловать, {{ user.email }}! 🎉</h3>
-                        <p class="body-large mb-4" style="color: var(--text-secondary);">Вы успешно зарегистрированы и авторизованы в системе.</p>
-                        <div class="d-flex justify-content-center gap-3 btn-group-mobile">
-                            <a href="/profile" class="btn btn-primary">
-                                <i class="bi bi-person"></i> Перейти в профиль
-                            </a>
-                            <a href="/recipes" class="btn btn-outline-primary">
-                                <i class="bi bi-journal-text"></i> Создать рецепт
-                            </a>
-                            <a href="/meal-plans" class="btn btn-outline-primary" style="border-color: var(--success); color: var(--success);">
-                                <i class="bi bi-calendar-check"></i> Планировать питание
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-{% endif %}
 <!-- Hero Section - Full Width Image -->
 <section class="hero-overlay">
     <img src="/static/images/hero-image.png" alt="Вкусные рецепты" class="hero-full-image animate-fade-in"
@@ -111,7 +83,7 @@
         </div>
         <div class="text-center">
             <a href="/recipes/create" class="learn-more animate-fade-in">
-                УЗНАТЬ БОЛЬШЕ <i class="bi bi-arrow-right"></i>
+                СОЗДАТЬ РЕЦЕПТ <i class="bi bi-arrow-right"></i>
             </a>
         </div>
     </div>
@@ -180,8 +152,8 @@
                     </div>
                 </div>
                 <div class="text-center mt-4">
-                    <a href="/recipes" class="learn-more animate-fade-in">
-                        УЗНАТЬ БОЛЬШЕ <i class="bi bi-arrow-right"></i>
+                    <a href="/recipes/create" class="learn-more animate-fade-in">
+                        СОЗДАТЬ РЕЦЕПТ <i class="bi bi-arrow-right"></i>
                     </a>
                 </div>
             </div>
@@ -189,47 +161,6 @@
     </div>
 </section>
 
-<!-- Stats Section -->
-{% if user %}
-<section class="section-white animate-fade-in">
-    <div class="container">
-        <div class="row text-center">
-            <div class="col-md-3 mb-4 mb-md-0">
-                <div class="card animate-scale-in" style="border: none; background: transparent;">
-                    <div class="card-body">
-                        <div class="display-medium mb-2" style="color: var(--primary); font-weight: var(--font-weight-black);">{{ recipes_count or 0 }}</div>
-                        <p class="body-medium mb-0" style="color: var(--text-secondary);">Созданных рецептов</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3 mb-4 mb-md-0">
-                <div class="card animate-scale-in" style="border: none; background: transparent;">
-                    <div class="card-body">
-                        <div class="display-medium mb-2" style="color: var(--primary); font-weight: var(--font-weight-black);">{{ meal_plans_count or 0 }}</div>
-                        <p class="body-medium mb-0" style="color: var(--text-secondary);">Планов питания</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3 mb-4 mb-md-0">
-                <div class="card animate-scale-in" style="border: none; background: transparent;">
-                    <div class="card-body">
-                        <div class="display-medium mb-2" style="color: var(--secondary); font-weight: var(--font-weight-black);">437</div>
-                        <p class="body-medium mb-0" style="color: var(--text-secondary);">Продуктов в базе</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="card animate-scale-in" style="border: none; background: transparent;">
-                    <div class="card-body">
-                        <div class="display-medium mb-2" style="color: var(--success); font-weight: var(--font-weight-black);">24/7</div>
-                        <p class="body-medium mb-0" style="color: var(--text-secondary);">Доступность</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-{% endif %}
 
 <!-- CTA Section -->
 <section class="red-bg animate-fade-in" style="padding: var(--space-24) 0; color: white;">
@@ -243,20 +174,9 @@
                     Присоединяйся к тысячам пользователей, которые уже используют AI Recipe Bot
                     для создания вкусных и здоровых блюд.
                 </p>
-                {% if not user %}
-                <a href="/auth/register" class="btn btn-primary animate-scale-in" style="background: white; color: var(--primary); border-color: white;">
-                    НАЧАТЬ ПРЯМО СЕЙЧАС
+                <a href="/recipes/create" class="btn btn-primary animate-scale-in" style="background: white; color: var(--primary); border-color: white;">
+                    СОЗДАТЬ РЕЦЕПТ
                 </a>
-                {% else %}
-                <div class="d-flex justify-content-center gap-3 flex-wrap btn-group-mobile animate-slide-up">
-                    <a href="/recipes/create" class="btn btn-primary" style="background: white; color: var(--primary); border-color: white;">
-                        СОЗДАТЬ РЕЦЕПТ
-                    </a>
-                    <a href="/meal-plans/create" class="btn btn-outline-primary" style="border-color: white; color: white;">
-                        ПЛАН ПИТАНИЯ
-                    </a>
-                </div>
-                {% endif %}
             </div>
         </div>
     </div>

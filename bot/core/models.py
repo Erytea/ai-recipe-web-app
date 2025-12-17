@@ -3,39 +3,6 @@ from tortoise.models import Model
 import uuid
 
 
-class User(Model):
-    """Модель пользователя веб-приложения"""
-
-    id = fields.UUIDField(pk=True, default=uuid.uuid4, description="Уникальный ID пользователя")
-
-    # Аутентификация
-    email = fields.CharField(max_length=255, unique=True, description="Email пользователя")
-    password_hash = fields.CharField(max_length=255, description="Хэш пароля")
-
-    # Профиль
-    username = fields.CharField(
-        max_length=255, null=True, unique=True, description="Username пользователя"
-    )
-    first_name = fields.CharField(
-        max_length=255, null=True, description="Имя пользователя"
-    )
-    last_name = fields.CharField(
-        max_length=255, null=True, description="Фамилия пользователя"
-    )
-
-    # Мета
-    is_active = fields.BooleanField(default=True, description="Активен ли аккаунт")
-    is_admin = fields.BooleanField(default=False, description="Является ли пользователь администратором")
-    created_at = fields.DatetimeField(auto_now_add=True, description="Дата регистрации")
-    updated_at = fields.DatetimeField(auto_now=True, description="Дата последнего обновления")
-
-    class Meta:
-        table = "users"
-
-    def __str__(self):
-        return f"User {self.email} ({self.username or self.first_name})"
-
-
 class RecipeBase(Model):
     """Базовая библиотека рецептов (общая база)"""
 
@@ -89,10 +56,6 @@ class Recipe(Model):
     """Модель рецепта"""
 
     id = fields.UUIDField(pk=True, default=uuid.uuid4)
-    user = fields.ForeignKeyField(
-        "models.User", related_name="recipes", on_delete=fields.CASCADE,
-        to_field="id", description="Пользователь, создавший рецепт"
-    )
 
     # Исходные данные
     photo_file_id = fields.CharField(max_length=500, description="Путь к файлу фото")
@@ -120,7 +83,7 @@ class Recipe(Model):
         ordering = ["-created_at"]
 
     def __str__(self):
-        return f"Recipe {self.id} for user {self.user_id}"
+        return f"Recipe {self.id}"
 
     @property
     def kbzhu_formatted(self) -> str:
@@ -130,65 +93,6 @@ class Recipe(Model):
             f"Белки: {self.calculated_protein:.1f} г\n"
             f"Жиры: {self.calculated_fat:.1f} г\n"
             f"Углеводы: {self.calculated_carbs:.1f} г"
-        )
-
-
-class MealPlan(Model):
-    """Модель рациона на день"""
-
-    id = fields.UUIDField(pk=True, default=uuid.uuid4)
-    user = fields.ForeignKeyField(
-        "models.User", related_name="meal_plans", on_delete=fields.CASCADE,
-        to_field="id", description="Пользователь, создавший рацион"
-    )
-
-    # Исходные данные
-    photo_file_id = fields.CharField(max_length=500, description="Путь к файлу фото")
-    ingredients_detected = fields.TextField(description="Обнаруженные ингредиенты")
-    clarifications = fields.TextField(null=True, description="Уточнения пользователя")
-
-    # Параметры рациона
-    meals_count = fields.IntField(description="Количество приемов пищи")
-    target_daily_calories = fields.IntField(description="Желаемые калории за день")
-    target_daily_protein = fields.FloatField(description="Желаемый белок за день (г)")
-    target_daily_fat = fields.FloatField(description="Желаемые жиры за день (г)")
-    target_daily_carbs = fields.FloatField(description="Желаемые углеводы за день (г)")
-    daily_greens_weight = fields.FloatField(
-        description="Количество растительности за день (г)"
-    )
-
-    # Результат
-    meal_plan_text = fields.TextField(description="Текст рациона")
-    calculated_daily_calories = fields.FloatField(
-        description="Рассчитанные калории за день"
-    )
-    calculated_daily_protein = fields.FloatField(
-        description="Рассчитанный белок за день (г)"
-    )
-    calculated_daily_fat = fields.FloatField(
-        description="Рассчитанные жиры за день (г)"
-    )
-    calculated_daily_carbs = fields.FloatField(
-        description="Рассчитанные углеводы за день (г)"
-    )
-
-    created_at = fields.DatetimeField(auto_now_add=True, description="Дата создания")
-
-    class Meta:
-        table = "meal_plans"
-        ordering = ["-created_at"]
-
-    def __str__(self):
-        return f"MealPlan {self.id} for user {self.user_id}"
-
-    @property
-    def kbzhu_formatted(self) -> str:
-        """Форматированное КБЖУ за день"""
-        return (
-            f"Калории за день: {self.calculated_daily_calories:.0f} ккал\n"
-            f"Белки: {self.calculated_daily_protein:.1f} г\n"
-            f"Жиры: {self.calculated_daily_fat:.1f} г\n"
-            f"Углеводы: {self.calculated_daily_carbs:.1f} г"
         )
 
 

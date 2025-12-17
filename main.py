@@ -18,9 +18,7 @@ from tortoise import Tortoise
 
 from bot.core.config import settings
 from bot.core.models import init_db, close_db
-from bot.web.routes import auth, recipes, meal_plans, main, api, admin
-from bot.web.dependencies import get_current_user_optional
-from bot.core.models import User
+from bot.web.routes import recipes, main, api
 
 # Настройка логирования
 logging.basicConfig(
@@ -47,38 +45,6 @@ async def lifespan(app: FastAPI):
         await init_db(settings.database_url)
         logger.info("База данных инициализирована успешно")
 
-        # Создаем администратора при первом запуске
-        logger.info("Проверка администратора...")
-        from bot.core.models import User
-        admin_count = await User.filter(is_admin=True).count()
-        if admin_count == 0:
-            logger.info("Создание начального администратора...")
-            from bot.web.dependencies import get_password_hash
-
-            admin_email = os.getenv("ADMIN_EMAIL", "admin@railway.app")
-            admin_password = os.getenv("ADMIN_PASSWORD", "secure_admin_password_123")
-            admin_username = os.getenv("ADMIN_USERNAME", "admin")
-
-            # Проверяем, существует ли пользователь
-            existing = await User.get_or_none(email=admin_email)
-            if not existing:
-                hashed_password = get_password_hash(admin_password)
-                admin_user = await User.create(
-                    email=admin_email,
-                    password_hash=hashed_password,
-                    username=admin_username,
-                    first_name="Администратор",
-                    last_name="Railway",
-                    is_admin=True,
-                    is_active=True
-                )
-                logger.info(f"Создан администратор: {admin_email}")
-            else:
-                existing.is_admin = True
-                await existing.save()
-                logger.info(f"Назначен администратор: {admin_email}")
-        else:
-            logger.info("Администратор уже существует")
 
     except Exception as e:
         logger.error(f"Ошибка инициализации базы данных: {e}", exc_info=True)
@@ -120,54 +86,21 @@ templates = Jinja2Templates(directory="templates")
 
 # Подключаем роутеры
 app.include_router(main.router, tags=["main"])
-app.include_router(auth.router, prefix="/auth", tags=["auth"])
 app.include_router(recipes.router, prefix="/recipes", tags=["recipes"])
-app.include_router(meal_plans.router, prefix="/meal-plans", tags=["meal-plans"])
-app.include_router(admin.router, prefix="/admin", tags=["admin"])
 app.include_router(api.router, tags=["api"])
 
 
 @app.get("/", response_class=HTMLResponse)
-async def home(
-    request: Request,
-    current_user: User | None = Depends(get_current_user_optional)
-):
+async def home(request: Request):
     """Главная страница"""
-    from bot.web.flash_messages import get_flash_message
-    from bot.web.csrf import get_csrf_token, generate_csrf_token, set_csrf_token
-    
+
     context = {
         "request": request,
-        "user": current_user,
         "title": "AI Recipe Bot"
     }
-    
-    # Получаем или генерируем CSRF токен
-    csrf_token = get_csrf_token(request)
-    if not csrf_token:
-        csrf_token = generate_csrf_token()
-    context["csrf_token"] = csrf_token
-    
-    # Получаем flash сообщение
-    flash = get_flash_message(request)
-    if flash:
-        context["flash_message"] = flash[0]
-        context["flash_type"] = flash[1]
-    
-    # Подсчитываем статистику для авторизованного пользователя
-    if current_user:
-        from bot.core.models import Recipe, MealPlan
-        recipes_count = await Recipe.filter(user=current_user).count()
-        meal_plans_count = await MealPlan.filter(user=current_user).count()
-        context["recipes_count"] = recipes_count
-        context["meal_plans_count"] = meal_plans_count
-    
+
     response = templates.TemplateResponse("index.html", context)
-    
-    # Устанавливаем CSRF токен в cookie если его нет
-    if not get_csrf_token(request):
-        set_csrf_token(response, csrf_token)
-    
+
     return response
 
 
@@ -185,19 +118,15 @@ async def health_check():
 @app.get("/status")
 async def app_status():
     """Подробный статус приложения"""
-    from bot.core.models import User, Recipe, MealPlan
+    from bot.core.models import Recipe
 
     try:
-        users_count = await User.all().count()
         recipes_count = await Recipe.all().count()
-        meal_plans_count = await MealPlan.all().count()
 
         return {
             "status": "ok",
             "database": "connected",
-            "users_count": users_count,
             "recipes_count": recipes_count,
-            "meal_plans_count": meal_plans_count,
             "openai_api": "configured" if settings.openai_api_key else "not_configured"
         }
     except Exception as e:

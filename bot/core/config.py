@@ -12,13 +12,13 @@ class Settings(BaseSettings):
     database_url: str = "sqlite://db.sqlite3"
 
     # Web App Settings
-    secret_key: str = "debug-secret-key-change-in-production-min-32-chars-for-development-only-this-is-a-long-enough-key"  # Для debug режима
+    secret_key: str = "production-secret-key-change-in-production-min-32-chars-for-development-only-this-is-a-long-enough-key"  # Для debug режима
     debug: bool = False
     host: str = "0.0.0.0"
     port: int = int(os.getenv("PORT", 8000))
 
     # JWT Settings
-    jwt_secret_key: str = "debug-jwt-secret-key-change-in-production-this-is-a-long-enough-key-for-testing"  # Для debug режима
+    jwt_secret_key: str = "production-jwt-secret-key-change-in-production-this-is-a-long-enough-key-for-testing"  # Для debug режима
     jwt_algorithm: str = "HS256"
     jwt_expiration_hours: int = 24
 

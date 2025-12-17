@@ -377,40 +377,9 @@
                     <li class="nav-item">
                         <a class="nav-link" href="/">ГЛАВНАЯ</a>
                     </li>
-                    {% if user %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="/recipes">РЕЦЕПТЫ</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/meal-plans">ПЛАНЫ</a>
-                    </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/about">О ПРИЛОЖЕНИИ</a>
                     </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
-                            {{ user.email|upper }}
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="/profile">ПРОФИЛЬ</a></li>
-                            {% if user.is_admin %}
-                            <li><a class="dropdown-item" href="/admin">АДМИН ПАНЕЛЬ</a></li>
-                            {% endif %}
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="/auth/logout">ВЫЙТИ</a></li>
-                        </ul>
-                    </li>
-                    {% else %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="/about">О ПРИЛОЖЕНИИ</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/auth/login">ВОЙТИ</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/auth/register">РЕГИСТРАЦИЯ</a>
-                    </li>
-                    {% endif %}
                 </ul>
             </div>
         </div>
@@ -418,21 +387,6 @@
 
     <!-- Main Content -->
     <main>
-        <!-- Flash Messages -->
-        {% if flash_message %}
-        <div class="container mt-3">
-            <div class="alert alert-{{ flash_type }} alert-dismissible fade show" role="alert" id="flash-message">
-                <i class="bi bi-{% if flash_type == 'success' %}check-circle{% elif flash_type == 'error' %}x-circle{% elif flash_type == 'warning' %}exclamation-triangle{% else %}info-circle{% endif %}"></i>
-                {{ flash_message }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        </div>
-        <script>
-            // Удаляем flash сообщения из cookies после показа
-            document.cookie = "flash_message=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-            document.cookie = "flash_type=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-        </script>
-        {% endif %}
         
         {% block content %}{% endblock %}
     </main>

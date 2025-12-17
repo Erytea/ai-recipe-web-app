@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Пример компонентов в стиле Delfa</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <!-- AI Recipe Bot Design System -->
+    <link rel="stylesheet" href="/static/css/design-system.css">
+</head>
+<body>
+    <!-- Brand Identity Section -->
+    <section class="brand-identity-section">
+        <div class="container">
+            <div class="brand-identity-content">
+                <div class="brand-identity-block">
+                    <h3>Ключевые элементы бренда:</h3>
+                    <ul>
+                        <li>Чистые линии и минимализм</li>
+                        <li>Сферические формы как символы полноты и баланса</li>
+                        <li>Деликатные текстуры камня, создающие глубину и тактильность</li>
+                    </ul>
+                </div>
+                <div class="brand-identity-block">
+                    <p>Сфера — это не просто графический элемент: она символизирует идеальный баланс, необходимый в дизайне интерьера.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Hero Section with Overlay -->
+    <section class="hero-with-overlay">
+        <img src="/static/images/hero-image.png" alt="Hero" 
+             onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+        <div style="display:none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, var(--high-orange-100) 0%, var(--bright-blue-300) 100%); z-index: 1;"></div>
+        <div class="hero-overlay-content">
+            <h1 class="hero-overlay-title">КОМФОРТ В ТВОЕМ ДОМЕ</h1>
+            <p class="hero-overlay-subtitle">Слова были не нужны — дома сами раскрывали ему свою суть.</p>
+            <div class="hero-overlay-arrow">
+                <i class="bi bi-arrow-up-right" style="font-size: 24px;"></i>
+            </div>
+        </div>
+    </section>
+
+    <!-- Catalog Section -->
+    <section class="catalog-section">
+        <div class="container">
+            <h2 class="catalog-title">КАТАЛОГ</h2>
+            <div class="catalog-grid">
+                <!-- Product Item 1 -->
+                <div class="catalog-item">
+                    <img src="/static/images/product-detail.jpg" alt="Продукт 1" class="catalog-item-image"
+                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <div class="catalog-item-text" style="display:none;">КАТАЛОГ</div>
+                </div>
+                <!-- Product Item 2 -->
+                <div class="catalog-item">
+                    <img src="/static/images/concept-1.jpg" alt="Продукт 2" class="catalog-item-image"
+                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <div class="catalog-item-text" style="display:none;">КАТАЛОГ</div>
+                </div>
+                <!-- Product Item 3 -->
+                <div class="catalog-item">
+                    <div class="catalog-item-text">КАТАЛОГ</div>
+                </div>
+            </div>
+            <p class="catalog-description">
+                В поисках идеального комфорта он собрал оттенки закатов, текстуры старых стен, прохладу мрамора и тепло керамики. 
+                Все слилось в композиции, которые не просто заполняли пространство, а создавали особое настроение. 
+                Так родилось место, где стиль встречается с комфортом, а дом становится отражением характера.
+            </p>
+        </div>
+    </section>
+
+    <!-- Product Cards Section -->
+    <section class="product-cards-section">
+        <div class="container">
+            <h2 class="product-cards-title">ТЕБЕ ПОНРАВИТСЯ</h2>
+            <div class="product-cards-grid">
+                <!-- Product Card 1 -->
+                <div class="product-card">
+                    <img src="/static/images/concept-1.jpg" alt="Набор из 3 ваз" class="product-card-image"
+                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <div style="display:none; height: 280px; background: var(--surface-hover); align-items: center; justify-content: center;">
+                        <i class="bi bi-image" style="font-size: 3rem; color: var(--text-disabled);"></i>
+                    </div>
+                    <div class="product-card-body">
+                        <h3 class="product-card-title">Набор из 3 ваз</h3>
+                        <div class="product-card-price">7005</div>
+                    </div>
+                </div>
+                <!-- Product Card 2 -->
+                <div class="product-card">
+                    <img src="/static/images/concept-2.jpg" alt="Ваза для цветов 'терракота'" class="product-card-image"
+                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <div style="display:none; height: 280px; background: var(--surface-hover); align-items: center; justify-content: center;">
+                        <i class="bi bi-image" style="font-size: 3rem; color: var(--text-disabled);"></i>
+                    </div>
+                    <div class="product-card-body">
+                        <h3 class="product-card-title">Ваза для цветов "терракота"</h3>
+                        <div class="product-card-price">3005</div>
+                    </div>
+                </div>
+                <!-- Product Card 3 -->
+                <div class="product-card">
+                    <img src="/static/images/concept-3.jpg" alt="Ваза для цветов 'терракота' #2" class="product-card-image"
+                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <div style="display:none; height: 280px; background: var(--surface-hover); align-items: center; justify-content: center;">
+                        <i class="bi bi-image" style="font-size: 3rem; color: var(--text-disabled);"></i>
+                    </div>
+                    <div class="product-card-body">
+                        <h3 class="product-card-title">Ваза для цветов "терракота" #2</h3>
+                        <div class="product-card-price">1305</div>
+                    </div>
+                </div>
+                <!-- Product Card 4 -->
+                <div class="product-card">
+                    <img src="/static/images/product-detail.jpg" alt="Комплект постельного белья из хлопка" class="product-card-image"
+                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <div style="display:none; height: 280px; background: var(--surface-hover); align-items: center; justify-content: center;">
+                        <i class="bi bi-image" style="font-size: 3rem; color: var(--text-disabled);"></i>
+                    </div>
+                    <div class="product-card-body">
+                        <h3 class="product-card-title">Комплект постельного белья из хлопка</h3>
+                        <div class="product-card-price">2306</div>
+                    </div>
+                </div>
+            </div>
+            <div class="product-cards-cta">
+                <a href="#" class="product-cards-button">СМОТРЕТЬ КАТАЛОГ</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+
