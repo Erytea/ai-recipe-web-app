@@ -6,6 +6,7 @@ from datetime import datetime, timedelta
 from typing import Optional
 from uuid import UUID
 import hashlib
+import base64
 
 from fastapi import Depends, HTTPException, status, Cookie
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
@@ -22,29 +23,44 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 security = HTTPBearer(auto_error=False)
 
 
-def _prehash_password(password: str) -> bytes:
+def _prehash_password(password: str) -> str:
     """
     Предварительно хеширует пароль через SHA-256 для обхода ограничения bcrypt в 72 байта.
-    Возвращает байты (не строку), чтобы гарантировать правильную обработку.
+    Использует base64 кодирование для компактности (32 байта SHA-256 = 44 символа base64).
     """
     # Кодируем пароль в UTF-8 байты
     password_bytes = password.encode('utf-8')
     
-    # Хешируем пароль через SHA-256 (всегда 32 байта, что меньше 72 байт)
+    # Хешируем пароль через SHA-256 (всегда 32 байта)
     sha256_digest = hashlib.sha256(password_bytes).digest()
     
-    # Возвращаем байты напрямую (32 байта)
-    return sha256_digest
+    # Кодируем в base64 (32 байта = 44 символа base64, что меньше 72 байт в UTF-8)
+    # Используем base64.urlsafe_b64encode для избежания проблем с символами
+    prehashed = base64.urlsafe_b64encode(sha256_digest).decode('ascii')
+    
+    # Убеждаемся, что длина в байтах не превышает 72
+    prehashed_bytes = prehashed.encode('utf-8')
+    if len(prehashed_bytes) > 72:
+        # Это не должно произойти (44 < 72), но на всякий случай усекаем
+        prehashed = prehashed_bytes[:72].decode('utf-8', errors='ignore')
+    
+    return prehashed
 
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     """Проверяет пароль"""
     try:
         # Предварительно хешируем пароль через SHA-256 перед проверкой через bcrypt
-        # Преобразуем байты в hex строку для совместимости с bcrypt
-        prehashed_bytes = _prehash_password(plain_password)
-        prehashed = prehashed_bytes.hex()  # hexdigest всегда 64 символа = 64 байта в UTF-8
-        return pwd_context.verify(prehashed, hashed_password)
+        # Используем новый метод (base64)
+        prehashed = _prehash_password(plain_password)
+        if pwd_context.verify(prehashed, hashed_password):
+            return True
+        
+        # Обратная совместимость: пробуем старый метод (hex) для существующих паролей
+        password_bytes = plain_password.encode('utf-8')
+        sha256_digest = hashlib.sha256(password_bytes).digest()
+        prehashed_hex = sha256_digest.hex()  # Старый метод
+        return pwd_context.verify(prehashed_hex, hashed_password)
     except Exception:
         return False
 
@@ -57,20 +73,12 @@ def get_password_hash(password: str) -> str:
     
     # Предварительно хешируем пароль через SHA-256 перед bcrypt
     # Это позволяет использовать пароли любой длины
-    prehashed_bytes = _prehash_password(password)
-    # Преобразуем байты в hex строку (64 символа = 64 байта в UTF-8, что меньше 72)
-    prehashed = prehashed_bytes.hex()
+    prehashed = _prehash_password(password)
     
-    # Дополнительная проверка: убеждаемся, что длина в байтах не превышает 72
-    prehashed_bytes_utf8 = prehashed.encode('utf-8')
-    if len(prehashed_bytes_utf8) > 72:
-        # Это не должно произойти, но на всякий случай усекаем
-        prehashed = prehashed_bytes_utf8[:72].decode('utf-8', errors='ignore')
-    
-    # Финальная проверка перед передачей в bcrypt
+    # Финальная проверка: убеждаемся, что длина в байтах не превышает 72
     final_bytes = prehashed.encode('utf-8')
     if len(final_bytes) > 72:
-        # Если все равно превышает, усекаем до 72 байт
+        # Если все равно превышает (не должно произойти), усекаем до 72 байт
         final_bytes = final_bytes[:72]
         prehashed = final_bytes.decode('utf-8', errors='ignore')
     
@@ -78,9 +86,10 @@ def get_password_hash(password: str) -> str:
         return pwd_context.hash(prehashed)
     except ValueError as e:
         # Если все равно возникает ошибка о длине, используем более короткий хеш
-        if "72" in str(e) or "bytes" in str(e).lower():
-            # Используем только первые 32 байта хеша (16 hex символов)
-            short_hash = prehashed[:16]
+        error_str = str(e).lower()
+        if "72" in str(e) or "bytes" in error_str or "truncate" in error_str:
+            # Используем только первые 50 символов (все еще меньше 72 байт)
+            short_hash = prehashed[:50]
             return pwd_context.hash(short_hash)
         raise
 
