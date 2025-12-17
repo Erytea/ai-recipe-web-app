@@ -2,6 +2,7 @@
 Роуты для работы с рецептами
 """
 
+import base64
 import json
 import logging
 import os
@@ -31,6 +32,46 @@ logger = logging.getLogger(__name__)
 # Директория для загрузки изображений
 UPLOAD_DIR = Path("static/uploads")
 UPLOAD_DIR.mkdir(exist_ok=True)
+
+
+def encode_cookie_value(value: str) -> str:
+    """Кодирует строковое значение cookie в base64 для поддержки Unicode"""
+    if not value:
+        return ""
+    # Кодируем строку в base64 напрямую (без JSON, так как это уже строка)
+    return base64.b64encode(value.encode('utf-8')).decode('ascii')
+
+
+def decode_cookie_value(encoded_value: str) -> str:
+    """Декодирует строковое значение cookie из base64"""
+    if not encoded_value:
+        return ""
+    try:
+        # Декодируем из base64
+        return base64.b64decode(encoded_value.encode('ascii')).decode('utf-8')
+    except Exception as e:
+        logger.error(f"Ошибка декодирования cookie: {e}")
+        return ""
+
+
+def encode_cookie_json(obj: dict) -> str:
+    """Кодирует JSON объект в base64 для cookie"""
+    if not obj:
+        return ""
+    json_str = json.dumps(obj, ensure_ascii=False)
+    return base64.b64encode(json_str.encode('utf-8')).decode('ascii')
+
+
+def decode_cookie_json(encoded_value: str) -> dict:
+    """Декодирует JSON объект из base64 cookie"""
+    if not encoded_value:
+        return {}
+    try:
+        json_str = base64.b64decode(encoded_value.encode('ascii')).decode('utf-8')
+        return json.loads(json_str)
+    except Exception as e:
+        logger.error(f"Ошибка декодирования JSON cookie: {e}")
+        return {}
 
 
 @router.get("/", response_class=HTMLResponse)
@@ -158,10 +199,10 @@ async def analyze_photo_page(request: Request):
 
     response = templates.TemplateResponse("recipes/create/step2.html", context)
 
-    # Сохраняем анализ в куки (сериализуем в JSON)
+    # Сохраняем анализ в куки (кодируем в base64 для поддержки Unicode)
     response.set_cookie(
         key="recipe_analysis",
-        value=json.dumps(analysis),
+        value=encode_cookie_json(analysis),
         httponly=True,  # Защита от XSS атак
         secure=False,   # Для разработки без HTTPS
         max_age=3600
@@ -178,10 +219,10 @@ async def process_clarifications(
     """Обработка уточнений - переход к шагу 3"""
     response = RedirectResponse(url="/recipes/create/step3", status_code=302)
 
-    # Сохраняем уточнения в сессии (сериализуем в JSON для поддержки Unicode)
+    # Сохраняем уточнения в сессии (кодируем в base64 для поддержки Unicode)
     response.set_cookie(
         key="recipe_clarifications",
-        value=json.dumps(clarifications, ensure_ascii=False),
+        value=encode_cookie_value(clarifications),
         httponly=True,  # Защита от XSS атак
         secure=False,   # Для разработки без HTTPS
         max_age=3600
@@ -246,14 +287,15 @@ async def process_nutrition_parameters(
 
     # Получаем данные из сессии
     photo_path = request.cookies.get("recipe_photo")
-    analysis_json = request.cookies.get("recipe_analysis")
-    clarifications_json = request.cookies.get("recipe_clarifications")
+    analysis_encoded = request.cookies.get("recipe_analysis")
+    clarifications_encoded = request.cookies.get("recipe_clarifications")
 
-    if not all([photo_path, analysis_json]):
+    if not all([photo_path, analysis_encoded]):
         return RedirectResponse(url="/recipes/create", status_code=302)
 
-    analysis = json.loads(analysis_json)
-    clarifications = json.loads(clarifications_json) if clarifications_json else ""
+    # Декодируем cookie значения из base64
+    analysis = decode_cookie_json(analysis_encoded) if analysis_encoded else {}
+    clarifications = decode_cookie_value(clarifications_encoded) if clarifications_encoded else ""
 
     # Формируем список ингредиентов
     ingredients = analysis.get("ingredients", [])
