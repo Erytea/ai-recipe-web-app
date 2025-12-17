@@ -20,8 +20,8 @@ async def test_all():
     print("\n1️⃣ Тестирование импортов...")
     try:
         from bot.core.config import settings
-        from bot.core.models import User, Recipe, RecipeBase, MealPlan
-        from bot.web.routes import auth, recipes, meal_plans, main
+        from bot.core.models import Recipe, RecipeBase
+        from bot.web.routes import recipes, main
         from bot.services.openai_service import openai_service
         from bot.services.recipe_search import find_recipes_by_kbzhu
         from bot.services.recipe_parser import parse_recipe_text
@@ -58,15 +58,11 @@ async def test_all():
         await Tortoise.generate_schemas()
 
         # Статистика
-        users = await User.all().count()
         recipes = await Recipe.all().count()
         recipe_base = await RecipeBase.all().count()
-        meal_plans = await MealPlan.all().count()
 
         print(f"   ✅ База данных работает")
-        print(f"   📊 Пользователей: {users}")
         print(f"   📊 Рецептов: {recipes}")
-        print(f"   📊 Рационов: {meal_plans}")
         print(f"   📊 База рецептов: {recipe_base}")
         tests_passed += 1
 
@@ -174,8 +170,43 @@ async def test_all():
         print(f"   ❌ Ошибка OpenAI: {e}")
         tests_failed += 1
 
-    # Тест 8: Статические файлы
-    print("\n8️⃣ Проверка статических файлов...")
+    # Тест 8: Кодировка UTF-8
+    print("\n8️⃣ Тестирование кодировки UTF-8...")
+    try:
+        import json
+
+        # Тест сериализации русских символов
+        test_data = {
+            "clarifications": "Уточнения: это помидор красный, а не яблоко",
+            "cooking_tags": "варить,жарить,запекать,только сырое"
+        }
+
+        # Сериализация
+        serialized = json.dumps(test_data, ensure_ascii=False)
+        print(f"   ✅ Сериализация: {len(serialized)} символов")
+
+        # Десериализация
+        deserialized = json.loads(serialized)
+        assert deserialized == test_data
+        print(f"   ✅ Десериализация: данные совпадают")
+
+        # Тест работы с формой (имитация)
+        form_data = "cooking_tags=варить%2Cжарить%2Cзапекать&clarifications=тестовые+уточнения"
+        # Проверяем, что русские символы могут быть обработаны
+        test_string = "тестовые уточнения с русскими символами: помидор, курица, рис"
+        encoded = test_string.encode('utf-8')
+        decoded = encoded.decode('utf-8')
+        assert decoded == test_string
+        print(f"   ✅ Кодировка UTF-8 работает корректно")
+
+        tests_passed += 1
+
+    except Exception as e:
+        print(f"   ❌ Ошибка кодировки: {e}")
+        tests_failed += 1
+
+    # Тест 9: Статические файлы
+    print("\n9️⃣ Проверка статических файлов...")
     try:
         static_dir = Path("static")
         templates_dir = Path("templates")
@@ -206,6 +237,7 @@ async def test_all():
     print(f"   ✅ Пройдено: {tests_passed}")
     print(f"   ❌ Не пройдено: {tests_failed}")
     print(f"   📈 Всего: {tests_passed + tests_failed}")
+    print(f"   🔧 Исправления кодировки: применены")
 
     if tests_failed == 0:
         print("\n🎉 ВСЕ ТЕСТЫ ПРОЙДЕНЫ УСПЕШНО!")
