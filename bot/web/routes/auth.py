@@ -33,9 +33,7 @@ class LoginRequest(BaseModel):
 class RegisterRequest(BaseModel):
     email: EmailStr
     password: str
-    username: Optional[str] = None
-    first_name: Optional[str] = None
-    last_name: Optional[str] = None
+    username: str
 
 
 @router.get("/login", response_class=HTMLResponse)
@@ -175,9 +173,7 @@ async def register(
     response: Response,
     email: str = Form(...),
     password: str = Form(...),
-    username: Optional[str] = Form(None),
-    first_name: Optional[str] = Form(None),
-    last_name: Optional[str] = Form(None),
+    username: str = Form(...),
     csrf_token: str = Form(None)
 ):
     """Регистрация нового пользователя"""
@@ -193,11 +189,25 @@ async def register(
         set_flash_message(response, error_msg, "error")
         return response
     
-    # Проверяем, существует ли пользователь
+    # Валидация username
+    username = username.strip()
+    if not username:
+        response = RedirectResponse(url="/auth/register", status_code=302)
+        set_flash_message(response, "Имя пользователя не может быть пустым", "error")
+        return response
+    
+    # Проверяем, существует ли пользователь с таким email
     existing_user = await get_user_by_email(email)
     if existing_user:
         response = RedirectResponse(url="/auth/register", status_code=302)
         set_flash_message(response, "Пользователь с таким email уже существует", "error")
+        return response
+    
+    # Проверяем, существует ли пользователь с таким username
+    existing_username = await User.get_or_none(username=username)
+    if existing_username:
+        response = RedirectResponse(url="/auth/register", status_code=302)
+        set_flash_message(response, "Пользователь с таким именем уже существует", "error")
         return response
 
     try:
@@ -208,9 +218,7 @@ async def register(
         user = await User.create(
             email=email,
             password_hash=password_hash,
-            username=username,
-            first_name=first_name,
-            last_name=last_name
+            username=username
         )
 
         # Создаем токен и логиним
@@ -268,12 +276,36 @@ async def api_login(login_data: LoginRequest):
 @router.post("/api/register")
 async def api_register(register_data: RegisterRequest):
     """API регистрация"""
-    # Проверяем, существует ли пользователь
+    # Валидация username
+    username = register_data.username.strip()
+    if not username:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Имя пользователя не может быть пустым"
+        )
+    
+    # Проверяем, существует ли пользователь с таким email
     existing_user = await get_user_by_email(register_data.email)
     if existing_user:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Пользователь с таким email уже существует"
+        )
+    
+    # Проверяем, существует ли пользователь с таким username
+    existing_username = await User.get_or_none(username=username)
+    if existing_username:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Пользователь с таким именем уже существует"
+        )
+
+    # Валидация пароля
+    is_valid, error_msg = validate_password(register_data.password)
+    if not is_valid:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=error_msg
         )
 
     # Хэшируем пароль
@@ -283,9 +315,7 @@ async def api_register(register_data: RegisterRequest):
     user = await User.create(
         email=register_data.email,
         password_hash=password_hash,
-        username=register_data.username,
-        first_name=register_data.first_name,
-        last_name=register_data.last_name
+        username=username
     )
 
     access_token_expires = timedelta(hours=24)
