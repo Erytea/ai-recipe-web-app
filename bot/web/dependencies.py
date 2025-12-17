@@ -7,17 +7,14 @@ from typing import Optional
 from uuid import UUID
 import hashlib
 import base64
+import bcrypt
 
 from fastapi import Depends, HTTPException, status, Cookie
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from jose import JWTError, jwt
-from passlib.context import CryptContext
 
 from bot.core.config import settings
 from bot.core.models import User
-
-# Настройки для паролей
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 # Bearer токен для API
 security = HTTPBearer(auto_error=False)
@@ -60,16 +57,18 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
     """Проверяет пароль"""
     try:
         # Предварительно хешируем пароль через SHA-256 перед проверкой через bcrypt
-        # Используем новый метод (base64)
         prehashed = _prehash_password(plain_password)
-        if pwd_context.verify(prehashed, hashed_password):
+        prehashed_bytes = prehashed.encode('utf-8')
+
+        # Проверяем новый формат (base64)
+        if bcrypt.checkpw(prehashed_bytes, hashed_password.encode('utf-8')):
             return True
-        
+
         # Обратная совместимость: пробуем старый метод (hex) для существующих паролей
         password_bytes = plain_password.encode('utf-8')
         sha256_digest = hashlib.sha256(password_bytes).digest()
-        prehashed_hex = sha256_digest.hex()  # Старый метод
-        return pwd_context.verify(prehashed_hex, hashed_password)
+        prehashed_hex = sha256_digest.hex()
+        return bcrypt.checkpw(prehashed_hex.encode('utf-8'), hashed_password.encode('utf-8'))
     except Exception:
         return False
 
@@ -83,9 +82,12 @@ def get_password_hash(password: str) -> str:
     # Предварительно хешируем пароль через SHA-256 перед bcrypt
     # Это позволяет использовать пароли любой длины и гарантирует <72 байт
     prehashed = _prehash_password(password)
+    prehashed_bytes = prehashed.encode('utf-8')
 
-    # Поскольку _prehash_password гарантирует <72 байт, хешируем напрямую
-    return pwd_context.hash(prehashed)
+    # Хешируем через bcrypt напрямую
+    salt = bcrypt.gensalt()
+    hashed = bcrypt.hashpw(prehashed_bytes, salt)
+    return hashed.decode('utf-8')
 
 
 def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
