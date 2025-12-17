@@ -178,10 +178,10 @@ async def process_clarifications(
     """Обработка уточнений - переход к шагу 3"""
     response = RedirectResponse(url="/recipes/create/step3", status_code=302)
 
-    # Сохраняем уточнения в сессии
+    # Сохраняем уточнения в сессии (сериализуем в JSON для поддержки Unicode)
     response.set_cookie(
         key="recipe_clarifications",
-        value=clarifications,
+        value=json.dumps(clarifications, ensure_ascii=False),
         httponly=True,  # Защита от XSS атак
         secure=False,   # Для разработки без HTTPS
         max_age=3600
@@ -247,12 +247,13 @@ async def process_nutrition_parameters(
     # Получаем данные из сессии
     photo_path = request.cookies.get("recipe_photo")
     analysis_json = request.cookies.get("recipe_analysis")
-    clarifications = request.cookies.get("recipe_clarifications")
+    clarifications_json = request.cookies.get("recipe_clarifications")
 
     if not all([photo_path, analysis_json]):
         return RedirectResponse(url="/recipes/create", status_code=302)
 
     analysis = json.loads(analysis_json)
+    clarifications = json.loads(clarifications_json) if clarifications_json else ""
 
     # Формируем список ингредиентов
     ingredients = analysis.get("ingredients", [])
