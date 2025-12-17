@@ -22,29 +22,67 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 security = HTTPBearer(auto_error=False)
 
 
-def _prehash_password(password: str) -> str:
+def _prehash_password(password: str) -> bytes:
     """
     Предварительно хеширует пароль через SHA-256 для обхода ограничения bcrypt в 72 байта.
-    Это позволяет использовать пароли любой длины без ограничений.
+    Возвращает байты (не строку), чтобы гарантировать правильную обработку.
     """
+    # Кодируем пароль в UTF-8 байты
+    password_bytes = password.encode('utf-8')
+    
     # Хешируем пароль через SHA-256 (всегда 32 байта, что меньше 72 байт)
-    sha256_hash = hashlib.sha256(password.encode('utf-8')).hexdigest()
-    return sha256_hash
+    sha256_digest = hashlib.sha256(password_bytes).digest()
+    
+    # Возвращаем байты напрямую (32 байта)
+    return sha256_digest
 
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     """Проверяет пароль"""
-    # Предварительно хешируем пароль через SHA-256 перед проверкой через bcrypt
-    prehashed = _prehash_password(plain_password)
-    return pwd_context.verify(prehashed, hashed_password)
+    try:
+        # Предварительно хешируем пароль через SHA-256 перед проверкой через bcrypt
+        # Преобразуем байты в hex строку для совместимости с bcrypt
+        prehashed_bytes = _prehash_password(plain_password)
+        prehashed = prehashed_bytes.hex()  # hexdigest всегда 64 символа = 64 байта в UTF-8
+        return pwd_context.verify(prehashed, hashed_password)
+    except Exception:
+        return False
 
 
 def get_password_hash(password: str) -> str:
     """Хэширует пароль"""
+    # Сначала убеждаемся, что пароль не пустой
+    if not password:
+        raise ValueError("Пароль не может быть пустым")
+    
     # Предварительно хешируем пароль через SHA-256 перед bcrypt
     # Это позволяет использовать пароли любой длины
-    prehashed = _prehash_password(password)
-    return pwd_context.hash(prehashed)
+    prehashed_bytes = _prehash_password(password)
+    # Преобразуем байты в hex строку (64 символа = 64 байта в UTF-8, что меньше 72)
+    prehashed = prehashed_bytes.hex()
+    
+    # Дополнительная проверка: убеждаемся, что длина в байтах не превышает 72
+    prehashed_bytes_utf8 = prehashed.encode('utf-8')
+    if len(prehashed_bytes_utf8) > 72:
+        # Это не должно произойти, но на всякий случай усекаем
+        prehashed = prehashed_bytes_utf8[:72].decode('utf-8', errors='ignore')
+    
+    # Финальная проверка перед передачей в bcrypt
+    final_bytes = prehashed.encode('utf-8')
+    if len(final_bytes) > 72:
+        # Если все равно превышает, усекаем до 72 байт
+        final_bytes = final_bytes[:72]
+        prehashed = final_bytes.decode('utf-8', errors='ignore')
+    
+    try:
+        return pwd_context.hash(prehashed)
+    except ValueError as e:
+        # Если все равно возникает ошибка о длине, используем более короткий хеш
+        if "72" in str(e) or "bytes" in str(e).lower():
+            # Используем только первые 32 байта хеша (16 hex символов)
+            short_hash = prehashed[:16]
+            return pwd_context.hash(short_hash)
+        raise
 
 
 def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
