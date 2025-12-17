@@ -295,19 +295,15 @@ async def generate_recipe(
         )
 
     try:
-        # Анализируем фото
-        analysis = await openai_service.analyze_food_image(content)
-
-        # Формируем список ингредиентов
-        ingredients = analysis.get("ingredients", [])
-        if clarifications:
-            ingredients.append(f"Уточнения: {clarifications}")
-
-        # Формируем параметры для AI (только указанные пользователем)
+        # Формируем параметры для AI
         ai_params = {
-            "ingredients": ingredients,
+            "image_data": content,  # Передаем изображение напрямую
             "target_calories": int(target_calories)
         }
+
+        # Добавляем уточнения пользователя, если есть
+        if clarifications:
+            ai_params["ingredients"] = [f"Уточнения: {clarifications}"]
 
         # Добавляем опциональные параметры только если они указаны
         if target_protein > 0:
@@ -317,19 +313,27 @@ async def generate_recipe(
         if target_carbs > 0:
             ai_params["target_carbs"] = target_carbs
         if greens_weight > 0:
-            ai_params["greens_weight"] = greens_weight
+            # Используем plant_level для нового промпта, но сохраняем greens_weight для БД
+            ai_params["plant_level"] = greens_weight
         
         # Добавляем теги способов приготовления, если указаны
         if cooking_tags:
             ai_params["cooking_tags"] = cooking_tags
 
-        # Генерируем рецепт
+        # Генерируем рецепт напрямую из изображения
         recipe_data = await openai_service.generate_recipe(**ai_params)
+
+        # Извлекаем список ингредиентов для сохранения в БД
+        ingredients_list = []
+        if "ingredients" in recipe_data:
+            ingredients_list = [ing.get("name", "") for ing in recipe_data["ingredients"]]
+        elif "ingredients_with_weights" in recipe_data:
+            ingredients_list = [ing.get("name", "") for ing in recipe_data["ingredients_with_weights"]]
 
         # Сохраняем рецепт в БД
         recipe = await Recipe.create(
             photo_file_id="",  # Не сохраняем фото в файловой системе
-            ingredients_detected=json.dumps(ingredients, ensure_ascii=False),
+            ingredients_detected=json.dumps(ingredients_list, ensure_ascii=False),
             clarifications=clarifications,
             target_calories=target_calories,
             target_protein=target_protein,
@@ -345,8 +349,7 @@ async def generate_recipe(
 
         return {
             "recipe_id": str(recipe.id),
-            "recipe": recipe_data,
-            "analysis": analysis
+            "recipe": recipe_data
         }
 
     except Exception as e:

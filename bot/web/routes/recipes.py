@@ -297,20 +297,35 @@ async def process_nutrition_parameters(
     analysis = decode_cookie_json(analysis_encoded) if analysis_encoded else {}
     clarifications = decode_cookie_value(clarifications_encoded) if clarifications_encoded else ""
 
-    # Формируем список ингредиентов
-    ingredients = analysis.get("ingredients", [])
-
-    # Добавляем уточнения пользователя
-    if clarifications:
-        ingredients.append(f"Уточнения: {clarifications}")
-
-    # Теги способов приготовления передаются отдельно в generate_recipe
-
-    # Формируем параметры для AI (только указанные пользователем)
+    # Формируем параметры для AI
     ai_params = {
-        "ingredients": ingredients,
         "target_calories": int(target_calories)
     }
+
+    # Пытаемся прочитать изображение, если оно доступно
+    image_data = None
+    if photo_path:
+        try:
+            photo_full_path = UPLOAD_DIR / photo_path
+            if photo_full_path.exists():
+                with open(photo_full_path, 'rb') as f:
+                    image_data = f.read()
+                ai_params["image_data"] = image_data
+        except Exception as e:
+            logger.warning(f"Не удалось прочитать изображение: {e}")
+
+    # Если изображения нет, используем список ингредиентов из анализа (обратная совместимость)
+    if not image_data:
+        ingredients = analysis.get("ingredients", [])
+        if clarifications:
+            ingredients.append(f"Уточнения: {clarifications}")
+        ai_params["ingredients"] = ingredients
+
+    # Добавляем уточнения пользователя, если нет изображения
+    if clarifications and image_data:
+        if "ingredients" not in ai_params:
+            ai_params["ingredients"] = []
+        ai_params["ingredients"].append(f"Уточнения: {clarifications}")
 
     # Добавляем опциональные параметры только если они указаны
     if target_protein > 0:
@@ -320,7 +335,8 @@ async def process_nutrition_parameters(
     if target_carbs > 0:
         ai_params["target_carbs"] = target_carbs
     if greens_weight > 0:
-        ai_params["greens_weight"] = greens_weight
+        # Используем plant_level для нового промпта
+        ai_params["plant_level"] = greens_weight
     
     # Добавляем теги способов приготовления, если указаны
     if cooking_tags:
@@ -345,6 +361,16 @@ async def process_nutrition_parameters(
                 logger.error(f"Отсутствует поле '{field}' в calculated_nutrition. Доступные поля: {nutrition.keys()}")
                 raise ValueError(f"Неверная структура данных рецепта: отсутствует '{field}' в calculated_nutrition")
 
+        # Извлекаем список ингредиентов для сохранения в БД
+        ingredients_list = []
+        if "ingredients" in recipe_data:
+            ingredients_list = [ing.get("name", "") for ing in recipe_data["ingredients"]]
+        elif "ingredients_with_weights" in recipe_data:
+            ingredients_list = [ing.get("name", "") for ing in recipe_data["ingredients_with_weights"]]
+        elif not image_data:
+            # Если нет изображения и нет ингредиентов в ответе, используем старый список
+            ingredients_list = ingredients if 'ingredients' in locals() else []
+
         # Сохраняем рецепт в БД
         # Формируем строку уточнений с правильной кодировкой
         clarifications_combined = f"{clarifications or ''}; Cooking: {cooking_tags or ''}".strip('; ')
@@ -355,7 +381,7 @@ async def process_nutrition_parameters(
 
         recipe = await Recipe.create(
             photo_file_id=photo_path,  # Сохраняем путь к фото
-            ingredients_detected=json.dumps(ingredients, ensure_ascii=False),
+            ingredients_detected=json.dumps(ingredients_list, ensure_ascii=False),
             clarifications=clarifications_combined,
             target_calories=target_calories,
             target_protein=target_protein if target_protein > 0 else 0,
