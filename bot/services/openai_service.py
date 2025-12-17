@@ -92,21 +92,23 @@ class OpenAIService:
         self,
         ingredients: List[str],
         target_calories: int,
-        target_protein: float,
-        target_fat: float,
-        target_carbs: float,
-        greens_weight: float
+        target_protein: Optional[float] = None,
+        target_fat: Optional[float] = None,
+        target_carbs: Optional[float] = None,
+        greens_weight: Optional[float] = None,
+        cooking_tags: Optional[str] = None
     ) -> Dict:
         """
         Генерирует рецепт на основе ингредиентов и целевых показателей КБЖУ.
         
         Args:
             ingredients: Список доступных ингредиентов
-            target_calories: Целевые калории
-            target_protein: Целевой белок (г)
-            target_fat: Целевые жиры (г)
-            target_carbs: Целевые углеводы (г)
-            greens_weight: Количество растительности (г)
+            target_calories: Целевые калории (обязательно)
+            target_protein: Целевой белок (г, опционально)
+            target_fat: Целевые жиры (г, опционально)
+            target_carbs: Целевые углеводы (г, опционально)
+            greens_weight: Количество растительности (г, опционально)
+            cooking_tags: Теги способов приготовления (опционально)
             
         Returns:
             Dict с ключами:
@@ -118,24 +120,60 @@ class OpenAIService:
         
         ingredients_text = ", ".join(ingredients)
         
+        # Формируем список целевых показателей (только указанные)
+        target_indicators = [f"- Калории: {target_calories} ккал (ОБЯЗАТЕЛЬНО)"]
+        
+        if target_protein is not None and target_protein > 0:
+            target_indicators.append(f"- Белки: {target_protein} г")
+        
+        if target_fat is not None and target_fat > 0:
+            target_indicators.append(f"- Жиры: {target_fat} г")
+        
+        if target_carbs is not None and target_carbs > 0:
+            target_indicators.append(f"- Углеводы: {target_carbs} г")
+        
+        if greens_weight is not None and greens_weight > 0:
+            target_indicators.append(f"- Растительность (зелень, овощи): {greens_weight} г")
+        
+        target_indicators_text = "\n        ".join(target_indicators)
+        
+        # Формируем требования
+        requirements = [
+            "Используй ТОЛЬКО указанные ингредиенты",
+            "ОБЯЗАТЕЛЬНО соблюдай целевые калории",
+        ]
+        
+        if target_protein is not None and target_protein > 0:
+            requirements.append("Старайся приблизиться к целевому количеству белков")
+        if target_fat is not None and target_fat > 0:
+            requirements.append("Старайся приблизиться к целевому количеству жиров")
+        if target_carbs is not None and target_carbs > 0:
+            requirements.append("Старайся приблизиться к целевому количеству углеводов")
+        if greens_weight is not None and greens_weight > 0:
+            requirements.append(f"ОБЯЗАТЕЛЬНО включи {greens_weight}г растительности (зелень, овощи)")
+        
+        # Добавляем требования по способам приготовления, если указаны теги
+        if cooking_tags:
+            tags_list = [tag.strip() for tag in cooking_tags.split(',') if tag.strip()]
+            if tags_list:
+                requirements.append(f"ОБЯЗАТЕЛЬНО используй следующие способы приготовления: {', '.join(tags_list)}")
+        
+        requirements.append("Укажи точный вес каждого ингредиента в граммах")
+        requirements.append("Рассчитай итоговое КБЖУ блюда на основе указанных порций")
+        
+        # Нумеруем требования
+        requirements_text = "\n        ".join([f"{i+1}. {req}" for i, req in enumerate(requirements)])
+        
         prompt = f"""
         Создай рецепт блюда на основе следующих данных:
         
         Доступные ингредиенты: {ingredients_text}
         
         Целевые показатели:
-        - Калории: {target_calories} ккал
-        - Белки: {target_protein} г
-        - Жиры: {target_fat} г
-        - Углеводы: {target_carbs} г
-        - Растительность (зелень, овощи): {greens_weight} г
+        {target_indicators_text}
         
         Требования:
-        1. Используй ТОЛЬКО указанные ингредиенты
-        2. Старайся максимально приблизиться к целевым показателям КБЖУ
-        3. Укажи точный вес каждого ингредиента в граммах
-        4. Обязательно включи {greens_weight}г растительности (зелень, овощи)
-        5. Рассчитай итоговое КБЖУ блюда на основе указанных порций
+        {requirements_text}
         
         Верни результат в JSON формате:
         {{

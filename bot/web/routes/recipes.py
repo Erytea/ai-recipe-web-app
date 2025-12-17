@@ -304,14 +304,12 @@ async def process_nutrition_parameters(
     if clarifications:
         ingredients.append(f"Уточнения: {clarifications}")
 
-    # Добавляем предпочтения по приготовлению
-    if cooking_tags:
-        ingredients.append(f"Способы приготовления: {cooking_tags}")
+    # Теги способов приготовления передаются отдельно в generate_recipe
 
     # Формируем параметры для AI (только указанные пользователем)
     ai_params = {
         "ingredients": ingredients,
-        "target_calories": target_calories
+        "target_calories": int(target_calories)
     }
 
     # Добавляем опциональные параметры только если они указаны
@@ -323,6 +321,10 @@ async def process_nutrition_parameters(
         ai_params["target_carbs"] = target_carbs
     if greens_weight > 0:
         ai_params["greens_weight"] = greens_weight
+    
+    # Добавляем теги способов приготовления, если указаны
+    if cooking_tags:
+        ai_params["cooking_tags"] = cooking_tags
 
     try:
         # Генерируем рецепт

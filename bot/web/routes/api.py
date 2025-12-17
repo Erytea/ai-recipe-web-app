@@ -225,10 +225,11 @@ async def generate_recipe(
     photo: UploadFile = File(...),
     clarifications: str = Form(""),
     target_calories: float = Form(...),
-    target_protein: float = Form(...),
-    target_fat: float = Form(...),
-    target_carbs: float = Form(...),
-    greens_weight: float = Form(...)
+    target_protein: float = Form(0),
+    target_fat: float = Form(0),
+    target_carbs: float = Form(0),
+    greens_weight: float = Form(0),
+    cooking_tags: str = Form("")
 ):
     """Генерировать рецепт на основе фото"""
     from bot.core.config import settings
@@ -268,25 +269,26 @@ async def generate_recipe(
             detail="Калории должны быть от 0 до 10000"
         )
 
-    if not (0 <= target_protein <= 1000):
+    # Опциональные параметры - проверяем только если указаны
+    if target_protein > 0 and not (0 < target_protein <= 1000):
         raise HTTPException(
             status_code=400,
             detail="Белки должны быть от 0 до 1000 г"
         )
 
-    if not (0 <= target_fat <= 1000):
+    if target_fat > 0 and not (0 < target_fat <= 1000):
         raise HTTPException(
             status_code=400,
             detail="Жиры должны быть от 0 до 1000 г"
         )
 
-    if not (0 <= target_carbs <= 1000):
+    if target_carbs > 0 and not (0 < target_carbs <= 1000):
         raise HTTPException(
             status_code=400,
             detail="Углеводы должны быть от 0 до 1000 г"
         )
 
-    if not (0 <= greens_weight <= 2000):
+    if greens_weight > 0 and not (0 < greens_weight <= 2000):
         raise HTTPException(
             status_code=400,
             detail="Вес растительности должен быть от 0 до 2000 г"
@@ -301,15 +303,28 @@ async def generate_recipe(
         if clarifications:
             ingredients.append(f"Уточнения: {clarifications}")
 
+        # Формируем параметры для AI (только указанные пользователем)
+        ai_params = {
+            "ingredients": ingredients,
+            "target_calories": int(target_calories)
+        }
+
+        # Добавляем опциональные параметры только если они указаны
+        if target_protein > 0:
+            ai_params["target_protein"] = target_protein
+        if target_fat > 0:
+            ai_params["target_fat"] = target_fat
+        if target_carbs > 0:
+            ai_params["target_carbs"] = target_carbs
+        if greens_weight > 0:
+            ai_params["greens_weight"] = greens_weight
+        
+        # Добавляем теги способов приготовления, если указаны
+        if cooking_tags:
+            ai_params["cooking_tags"] = cooking_tags
+
         # Генерируем рецепт
-        recipe_data = await openai_service.generate_recipe(
-            ingredients=ingredients,
-            target_calories=target_calories,
-            target_protein=target_protein,
-            target_fat=target_fat,
-            target_carbs=target_carbs,
-            greens_weight=greens_weight
-        )
+        recipe_data = await openai_service.generate_recipe(**ai_params)
 
         # Сохраняем рецепт в БД
         recipe = await Recipe.create(
