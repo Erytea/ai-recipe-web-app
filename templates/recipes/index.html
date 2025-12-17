@@ -1,67 +1,76 @@
 {% extends "layout.html" %}
 
 {% block content %}
-<div class="container py-5">
-    <div class="d-flex justify-content-between align-items-center mb-4">
+<div class="container py-5 animate-fade-in">
+    <div class="d-flex justify-content-between align-items-center mb-5">
         <div>
-            <h1 class="h2 mb-1">
-                <i class="bi bi-book"></i> Мои рецепты
+            <h1 class="headline-large mb-2">
+                <i class="bi bi-book" style="color: var(--primary); margin-right: var(--space-2);"></i>
+                Мои рецепты
             </h1>
-            <p class="text-muted mb-0">Твоя личная коллекция рецептов</p>
+            <p class="body-large mb-0" style="color: var(--text-secondary);">Твоя личная коллекция рецептов</p>
         </div>
-        <div class="d-flex gap-2">
-            <a href="/recipes/base" class="btn btn-outline-primary btn-lg">
+        <div class="d-flex gap-3 btn-group-mobile">
+            <a href="/recipes/base" class="btn btn-outline-primary">
                 <i class="bi bi-database"></i> Общая база
             </a>
-            <a href="/recipes/create" class="btn btn-primary btn-lg">
+            <a href="/recipes/create" class="btn btn-primary">
                 <i class="bi bi-plus-circle"></i> Создать рецепт
             </a>
         </div>
     </div>
 
     {% if recipes %}
-    <div class="row">
+    <div class="row g-4">
         {% for recipe in recipes %}
         <div class="col-md-6 col-lg-4 mb-4">
-            <div class="card shadow-sm h-100">
+            <div class="card animate-scale-in">
                 <div class="card-body d-flex flex-column">
-                    <h5 class="card-title">
-                        <a href="/recipes/{{ recipe.id }}" class="text-decoration-none">
+                    <h5 class="title-large mb-3">
+                        <a href="/recipes/{{ recipe.id }}" class="text-decoration-none" style="color: var(--text-primary);">
                             {{ recipe.recipe_text.get('recipe_title', 'Без названия') if recipe.recipe_text else 'Без названия' }}
                         </a>
                     </h5>
 
-                    <div class="mb-3">
-                        <small class="text-muted">
-                            <i class="bi bi-calendar"></i>
+                    <div class="mb-4">
+                        <small class="body-small" style="color: var(--text-secondary);">
+                            <i class="bi bi-calendar" style="margin-right: var(--space-1);"></i>
                             {{ recipe.created_at.strftime('%d.%m.%Y') }}
                         </small>
                     </div>
 
                     <!-- Nutrition preview -->
                     {% if recipe.calculated_calories %}
-                    <div class="row text-center mb-3 small">
+                    <div class="row text-center mb-4">
                         <div class="col-3">
-                            <div class="text-danger fw-bold">{{ recipe.calculated_calories }}</div>
-                            <div class="text-muted">ккал</div>
+                            <div class="p-2 rounded" style="background: var(--surface-hover);">
+                                <div class="body-small fw-bold" style="color: var(--primary);">{{ recipe.calculated_calories }}</div>
+                                <div class="body-small" style="color: var(--text-secondary);">ккал</div>
+                            </div>
                         </div>
                         <div class="col-3">
-                            <div class="text-primary fw-bold">{{ recipe.calculated_protein }}г</div>
-                            <div class="text-muted">Б</div>
+                            <div class="p-2 rounded" style="background: var(--surface-hover);">
+                                <div class="body-small fw-bold" style="color: var(--secondary);">{{ recipe.calculated_protein }}г</div>
+                                <div class="body-small" style="color: var(--text-secondary);">Б</div>
+                            </div>
                         </div>
                         <div class="col-3">
-                            <div class="text-warning fw-bold">{{ recipe.calculated_fat }}г</div>
-                            <div class="text-muted">Ж</div>
+                            <div class="p-2 rounded" style="background: var(--surface-hover);">
+                                <div class="body-small fw-bold" style="color: var(--warning);">{{ recipe.calculated_fat }}г</div>
+                                <div class="body-small" style="color: var(--text-secondary);">Ж</div>
+                            </div>
                         </div>
                         <div class="col-3">
-                            <div class="text-info fw-bold">{{ recipe.calculated_carbs }}г</div>
-                            <div class="text-muted">У</div>
+                            <div class="p-2 rounded" style="background: var(--surface-hover);">
+                                <div class="body-small fw-bold" style="color: var(--info);">{{ recipe.calculated_carbs }}г</div>
+                                <div class="body-small" style="color: var(--text-secondary);">У</div>
+                            </div>
                         </div>
                     </div>
                     {% endif %}
 
                     <div class="mt-auto">
-                        <a href="/recipes/{{ recipe.id }}" class="btn btn-outline-primary btn-sm w-100">
+                        <a href="/recipes/{{ recipe.id }}" class="btn btn-outline-primary">
                             <i class="bi bi-eye"></i> Посмотреть рецепт
                         </a>
                     </div>
@@ -73,21 +82,24 @@
 
     {% if recipes|length >= 10 %}
     <div class="text-center mt-4">
-        <p class="text-muted">Показаны последние 10 рецептов</p>
+        <p class="body-medium" style="color: var(--text-secondary);">Показаны последние 10 рецептов</p>
     </div>
     {% endif %}
 
     {% else %}
     <!-- Empty state -->
-    <div class="text-center py-5">
+    <div class="text-center py-5 animate-fade-in">
         <div class="mb-4">
-            <i class="bi bi-book text-muted" style="font-size: 4rem;"></i>
+            <div class="rounded-circle d-inline-flex align-items-center justify-content-center"
+                 style="width: 120px; height: 120px; background: var(--surface-hover);">
+                <i class="bi bi-book" style="font-size: 48px; color: var(--text-disabled);"></i>
+            </div>
         </div>
-        <h3 class="text-muted mb-3">У тебя пока нет рецептов</h3>
-        <p class="text-muted mb-4">
+        <h3 class="headline-medium mb-3" style="color: var(--text-primary);">У тебя пока нет рецептов</h3>
+        <p class="body-large mb-4" style="color: var(--text-secondary);">
             Создай свой первый рецепт с помощью искусственного интеллекта!
         </p>
-        <a href="/recipes/create" class="btn btn-primary btn-lg">
+        <a href="/recipes/create" class="btn btn-primary">
             <i class="bi bi-plus-circle"></i> Создать первый рецепт
         </a>
     </div>

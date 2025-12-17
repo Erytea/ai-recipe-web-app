@@ -3,22 +3,22 @@
 {% block content %}
 {% if user %}
 <!-- Welcome Section for Authenticated Users -->
-<section class="py-4 bg-light">
+<section class="py-4" style="background-color: var(--surface-hover);">
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-lg-8">
-                <div class="card border-0 shadow-sm">
+                <div class="card animate-scale-in">
                     <div class="card-body p-4 text-center">
-                        <h3 class="mb-3">Добро пожаловать, {{ user.email }}! 🎉</h3>
-                        <p class="mb-4">Вы успешно зарегистрированы и авторизованы в системе.</p>
-                        <div class="d-flex justify-content-center gap-3">
+                        <h3 class="headline-medium mb-3" style="color: var(--primary);">Добро пожаловать, {{ user.email }}! 🎉</h3>
+                        <p class="body-large mb-4" style="color: var(--text-secondary);">Вы успешно зарегистрированы и авторизованы в системе.</p>
+                        <div class="d-flex justify-content-center gap-3 btn-group-mobile">
                             <a href="/profile" class="btn btn-primary">
                                 <i class="bi bi-person"></i> Перейти в профиль
                             </a>
                             <a href="/recipes" class="btn btn-outline-primary">
                                 <i class="bi bi-journal-text"></i> Создать рецепт
                             </a>
-                            <a href="/meal-plans" class="btn btn-outline-success">
+                            <a href="/meal-plans" class="btn btn-outline-primary" style="border-color: var(--success); color: var(--success);">
                                 <i class="bi bi-calendar-check"></i> Планировать питание
                             </a>
                         </div>
@@ -31,65 +31,86 @@
 {% endif %}
 <!-- Hero Section - Full Width Image -->
 <section class="hero-overlay">
-    <img src="/static/images/hero-image.png" alt="Вкусные рецепты" class="hero-full-image"
+    <img src="/static/images/hero-image.png" alt="Вкусные рецепты" class="hero-full-image animate-fade-in"
          onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-    <div class="red-bg" style="display:none; height: 70vh; position: relative;">
+    <div class="red-bg animate-fade-in" style="display:none; height: 70vh; position: relative;">
         <div class="d-flex align-items-center justify-content-center h-100">
             <i class="bi bi-camera-fill" style="font-size: 8rem; color: rgba(255,255,255,0.3);"></i>
         </div>
     </div>
-    <div class="hero-logo">AI RECIPE</div>
+    <div class="hero-logo animate-slide-up">AI RECIPE</div>
 </section>
 
 <!-- Concept Section -->
 <section class="section-white">
     <div class="container">
         <div class="row">
-            <div class="col-12">
-                <h2 class="section-title">КОНЦЕПЦИЯ = ИИ + РЕЦЕПТЫ</h2>
-                <p class="section-subtitle">Три простых шага к идеальному рецепту</p>
+            <div class="col-12 text-center">
+                <h2 class="section-title animate-fade-in">КОНЦЕПЦИЯ = ИИ + РЕЦЕПТЫ</h2>
+                <p class="section-subtitle animate-fade-in">Три простых шага к идеальному рецепту</p>
             </div>
         </div>
         <div class="row g-4 mb-5">
             <div class="col-md-4">
-                <img src="/static/images/concept-1.jpg" alt="Загрузка фото" class="concept-image"
-                     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                <div class="d-none align-items-center justify-content-center bg-light" style="height: 300px;">
-                    <i class="bi bi-camera-fill" style="font-size: 4rem; color: #ccc;"></i>
+                <div class="card animate-scale-in">
+                    <img src="/static/images/concept-1.jpg" alt="Загрузка фото" class="concept-image card-img-top"
+                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <div class="d-none align-items-center justify-content-center" style="height: 300px; background: var(--surface-hover); border-radius: var(--radius-lg) var(--radius-lg) 0 0;">
+                        <i class="bi bi-camera-fill" style="font-size: 4rem; color: var(--text-disabled);"></i>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="title-large mb-3" style="color: var(--primary);">
+                            <span class="badge" style="background: var(--primary); color: white; padding: var(--space-1) var(--space-2); border-radius: var(--radius-full); margin-right: var(--space-2);">1</span>
+                            ЗАГРУЗИ ФОТО
+                        </h5>
+                        <p class="concept-text">
+                            Сфотографируй продукты, которые у тебя есть, и загрузи изображение в приложение.
+                            ИИ распознает все ингредиенты автоматически.
+                        </p>
+                    </div>
                 </div>
-                <h5 class="fw-bold mb-3" style="color: var(--ringo-red);">1. ЗАГРУЗИ ФОТО</h5>
-                <p class="concept-text">
-                    Сфотографируй продукты, которые у тебя есть, и загрузи изображение в приложение. 
-                    ИИ распознает все ингредиенты автоматически.
-                </p>
             </div>
             <div class="col-md-4">
-                <img src="/static/images/concept-2.jpg" alt="Анализ ИИ" class="concept-image"
-                     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                <div class="d-none align-items-center justify-content-center bg-light" style="height: 300px;">
-                    <i class="bi bi-robot" style="font-size: 4rem; color: #ccc;"></i>
+                <div class="card animate-scale-in">
+                    <img src="/static/images/concept-2.jpg" alt="Анализ ИИ" class="concept-image card-img-top"
+                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <div class="d-none align-items-center justify-content-center" style="height: 300px; background: var(--surface-hover); border-radius: var(--radius-lg) var(--radius-lg) 0 0;">
+                        <i class="bi bi-robot" style="font-size: 4rem; color: var(--text-disabled);"></i>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="title-large mb-3" style="color: var(--primary);">
+                            <span class="badge" style="background: var(--secondary); color: white; padding: var(--space-1) var(--space-2); border-radius: var(--radius-full); margin-right: var(--space-2);">2</span>
+                            ИИ АНАЛИЗИРУЕТ
+                        </h5>
+                        <p class="concept-text">
+                            Искусственный интеллект распознает продукты, предлагает варианты уточнения
+                            и подбирает оптимальные рецепты на основе твоих предпочтений.
+                        </p>
+                    </div>
                 </div>
-                <h5 class="fw-bold mb-3" style="color: var(--ringo-red);">2. ИИ АНАЛИЗИРУЕТ</h5>
-                <p class="concept-text">
-                    Искусственный интеллект распознает продукты, предлагает варианты уточнения 
-                    и подбирает оптимальные рецепты на основе твоих предпочтений.
-                </p>
             </div>
             <div class="col-md-4">
-                <img src="/static/images/concept-3.jpg" alt="Готовый рецепт" class="concept-image"
-                     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                <div class="d-none align-items-center justify-content-center bg-light" style="height: 300px;">
-                    <i class="bi bi-star-fill" style="font-size: 4rem; color: #ccc;"></i>
+                <div class="card animate-scale-in">
+                    <img src="/static/images/concept-3.jpg" alt="Готовый рецепт" class="concept-image card-img-top"
+                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <div class="d-none align-items-center justify-content-center" style="height: 300px; background: var(--surface-hover); border-radius: var(--radius-lg) var(--radius-lg) 0 0;">
+                        <i class="bi bi-star-fill" style="font-size: 4rem; color: var(--text-disabled);"></i>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="title-large mb-3" style="color: var(--primary);">
+                            <span class="badge" style="background: var(--success); color: white; padding: var(--space-1) var(--space-2); border-radius: var(--radius-full); margin-right: var(--space-2);">3</span>
+                            ПОЛУЧИ РЕЦЕПТ
+                        </h5>
+                        <p class="concept-text">
+                            Готовый рецепт с пошаговой инструкцией и точным расчетом калорий,
+                            белков, жиров и углеводов. Все готово к приготовлению!
+                        </p>
+                    </div>
                 </div>
-                <h5 class="fw-bold mb-3" style="color: var(--ringo-red);">3. ПОЛУЧИ РЕЦЕПТ</h5>
-                <p class="concept-text">
-                    Готовый рецепт с пошаговой инструкцией и точным расчетом калорий, 
-                    белков, жиров и углеводов. Все готово к приготовлению!
-                </p>
             </div>
         </div>
-        <div class="text-end">
-            <a href="/recipes/create" class="learn-more">
+        <div class="text-center">
+            <a href="/recipes/create" class="learn-more animate-fade-in">
                 УЗНАТЬ БОЛЬШЕ <i class="bi bi-arrow-right"></i>
             </a>
         </div>
@@ -97,57 +118,69 @@
 </section>
 
 <!-- Product Section -->
-<section class="section-white" style="background: #f8f9fa;">
+<section class="section-white" style="background: var(--surface-hover);">
     <div class="container">
         <div class="row">
-            <div class="col-12">
-                <h2 class="section-title">ПРОДУКТ</h2>
-                <p class="section-subtitle">Персонализированные рецепты с точным расчетом КБЖУ</p>
+            <div class="col-12 text-center">
+                <h2 class="section-title animate-fade-in">ПРОДУКТ</h2>
+                <p class="section-subtitle animate-fade-in">Персонализированные рецепты с точным расчетом КБЖУ</p>
             </div>
         </div>
         <div class="row">
-            <div class="col-lg-8 mx-auto">
-                <div class="product-image-wrapper">
+            <div class="col-lg-10 mx-auto">
+                <div class="product-image-wrapper animate-scale-in">
                     <img src="/static/images/product-detail.jpg" alt="Детали рецепта" class="product-image"
                          onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                    <div class="d-none align-items-center justify-content-center bg-light" style="min-height: 400px;">
-                        <i class="bi bi-image" style="font-size: 6rem; color: #ccc;"></i>
+                    <div class="d-none align-items-center justify-content-center" style="min-height: 400px; background: var(--surface); border-radius: var(--radius-xl);">
+                        <i class="bi bi-image" style="font-size: 6rem; color: var(--text-disabled);"></i>
                     </div>
                 </div>
-                <div class="row g-4 mt-2">
+                <div class="row g-4 mt-4">
                     <div class="col-md-4 text-center">
-                        <div class="mb-3">
-                            <div class="rounded-circle bg-danger d-inline-flex align-items-center justify-content-center" 
-                                 style="width: 50px; height: 50px;">
-                                <i class="bi bi-camera text-white"></i>
+                        <div class="card animate-slide-up" style="border: none; background: transparent;">
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <div class="rounded-circle d-inline-flex align-items-center justify-content-center"
+                                         style="width: 60px; height: 60px; background: var(--primary);">
+                                        <i class="bi bi-camera text-white" style="font-size: 24px;"></i>
+                                    </div>
+                                </div>
+                                <h6 class="title-medium mb-2">ФОТО ПРОДУКТОВ</h6>
+                                <p class="body-small" style="color: var(--text-secondary);">Загрузи фото ингредиентов, которые у тебя есть</p>
                             </div>
                         </div>
-                        <h6 class="fw-bold">ФОТО ПРОДУКТОВ</h6>
-                        <p class="small text-muted">Загрузи фото ингредиентов, которые у тебя есть</p>
                     </div>
                     <div class="col-md-4 text-center">
-                        <div class="mb-3">
-                            <div class="rounded-circle bg-danger d-inline-flex align-items-center justify-content-center" 
-                                 style="width: 50px; height: 50px;">
-                                <i class="bi bi-calculator text-white"></i>
+                        <div class="card animate-slide-up" style="border: none; background: transparent;">
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <div class="rounded-circle d-inline-flex align-items-center justify-content-center"
+                                         style="width: 60px; height: 60px; background: var(--secondary);">
+                                        <i class="bi bi-calculator text-white" style="font-size: 24px;"></i>
+                                    </div>
+                                </div>
+                                <h6 class="title-medium mb-2">РАСЧЕТ КБЖУ</h6>
+                                <p class="body-small" style="color: var(--text-secondary);">Точный расчет калорий, белков, жиров и углеводов</p>
                             </div>
                         </div>
-                        <h6 class="fw-bold">РАСЧЕТ КБЖУ</h6>
-                        <p class="small text-muted">Точный расчет калорий, белков, жиров и углеводов</p>
                     </div>
                     <div class="col-md-4 text-center">
-                        <div class="mb-3">
-                            <div class="rounded-circle bg-danger d-inline-flex align-items-center justify-content-center" 
-                                 style="width: 50px; height: 50px;">
-                                <i class="bi bi-list-check text-white"></i>
+                        <div class="card animate-slide-up" style="border: none; background: transparent;">
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <div class="rounded-circle d-inline-flex align-items-center justify-content-center"
+                                         style="width: 60px; height: 60px; background: var(--success);">
+                                        <i class="bi bi-list-check text-white" style="font-size: 24px;"></i>
+                                    </div>
+                                </div>
+                                <h6 class="title-medium mb-2">ПОШАГОВАЯ ИНСТРУКЦИЯ</h6>
+                                <p class="body-small" style="color: var(--text-secondary);">Подробные шаги приготовления от ИИ</p>
                             </div>
                         </div>
-                        <h6 class="fw-bold">ПОШАГОВАЯ ИНСТРУКЦИЯ</h6>
-                        <p class="small text-muted">Подробные шаги приготовления от ИИ</p>
                     </div>
                 </div>
-                <div class="text-end mt-4">
-                    <a href="/recipes" class="learn-more">
+                <div class="text-center mt-4">
+                    <a href="/recipes" class="learn-more animate-fade-in">
                         УЗНАТЬ БОЛЬШЕ <i class="bi bi-arrow-right"></i>
                     </a>
                 </div>
@@ -158,24 +191,40 @@
 
 <!-- Stats Section -->
 {% if user %}
-<section class="section-white" style="background: white;">
+<section class="section-white animate-fade-in">
     <div class="container">
         <div class="row text-center">
             <div class="col-md-3 mb-4 mb-md-0">
-                <div class="h1 fw-bold mb-2" style="color: var(--ringo-red);">{{ recipes_count or 0 }}</div>
-                <p class="text-muted mb-0">Созданных рецептов</p>
+                <div class="card animate-scale-in" style="border: none; background: transparent;">
+                    <div class="card-body">
+                        <div class="display-medium mb-2" style="color: var(--primary); font-weight: var(--font-weight-black);">{{ recipes_count or 0 }}</div>
+                        <p class="body-medium mb-0" style="color: var(--text-secondary);">Созданных рецептов</p>
+                    </div>
+                </div>
             </div>
             <div class="col-md-3 mb-4 mb-md-0">
-                <div class="h1 fw-bold mb-2" style="color: var(--ringo-red);">{{ meal_plans_count or 0 }}</div>
-                <p class="text-muted mb-0">Планов питания</p>
+                <div class="card animate-scale-in" style="border: none; background: transparent;">
+                    <div class="card-body">
+                        <div class="display-medium mb-2" style="color: var(--primary); font-weight: var(--font-weight-black);">{{ meal_plans_count or 0 }}</div>
+                        <p class="body-medium mb-0" style="color: var(--text-secondary);">Планов питания</p>
+                    </div>
+                </div>
             </div>
             <div class="col-md-3 mb-4 mb-md-0">
-                <div class="h1 fw-bold mb-2" style="color: var(--ringo-red);">437</div>
-                <p class="text-muted mb-0">Продуктов в базе</p>
+                <div class="card animate-scale-in" style="border: none; background: transparent;">
+                    <div class="card-body">
+                        <div class="display-medium mb-2" style="color: var(--secondary); font-weight: var(--font-weight-black);">437</div>
+                        <p class="body-medium mb-0" style="color: var(--text-secondary);">Продуктов в базе</p>
+                    </div>
+                </div>
             </div>
             <div class="col-md-3">
-                <div class="h1 fw-bold mb-2" style="color: var(--ringo-red);">24/7</div>
-                <p class="text-muted mb-0">Доступность</p>
+                <div class="card animate-scale-in" style="border: none; background: transparent;">
+                    <div class="card-body">
+                        <div class="display-medium mb-2" style="color: var(--success); font-weight: var(--font-weight-black);">24/7</div>
+                        <p class="body-medium mb-0" style="color: var(--text-secondary);">Доступность</p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -183,25 +232,27 @@
 {% endif %}
 
 <!-- CTA Section -->
-<section class="red-bg" style="padding: 100px 0; color: white;">
+<section class="red-bg animate-fade-in" style="padding: var(--space-24) 0; color: white;">
     <div class="container text-center">
         <div class="row justify-content-center">
             <div class="col-lg-8">
-                <h2 class="display-4 fw-bold mb-4" style="color: white; letter-spacing: 2px;">ГОТОВ СОЗДАТЬ РЕЦЕПТ?</h2>
-                <p class="lead mb-5" style="color: rgba(255,255,255,0.9); font-size: 1.2rem;">
-                    Присоединяйся к тысячам пользователей, которые уже используют AI Recipe Bot 
+                <h2 class="display-large mb-4 animate-slide-up" style="color: white; letter-spacing: var(--letter-spacing-wide);">
+                    ГОТОВ СОЗДАТЬ РЕЦЕПТ?
+                </h2>
+                <p class="body-large mb-5 animate-slide-up" style="color: rgba(255,255,255,0.9);">
+                    Присоединяйся к тысячам пользователей, которые уже используют AI Recipe Bot
                     для создания вкусных и здоровых блюд.
                 </p>
                 {% if not user %}
-                <a href="/auth/register" class="btn btn-light btn-lg px-5" style="text-transform: uppercase; letter-spacing: 1px; font-weight: 500;">
+                <a href="/auth/register" class="btn btn-primary animate-scale-in" style="background: white; color: var(--primary); border-color: white;">
                     НАЧАТЬ ПРЯМО СЕЙЧАС
                 </a>
                 {% else %}
-                <div class="d-flex justify-content-center gap-3 flex-wrap">
-                    <a href="/recipes/create" class="btn btn-light btn-lg px-4" style="text-transform: uppercase; letter-spacing: 1px; font-weight: 500;">
+                <div class="d-flex justify-content-center gap-3 flex-wrap btn-group-mobile animate-slide-up">
+                    <a href="/recipes/create" class="btn btn-primary" style="background: white; color: var(--primary); border-color: white;">
                         СОЗДАТЬ РЕЦЕПТ
                     </a>
-                    <a href="/meal-plans/create" class="btn btn-outline-light btn-lg px-4" style="text-transform: uppercase; letter-spacing: 1px; font-weight: 500; border-width: 2px;">
+                    <a href="/meal-plans/create" class="btn btn-outline-primary" style="border-color: white; color: white;">
                         ПЛАН ПИТАНИЯ
                     </a>
                 </div>

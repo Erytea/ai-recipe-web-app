@@ -1,35 +1,62 @@
 {% extends "layout.html" %}
 
 {% block content %}
-<div class="container py-5">
+<div class="container py-5 animate-fade-in">
     <div class="row justify-content-center">
         <div class="col-lg-10">
             <!-- Progress Bar -->
-            <div class="mb-4">
-                <nav aria-label="Progress">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item text-success">
-                            <i class="bi bi-check-circle-fill"></i> Шаг 1: Загрузка фото
-                        </li>
-                        <li class="breadcrumb-item active">
-                            <i class="bi bi-robot"></i> Шаг 2: Анализ
-                        </li>
-                        <li class="breadcrumb-item text-muted">
-                            <i class="bi bi-calculator"></i> Шаг 3: Параметры
-                        </li>
-                        <li class="breadcrumb-item text-muted">
-                            <i class="bi bi-star"></i> Готово!
-                        </li>
-                    </ol>
-                </nav>
+            <div class="mb-5">
+                <div class="row g-2">
+                    <div class="col-3">
+                        <div class="text-center p-3 rounded-lg animate-slide-up" style="background: var(--success); color: white;">
+                            <div class="mb-2">
+                                <i class="bi bi-check-circle-fill" style="font-size: 24px;"></i>
+                            </div>
+                            <div class="body-small fw-bold">ШАГ 1</div>
+                            <div class="body-small">Загрузка фото</div>
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <div class="text-center p-3 rounded-lg animate-slide-up" style="background: var(--secondary); color: white;">
+                            <div class="mb-2">
+                                <i class="bi bi-robot" style="font-size: 24px;"></i>
+                            </div>
+                            <div class="body-small fw-bold">ШАГ 2</div>
+                            <div class="body-small">Анализ</div>
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <div class="text-center p-3 rounded-lg animate-slide-up" style="background: var(--surface-hover); border: 2px solid var(--border);">
+                            <div class="mb-2">
+                                <i class="bi bi-calculator" style="font-size: 24px; color: var(--text-disabled);"></i>
+                            </div>
+                            <div class="body-small" style="color: var(--text-disabled);">ШАГ 3</div>
+                            <div class="body-small" style="color: var(--text-disabled);">Параметры</div>
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <div class="text-center p-3 rounded-lg animate-slide-up" style="background: var(--surface-hover); border: 2px solid var(--border);">
+                            <div class="mb-2">
+                                <i class="bi bi-star" style="font-size: 24px; color: var(--text-disabled);"></i>
+                            </div>
+                            <div class="body-small" style="color: var(--text-disabled);">ГОТОВО!</div>
+                            <div class="body-small" style="color: var(--text-disabled);">-</div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <div class="card shadow">
+            <div class="card animate-scale-in">
                 <div class="card-body p-5">
-                    <div class="text-center mb-4">
-                        <i class="bi bi-robot text-info" style="font-size: 4rem;"></i>
-                        <h2 class="mt-3">Анализирую продукты...</h2>
-                        <p class="text-muted">Искусственный интеллект определяет, что на фото</p>
+                    <div class="text-center mb-5">
+                        <div class="mb-3">
+                            <div class="rounded-circle d-inline-flex align-items-center justify-content-center"
+                                 style="width: 100px; height: 100px; background: var(--secondary);">
+                                <i class="bi bi-robot text-white animate-pulse" style="font-size: 40px;"></i>
+                            </div>
+                        </div>
+                        <h2 class="headline-large mt-3 mb-2">Анализирую продукты...</h2>
+                        <p class="body-large" style="color: var(--text-secondary);">Искусственный интеллект определяет, что на фото</p>
                     </div>
 
                     <!-- Uploaded Photo -->

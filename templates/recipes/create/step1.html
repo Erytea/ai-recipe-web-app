@@ -1,93 +1,136 @@
 {% extends "layout.html" %}
 
 {% block content %}
-<div class="container py-5">
+<div class="container py-5 animate-fade-in">
     <div class="row justify-content-center">
-        <div class="col-lg-8">
+        <div class="col-lg-10">
             <!-- Progress Bar -->
-            <div class="mb-4">
-                <nav aria-label="Progress">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item active">
-                            <i class="bi bi-camera"></i> Шаг 1: Загрузка фото
-                        </li>
-                        <li class="breadcrumb-item text-muted">
-                            <i class="bi bi-robot"></i> Шаг 2: Анализ
-                        </li>
-                        <li class="breadcrumb-item text-muted">
-                            <i class="bi bi-calculator"></i> Шаг 3: Параметры
-                        </li>
-                        <li class="breadcrumb-item text-muted">
-                            <i class="bi bi-star"></i> Готово!
-                        </li>
-                    </ol>
-                </nav>
+            <div class="mb-5">
+                <div class="row g-2">
+                    <div class="col-3">
+                        <div class="text-center p-3 rounded-lg animate-slide-up" style="background: var(--primary); color: white;">
+                            <div class="mb-2">
+                                <i class="bi bi-camera" style="font-size: 24px;"></i>
+                            </div>
+                            <div class="body-small fw-bold">ШАГ 1</div>
+                            <div class="body-small">Загрузка фото</div>
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <div class="text-center p-3 rounded-lg animate-slide-up" style="background: var(--surface-hover); border: 2px solid var(--border);">
+                            <div class="mb-2">
+                                <i class="bi bi-robot" style="font-size: 24px; color: var(--text-disabled);"></i>
+                            </div>
+                            <div class="body-small" style="color: var(--text-disabled);">ШАГ 2</div>
+                            <div class="body-small" style="color: var(--text-disabled);">Анализ</div>
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <div class="text-center p-3 rounded-lg animate-slide-up" style="background: var(--surface-hover); border: 2px solid var(--border);">
+                            <div class="mb-2">
+                                <i class="bi bi-calculator" style="font-size: 24px; color: var(--text-disabled);"></i>
+                            </div>
+                            <div class="body-small" style="color: var(--text-disabled);">ШАГ 3</div>
+                            <div class="body-small" style="color: var(--text-disabled);">Параметры</div>
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <div class="text-center p-3 rounded-lg animate-slide-up" style="background: var(--surface-hover); border: 2px solid var(--border);">
+                            <div class="mb-2">
+                                <i class="bi bi-star" style="font-size: 24px; color: var(--text-disabled);"></i>
+                            </div>
+                            <div class="body-small" style="color: var(--text-disabled);">ГОТОВО!</div>
+                            <div class="body-small" style="color: var(--text-disabled);">-</div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <div class="card shadow">
+            <div class="card animate-scale-in">
                 <div class="card-body p-5">
-                    <div class="text-center mb-4">
-                        <i class="bi bi-camera-fill text-primary" style="font-size: 4rem;"></i>
-                        <h2 class="mt-3">Загрузи фото продуктов</h2>
-                        <p class="text-muted lead">
+                    <div class="text-center mb-5">
+                        <div class="mb-3">
+                            <div class="rounded-circle d-inline-flex align-items-center justify-content-center"
+                                 style="width: 100px; height: 100px; background: var(--primary);">
+                                <i class="bi bi-camera-fill text-white" style="font-size: 40px;"></i>
+                            </div>
+                        </div>
+                        <h2 class="headline-large mt-3 mb-2">Загрузи фото продуктов</h2>
+                        <p class="body-large" style="color: var(--text-secondary);">
                             Сфотографируй продукты, из которых хочешь приготовить блюдо
                         </p>
                     </div>
 
-                    <div class="row">
+                    <div class="row g-4">
                         <div class="col-md-6">
-                            <div class="border border-2 border-dashed border-primary rounded p-4 text-center mb-4"
-                                 style="min-height: 300px; display: flex; align-items: center; justify-content: center;">
+                            <div class="border-2 border-dashed rounded-xl p-5 text-center animate-fade-in"
+                                 style="min-height: 350px; display: flex; align-items: center; justify-content: center; border-color: var(--primary); background: var(--surface-hover); cursor: pointer; transition: all var(--duration-normal) var(--easing-standard);">
                                 <div>
-                                    <i class="bi bi-cloud-upload text-primary" style="font-size: 3rem;"></i>
-                                    <h5 class="mt-3">Перетащи фото сюда</h5>
-                                    <p class="text-muted">или нажми для выбора файла</p>
+                                    <div class="mb-3">
+                                        <i class="bi bi-cloud-upload" style="font-size: 48px; color: var(--primary);"></i>
+                                    </div>
+                                    <h5 class="title-medium mb-2">Перетащи фото сюда</h5>
+                                    <p class="body-medium mb-0" style="color: var(--text-secondary);">или нажми для выбора файла</p>
                                 </div>
                             </div>
                         </div>
 
                         <div class="col-md-6">
-                            <h5 class="fw-bold mb-3">Советы по фото:</h5>
-                            <ul class="list-unstyled">
-                                <li class="mb-3">
-                                    <i class="bi bi-check-circle-fill text-success me-2"></i>
-                                    Размести продукты на светлом фоне
-                                </li>
-                                <li class="mb-3">
-                                    <i class="bi bi-check-circle-fill text-success me-2"></i>
-                                    Сфотографируй каждый продукт отдельно или группой
-                                </li>
-                                <li class="mb-3">
-                                    <i class="bi bi-check-circle-fill text-success me-2"></i>
-                                    Убедись, что фото четкое и хорошо освещенное
-                                </li>
-                                <li class="mb-3">
-                                    <i class="bi bi-check-circle-fill text-success me-2"></i>
-                                    Поддерживаются форматы: JPG, PNG, WebP
-                                </li>
-                            </ul>
+                            <h5 class="title-medium mb-4" style="color: var(--primary);">Советы по фото:</h5>
+                            <div class="d-flex flex-column gap-3">
+                                <div class="d-flex align-items-start">
+                                    <i class="bi bi-check-circle-fill me-3 mt-1" style="color: var(--success); font-size: 20px;"></i>
+                                    <div>
+                                        <div class="body-medium mb-1">Размести продукты на светлом фоне</div>
+                                        <div class="body-small" style="color: var(--text-secondary);">Для лучшего распознавания ИИ</div>
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-start">
+                                    <i class="bi bi-check-circle-fill me-3 mt-1" style="color: var(--success); font-size: 20px;"></i>
+                                    <div>
+                                        <div class="body-medium mb-1">Сфотографируй каждый продукт отдельно или группой</div>
+                                        <div class="body-small" style="color: var(--text-secondary);">ИИ лучше распознает организованные фото</div>
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-start">
+                                    <i class="bi bi-check-circle-fill me-3 mt-1" style="color: var(--success); font-size: 20px;"></i>
+                                    <div>
+                                        <div class="body-medium mb-1">Убедись, что фото четкое и хорошо освещенное</div>
+                                        <div class="body-small" style="color: var(--text-secondary);">Хорошее освещение = точный анализ</div>
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-start">
+                                    <i class="bi bi-check-circle-fill me-3 mt-1" style="color: var(--success); font-size: 20px;"></i>
+                                    <div>
+                                        <div class="body-medium mb-1">Поддерживаются форматы: JPG, PNG, WebP</div>
+                                        <div class="body-small" style="color: var(--text-secondary);">Максимальный размер: 10 MB</div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
-                    <form method="post" action="/recipes/create/step1" enctype="multipart/form-data">
-                        <div class="mb-4">
-                            <label for="photo" class="form-label fw-bold">Выбери фото продуктов:</label>
-                            <input type="file" class="form-control form-control-lg" id="photo" name="photo"
-                                   accept="image/*" required>
-                            <div class="form-text">
-                                Максимальный размер файла: 10 MB
+                    <div class="mt-5 pt-4 border-top" style="border-color: var(--border-light) !important;">
+                        <form method="post" action="/recipes/create/step1" enctype="multipart/form-data">
+                            <div class="mb-4">
+                                <label for="photo" class="form-label title-medium">Выбери фото продуктов:</label>
+                                <input type="file" class="form-control" id="photo" name="photo"
+                                       accept="image/*" required>
+                                <div class="form-text body-small" style="color: var(--text-hint);">
+                                    Максимальный размер файла: 10 MB • Поддерживаются JPG, PNG, WebP
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                            <a href="/" class="btn btn-outline-secondary">
-                                <i class="bi bi-arrow-left"></i> На главную
-                            </a>
-                            <button type="submit" class="btn btn-primary btn-lg px-5">
-                                <i class="bi bi-upload"></i> Загрузить и продолжить
-                            </button>
-                        </div>
-                    </form>
+                            <div class="d-flex gap-3 justify-content-end btn-group-mobile">
+                                <a href="/" class="btn btn-outline-primary">
+                                    <i class="bi bi-arrow-left"></i> На главную
+                                </a>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="bi bi-upload"></i> Загрузить и продолжить
+                                </button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>

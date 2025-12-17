@@ -1,12 +1,13 @@
 {% extends "layout.html" %}
 
 {% block content %}
-<div class="container py-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="h2 mb-0">
-            <i class="bi bi-shield-check"></i> Админ панель
+<div class="container py-4 animate-fade-in">
+    <div class="d-flex justify-content-between align-items-center mb-5">
+        <h1 class="headline-large mb-0">
+            <i class="bi bi-shield-check" style="color: var(--warning); margin-right: var(--space-2);"></i>
+            Админ панель
         </h1>
-        <small class="text-muted">Добро пожаловать, {{ user.email }}</small>
+        <small class="body-medium" style="color: var(--text-secondary);">Добро пожаловать, {{ user.email }}</small>
     </div>
 
     <!-- Статистика -->

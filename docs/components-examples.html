@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Компоненты AI Recipe Bot - Дизайн-система</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="../static/css/design-system.css">
+    <style>
+        body {
+            background-color: var(--surface);
+            color: var(--text-primary);
+        }
+
+        .component-section {
+            margin-bottom: var(--space-12);
+            padding: var(--space-8);
+            background: var(--background);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .component-title {
+            font-size: var(--text-headline-medium);
+            font-weight: var(--font-weight-bold);
+            color: var(--primary);
+            margin-bottom: var(--space-6);
+            border-bottom: 2px solid var(--border);
+            padding-bottom: var(--space-3);
+        }
+
+        .component-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--space-6);
+        }
+
+        .component-item {
+            padding: var(--space-4);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-lg);
+            background: var(--surface);
+        }
+
+        .component-code {
+            background: var(--motto-grey-900);
+            color: var(--motto-grey-100);
+            padding: var(--space-4);
+            border-radius: var(--radius-md);
+            font-family: var(--font-family-mono);
+            font-size: var(--text-body-small);
+            margin-top: var(--space-3);
+            overflow-x: auto;
+        }
+
+        .color-palette {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: var(--space-3);
+            margin: var(--space-4) 0;
+        }
+
+        .color-item {
+            text-align: center;
+        }
+
+        .color-sample {
+            width: 100%;
+            height: 60px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border);
+            margin-bottom: var(--space-2);
+        }
+
+        .color-name {
+            font-size: var(--text-label-small);
+            font-weight: var(--font-weight-medium);
+            color: var(--text-secondary);
+        }
+
+        .typography-examples {
+            margin: var(--space-4) 0;
+        }
+
+        .type-sample {
+            padding: var(--space-3);
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .type-sample:last-child {
+            border-bottom: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header style="text-align: center; padding: var(--space-12) 0;">
+            <h1 class="display-large" style="color: var(--primary); margin-bottom: var(--space-4);">
+                🎨 Дизайн-система AI Recipe Bot
+            </h1>
+            <p class="body-large" style="color: var(--text-secondary); max-width: 600px; margin: 0 auto;">
+                Компоненты и стили на основе анализа файлов color.pdf, Bright blue.pdf, Palette.pdf и Typography.pdf
+            </p>
+        </header>
+
+        <!-- Цветовая палитра -->
+        <section class="component-section">
+            <h2 class="component-title">🎨 Цветовая палитра</h2>
+
+            <h3 style="margin-bottom: var(--space-4);">Основные цвета (RINGO тема)</h3>
+            <div class="color-palette">
+                <div class="color-item">
+                    <div class="color-sample" style="background-color: var(--ringo-red);"></div>
+                    <div class="color-name">--ringo-red<br>#c41e3a</div>
+                </div>
+                <div class="color-item">
+                    <div class="color-sample" style="background-color: var(--ringo-red-dark);"></div>
+                    <div class="color-name">--ringo-red-dark<br>#8b1528</div>
+                </div>
+                <div class="color-item">
+                    <div class="color-sample" style="background-color: var(--ringo-red-light);"></div>
+                    <div class="color-name">--ringo-red-light<br>#e63950</div>
+                </div>
+            </div>
+
+            <h3 style="margin: var(--space-8) 0 var(--space-4) 0;">Синяя палитра (Bright Blue)</h3>
+            <div class="color-palette">
+                <div class="color-item">
+                    <div class="color-sample" style="background-color: var(--bright-blue-50);"></div>
+                    <div class="color-name">--bright-blue-50<br>#EFF1FD</div>
+                </div>
+                <div class="color-item">
+                    <div class="color-sample" style="background-color: var(--bright-blue-300);"></div>
+                    <div class="color-name">--bright-blue-300<br>#B6C8F9</div>
+                </div>
+                <div class="color-item">
+                    <div class="color-sample" style="background-color: var(--bright-blue-500);"></div>
+                    <div class="color-name">--bright-blue-500<br>#8494F1</div>
+                </div>
+                <div class="color-item">
+                    <div class="color-sample" style="background-color: var(--bright-blue-700);"></div>
+                    <div class="color-name">--bright-blue-700<br>#2B50ED</div>
+                </div>
+                <div class="color-item">
+                    <div class="color-sample" style="background-color: var(--bright-blue-900);"></div>
+                    <div class="color-name">--bright-blue-900<br>#3D425C</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Типографика -->
+        <section class="component-section">
+            <h2 class="component-title">📝 Типографика</h2>
+            <p class="body-medium" style="margin-bottom: var(--space-6);">
+                Система типографики на основе Typography.pdf с размерами 10px-20px
+            </p>
+
+            <div class="typography-examples">
+                <div class="type-sample">
+                    <div class="display-large">Display Large (48px)</div>
+                    <code class="component-code">.display-large { font-size: 3rem; }</code>
+                </div>
+                <div class="type-sample">
+                    <div class="display-medium">Display Medium (40px)</div>
+                    <code class="component-code">.display-medium { font-size: 2.5rem; }</code>
+                </div>
+                <div class="type-sample">
+                    <div class="headline-large">Headline Large (32px)</div>
+                    <code class="component-code">.headline-large { font-size: 2rem; }</code>
+                </div>
+                <div class="type-sample">
+                    <div class="headline-medium">Headline Medium (28px)</div>
+                    <code class="component-code">.headline-medium { font-size: 1.75rem; }</code>
+                </div>
+                <div class="type-sample">
+                    <div class="title-large">Title Large (22px)</div>
+                    <code class="component-code">.title-large { font-size: 1.375rem; }</code>
+                </div>
+                <div class="type-sample">
+                    <div class="body-large">Body Large (16px) - основной текст для чтения</div>
+                    <code class="component-code">.body-large { font-size: 1rem; }</code>
+                </div>
+                <div class="type-sample">
+                    <div class="body-medium">Body Medium (14px) - вспомогательный текст</div>
+                    <code class="component-code">.body-medium { font-size: 0.875rem; }</code>
+                </div>
+                <div class="type-sample">
+                    <div class="label-large">Label Large (14px) - кнопки и метки</div>
+                    <code class="component-code">.label-large { font-size: 0.875rem; }</code>
+                </div>
+            </div>
+        </section>
+
+        <!-- Кнопки -->
+        <section class="component-section">
+            <h2 class="component-title">🔘 Кнопки</h2>
+
+            <div class="component-grid">
+                <div class="component-item">
+                    <h4 style="margin-bottom: var(--space-3);">Основная кнопка</h4>
+                    <button class="btn btn-primary">
+                        <i class="bi bi-plus-circle"></i>
+                        Создать рецепт
+                    </button>
+                    <code class="component-code">&lt;button class="btn btn-primary"&gt;
+  &lt;i class="bi bi-plus-circle"&gt;&lt;/i&gt;
+  Создать рецепт
+&lt;/button&gt;</code>
+                </div>
+
+                <div class="component-item">
+                    <h4 style="margin-bottom: var(--space-3);">Вторичная кнопка</h4>
+                    <button class="btn btn-outline-primary">
+                        <i class="bi bi-camera"></i>
+                        Загрузить фото
+                    </button>
+                    <code class="component-code">&lt;button class="btn btn-outline-primary"&gt;
+  &lt;i class="bi bi-camera"&gt;&lt;/i&gt;
+  Загрузить фото
+&lt;/button&gt;</code>
+                </div>
+
+                <div class="component-item">
+                    <h4 style="margin-bottom: var(--space-3);">Отключенная кнопка</h4>
+                    <button class="btn btn-primary" disabled>
+                        Обработка...
+                    </button>
+                    <code class="component-code">&lt;button class="btn btn-primary" disabled&gt;
+  Обработка...
+&lt;/button&gt;</code>
+                </div>
+            </div>
+        </section>
+
+        <!-- Карточки -->
+        <section class="component-section">
+            <h2 class="component-title">📄 Карточки</h2>
+
+            <div class="component-grid">
+                <div class="component-item">
+                    <h4 style="margin-bottom: var(--space-3);">Карточка рецепта</h4>
+                    <div class="card">
+                        <div style="height: 150px; background: linear-gradient(135deg, var(--primary), var(--primary-light)); border-radius: var(--radius-xl) var(--radius-xl) 0 0;"></div>
+                        <div style="padding: var(--space-4);">
+                            <h5 class="title-medium" style="margin-bottom: var(--space-2);">Паста Карбонара</h5>
+                            <p class="body-medium" style="color: var(--text-secondary); margin-bottom: var(--space-3);">
+                                Классический итальянский рецепт с беконом и пармезаном
+                            </p>
+                            <div style="display: flex; gap: var(--space-3); font-size: var(--text-label-small);">
+                                <span>🍽️ 4 порции</span>
+                                <span>⏱️ 25 мин</span>
+                                <span>🔥 450 ккал</span>
+                            </div>
+                        </div>
+                    </div>
+                    <code class="component-code">&lt;div class="card"&gt;
+  &lt;!-- Изображение --&gt;
+  &lt;div style="padding: var(--space-4);"&gt;
+    &lt;h5 class="title-medium"&gt;Паста Карбонара&lt;/h5&gt;
+    &lt;p class="body-medium"&gt;Описание...&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code>
+                </div>
+
+                <div class="component-item">
+                    <h4 style="margin-bottom: var(--space-3);">Карточка ингредиента</h4>
+                    <div class="card" style="display: flex; align-items: center; gap: var(--space-4);">
+                        <div style="width: 60px; height: 60px; background: var(--success); border-radius: var(--radius-lg); display: flex; align-items: center; justify-content: center;">
+                            <i class="bi bi-egg" style="font-size: 24px; color: white;"></i>
+                        </div>
+                        <div style="flex: 1;">
+                            <h6 class="body-large" style="margin-bottom: var(--space-1);">Куриное яйцо</h6>
+                            <p class="body-small" style="color: var(--text-secondary); margin-bottom: var(--space-2);">2 шт • 100г</p>
+                            <div style="display: flex; gap: var(--space-2); font-size: var(--text-label-small);">
+                                <span>🍳 155 ккал</span>
+                                <span>🥚 13г белка</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Формы -->
+        <section class="component-section">
+            <h2 class="component-title">📝 Формы</h2>
+
+            <div class="component-grid">
+                <div class="component-item">
+                    <h4 style="margin-bottom: var(--space-3);">Поле ввода</h4>
+                    <div>
+                        <label class="form-label">Название рецепта</label>
+                        <input type="text" class="form-control" placeholder="Введите название рецепта">
+                    </div>
+                    <code class="component-code">&lt;label class="form-label"&gt;Название рецепта&lt;/label&gt;
+&lt;input type="text" class="form-control"
+       placeholder="Введите название рецепта"&gt;</code>
+                </div>
+
+                <div class="component-item">
+                    <h4 style="margin-bottom: var(--space-3);">Textarea</h4>
+                    <div>
+                        <label class="form-label">Описание рецепта</label>
+                        <textarea class="form-control" rows="3" placeholder="Опишите ваш рецепт..."></textarea>
+                    </div>
+                    <code class="component-code">&lt;label class="form-label"&gt;Описание рецепта&lt;/label&gt;
+&lt;textarea class="form-control" rows="3"
+          placeholder="Опишите ваш рецепт..."&gt;&lt;/textarea&gt;</code>
+                </div>
+
+                <div class="component-item">
+                    <h4 style="margin-bottom: var(--space-3);">Select</h4>
+                    <div>
+                        <label class="form-label">Сложность приготовления</label>
+                        <select class="form-control">
+                            <option>Легко</option>
+                            <option>Средне</option>
+                            <option>Сложно</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Иконки -->
+        <section class="component-section">
+            <h2 class="component-title">🎯 Иконки</h2>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--space-4);">
+                <div class="component-item">
+                    <h4 style="margin-bottom: var(--space-3);">Камера (загрузка фото)</h4>
+                    <div style="display: flex; align-items: center; gap: var(--space-3);">
+                        <i class="bi bi-camera" style="font-size: 32px; color: var(--primary);"></i>
+                        <i class="bi bi-camera-fill" style="font-size: 32px; color: var(--secondary);"></i>
+                        <i class="bi bi-camera-video" style="font-size: 32px; color: var(--accent);"></i>
+                    </div>
+                    <code class="component-code">&lt;i class="bi bi-camera"&gt;&lt;/i&gt;
+&lt;i class="bi bi-camera-fill"&gt;&lt;/i&gt;</code>
+                </div>
+
+                <div class="component-item">
+                    <h4 style="margin-bottom: var(--space-3);">Робот (ИИ)</h4>
+                    <div style="display: flex; align-items: center; gap: var(--space-3);">
+                        <i class="bi bi-robot" style="font-size: 32px; color: var(--primary);"></i>
+                        <i class="bi bi-cpu" style="font-size: 32px; color: var(--secondary);"></i>
+                        <i class="bi bi-lightning" style="font-size: 32px; color: var(--warning);"></i>
+                    </div>
+                </div>
+
+                <div class="component-item">
+                    <h4 style="margin-bottom: var(--space-3);">Еда и рецепты</h4>
+                    <div style="display: flex; align-items: center; gap: var(--space-3);">
+                        <i class="bi bi-egg" style="font-size: 32px; color: var(--success);"></i>
+                        <i class="bi bi-cup-hot" style="font-size: 32px; color: var(--primary);"></i>
+                        <i class="bi bi-star" style="font-size: 32px; color: var(--warning);"></i>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Анимации -->
+        <section class="component-section">
+            <h2 class="component-title">✨ Анимации</h2>
+
+            <div class="component-grid">
+                <div class="component-item">
+                    <h4 style="margin-bottom: var(--space-3);">Fade In</h4>
+                    <button class="btn btn-primary animate-fade-in">
+                        Плавное появление
+                    </button>
+                </div>
+
+                <div class="component-item">
+                    <h4 style="margin-bottom: var(--space-3);">Slide Up</h4>
+                    <button class="btn btn-outline-primary animate-slide-up">
+                        Скольжение вверх
+                    </button>
+                </div>
+
+                <div class="component-item">
+                    <h4 style="margin-bottom: var(--space-3);">Scale In</h4>
+                    <button class="btn btn-outline-primary animate-scale-in">
+                        Масштабирование
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Адаптивность -->
+        <section class="component-section">
+            <h2 class="component-title">📱 Адаптивность</h2>
+
+            <div class="row">
+                <div class="col-12">
+                    <p class="body-medium" style="margin-bottom: var(--space-4);">
+                        Система автоматически адаптируется под разные размеры экранов.
+                        Попробуйте изменить размер окна браузера!
+                    </p>
+                </div>
+            </div>
+
+            <div class="row g-3">
+                <div class="col-12 col-sm-6 col-lg-3">
+                    <div class="card" style="padding: var(--space-4); text-align: center;">
+                        <i class="bi bi-phone" style="font-size: 32px; color: var(--primary); margin-bottom: var(--space-2);"></i>
+                        <h6 class="title-medium">Мобильные</h6>
+                        <p class="body-small">320px - 575px</p>
+                    </div>
+                </div>
+                <div class="col-12 col-sm-6 col-lg-3">
+                    <div class="card" style="padding: var(--space-4); text-align: center;">
+                        <i class="bi bi-tablet" style="font-size: 32px; color: var(--primary); margin-bottom: var(--space-2);"></i>
+                        <h6 class="title-medium">Планшеты</h6>
+                        <p class="body-small">576px - 991px</p>
+                    </div>
+                </div>
+                <div class="col-12 col-sm-6 col-lg-3">
+                    <div class="card" style="padding: var(--space-4); text-align: center;">
+                        <i class="bi bi-laptop" style="font-size: 32px; color: var(--primary); margin-bottom: var(--space-2);"></i>
+                        <h6 class="title-medium">Ноутбуки</h6>
+                        <p class="body-small">992px - 1199px</p>
+                    </div>
+                </div>
+                <div class="col-12 col-sm-6 col-lg-3">
+                    <div class="card" style="padding: var(--space-4); text-align: center;">
+                        <i class="bi bi-display" style="font-size: 32px; color: var(--primary); margin-bottom: var(--space-2);"></i>
+                        <h6 class="title-medium">Десктопы</h6>
+                        <p class="body-small">1200px+</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer style="text-align: center; padding: var(--space-12) 0; border-top: 1px solid var(--border); margin-top: var(--space-12);">
+            <p class="body-medium" style="color: var(--text-secondary);">
+                Дизайн-система AI Recipe Bot • Создано на основе файлов color.pdf, Bright blue.pdf, Palette.pdf, Typography.pdf
+            </p>
+            <p class="body-small" style="color: var(--text-disabled); margin-top: var(--space-2);">
+                Следует принципам Material Design и 10 эвристикам юзабилити Нильсена
+            </p>
+        </footer>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

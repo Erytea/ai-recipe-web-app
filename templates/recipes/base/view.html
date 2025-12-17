@@ -1,69 +1,93 @@
 {% extends "layout.html" %}
 
 {% block content %}
-<div class="container py-5">
+<div class="container py-5 animate-fade-in">
     <div class="row justify-content-center">
         <div class="col-lg-10">
             <!-- Back button -->
             <div class="mb-4">
-                <a href="/recipes/base" class="btn btn-outline-secondary">
+                <a href="/recipes/base" class="btn btn-outline-primary">
                     <i class="bi bi-arrow-left"></i> Назад к базе рецептов
                 </a>
             </div>
 
-            <div class="card shadow">
+            <div class="card animate-scale-in">
                 <div class="card-body p-5">
                     <div class="text-center mb-5">
-                        <h1 class="display-5 mb-3">{{ recipe.title }}</h1>
-                        <div class="badge bg-info mb-2">
+                        <h1 class="display-large mb-3 animate-slide-up">{{ recipe.title }}</h1>
+                        <div class="badge mb-2" style="background: var(--secondary); color: white; padding: var(--space-2) var(--space-3);">
                             <i class="bi bi-database"></i> Из общей базы рецептов
                         </div>
                     </div>
 
                     <!-- Tags and metadata -->
-                    <div class="row mb-4">
+                    <div class="row mb-5 g-3">
                         {% if recipe.tags %}
-                        <div class="col-md-6 mb-2">
-                            <strong><i class="bi bi-tags"></i> Теги:</strong>
-                            <span class="text-muted">{{ recipe.tags }}</span>
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-center">
+                                <i class="bi bi-tags" style="color: var(--primary); margin-right: var(--space-2);"></i>
+                                <div>
+                                    <div class="body-small fw-bold" style="color: var(--text-secondary);">ТЕГИ</div>
+                                    <div class="body-medium">{{ recipe.tags }}</div>
+                                </div>
+                            </div>
                         </div>
                         {% endif %}
                         {% if recipe.cooking_time %}
-                        <div class="col-md-6 mb-2">
-                            <strong><i class="bi bi-clock"></i> Время:</strong>
-                            <span class="text-muted">{{ recipe.cooking_time }}</span>
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-center">
+                                <i class="bi bi-clock" style="color: var(--primary); margin-right: var(--space-2);"></i>
+                                <div>
+                                    <div class="body-small fw-bold" style="color: var(--text-secondary);">ВРЕМЯ ПРИГОТОВЛЕНИЯ</div>
+                                    <div class="body-medium">{{ recipe.cooking_time }}</div>
+                                </div>
+                            </div>
                         </div>
                         {% endif %}
                         {% if recipe.difficulty %}
-                        <div class="col-md-6 mb-2">
-                            <strong><i class="bi bi-bar-chart"></i> Сложность:</strong>
-                            <span class="text-muted">{{ recipe.difficulty }}</span>
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-center">
+                                <i class="bi bi-bar-chart" style="color: var(--primary); margin-right: var(--space-2);"></i>
+                                <div>
+                                    <div class="body-small fw-bold" style="color: var(--text-secondary);">СЛОЖНОСТЬ</div>
+                                    <div class="body-medium">{{ recipe.difficulty }}</div>
+                                </div>
+                            </div>
                         </div>
                         {% endif %}
                     </div>
 
                     <!-- Nutrition -->
-                    <div class="card bg-light mb-4">
-                        <div class="card-body">
-                            <h3 class="card-title mb-4">
-                                <i class="bi bi-calculator"></i> КБЖУ на 100г
+                    <div class="card mb-5" style="background: var(--surface-hover); border-color: var(--border-light);">
+                        <div class="card-body p-4">
+                            <h3 class="title-large mb-4 text-center" style="color: var(--primary);">
+                                <i class="bi bi-calculator" style="margin-right: var(--space-2);"></i>
+                                КБЖУ на 100г
                             </h3>
-                            <div class="row text-center">
-                                <div class="col-md-3 mb-3">
-                                    <div class="h2 text-danger fw-bold">{{ recipe.calories_per_100g|int }}</div>
-                                    <div class="text-muted">ккал</div>
+                            <div class="row text-center g-3">
+                                <div class="col-md-3">
+                                    <div class="p-3 rounded-lg" style="background: white; box-shadow: var(--shadow-sm);">
+                                        <div class="display-medium fw-bold" style="color: var(--primary);">{{ recipe.calories_per_100g|int }}</div>
+                                        <div class="body-small" style="color: var(--text-secondary);">ккал</div>
+                                    </div>
                                 </div>
-                                <div class="col-md-3 mb-3">
-                                    <div class="h2 text-primary fw-bold">{{ recipe.protein_per_100g|int }}г</div>
-                                    <div class="text-muted">Белки</div>
+                                <div class="col-md-3">
+                                    <div class="p-3 rounded-lg" style="background: white; box-shadow: var(--shadow-sm);">
+                                        <div class="display-medium fw-bold" style="color: var(--secondary);">{{ recipe.protein_per_100g|int }}г</div>
+                                        <div class="body-small" style="color: var(--text-secondary);">Белки</div>
+                                    </div>
                                 </div>
-                                <div class="col-md-3 mb-3">
-                                    <div class="h2 text-warning fw-bold">{{ recipe.fat_per_100g|int }}г</div>
-                                    <div class="text-muted">Жиры</div>
+                                <div class="col-md-3">
+                                    <div class="p-3 rounded-lg" style="background: white; box-shadow: var(--shadow-sm);">
+                                        <div class="display-medium fw-bold" style="color: var(--warning);">{{ recipe.fat_per_100g|int }}г</div>
+                                        <div class="body-small" style="color: var(--text-secondary);">Жиры</div>
+                                    </div>
                                 </div>
-                                <div class="col-md-3 mb-3">
-                                    <div class="h2 text-info fw-bold">{{ recipe.carbs_per_100g|int }}г</div>
-                                    <div class="text-muted">Углеводы</div>
+                                <div class="col-md-3">
+                                    <div class="p-3 rounded-lg" style="background: white; box-shadow: var(--shadow-sm);">
+                                        <div class="display-medium fw-bold" style="color: var(--info);">{{ recipe.carbs_per_100g|int }}г</div>
+                                        <div class="body-small" style="color: var(--text-secondary);">Углеводы</div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -71,63 +95,66 @@
 
                     <!-- Ingredients -->
                     {% if recipe.ingredients %}
-                    <div class="card mb-4">
-                        <div class="card-header">
-                            <h5 class="mb-0">
-                                <i class="bi bi-list-check"></i> Ингредиенты
+                    <div class="card mb-4 animate-slide-up">
+                        <div class="card-header" style="background: var(--primary); color: white; border: none;">
+                            <h5 class="mb-0 title-medium">
+                                <i class="bi bi-list-check" style="margin-right: var(--space-2);"></i>
+                                Ингредиенты
                             </h5>
                         </div>
-                        <div class="card-body">
-                            <pre class="mb-0" style="white-space: pre-wrap; font-family: inherit;">{{ recipe.ingredients }}</pre>
+                        <div class="card-body p-4">
+                            <div class="body-large" style="white-space: pre-wrap; line-height: var(--line-height-relaxed);">{{ recipe.ingredients }}</div>
                         </div>
                     </div>
                     {% endif %}
 
                     <!-- Instructions -->
                     {% if recipe.instructions %}
-                    <div class="card mb-4">
-                        <div class="card-header">
-                            <h5 class="mb-0">
-                                <i class="bi bi-list-ol"></i> Приготовление
+                    <div class="card mb-4 animate-slide-up">
+                        <div class="card-header" style="background: var(--secondary); color: white; border: none;">
+                            <h5 class="mb-0 title-medium">
+                                <i class="bi bi-list-ol" style="margin-right: var(--space-2);"></i>
+                                Приготовление
                             </h5>
                         </div>
-                        <div class="card-body">
-                            <pre class="mb-0" style="white-space: pre-wrap; font-family: inherit;">{{ recipe.instructions }}</pre>
+                        <div class="card-body p-4">
+                            <div class="body-large" style="white-space: pre-wrap; line-height: var(--line-height-relaxed);">{{ recipe.instructions }}</div>
                         </div>
                     </div>
                     {% endif %}
 
                     <!-- Notes -->
                     {% if recipe.notes %}
-                    <div class="card bg-light mb-4">
-                        <div class="card-body">
-                            <h5 class="card-title">
-                                <i class="bi bi-info-circle"></i> Заметки
+                    <div class="card mb-4 animate-slide-up" style="background: var(--surface-hover); border-color: var(--border-light);">
+                        <div class="card-body p-4">
+                            <h5 class="title-medium mb-3" style="color: var(--primary);">
+                                <i class="bi bi-info-circle" style="margin-right: var(--space-2);"></i>
+                                Заметки
                             </h5>
-                            <p class="mb-0">{{ recipe.notes }}</p>
+                            <div class="body-large" style="line-height: var(--line-height-relaxed);">{{ recipe.notes }}</div>
                         </div>
                     </div>
                     {% endif %}
 
                     <!-- Save to collection -->
-                    <div class="card border-primary">
-                        <div class="card-body text-center">
+                    <div class="card animate-slide-up" style="border-color: var(--primary); border-width: 2px;">
+                        <div class="card-body text-center p-4">
                             {% if saved_in_collection %}
-                            <div class="alert alert-info mb-0">
-                                <i class="bi bi-check-circle"></i>
+                            <div class="alert alert-info mb-0 animate-fade-in" style="background: var(--info); color: white; border: none;">
+                                <i class="bi bi-check-circle" style="margin-right: var(--space-2);"></i>
                                 Этот рецепт уже сохранен в твою коллекцию
-                                <a href="/recipes" class="alert-link">Посмотреть мои рецепты</a>
+                                <a href="/recipes" class="alert-link" style="color: white; text-decoration: underline;">Посмотреть мои рецепты</a>
                             </div>
                             {% else %}
-                            <h5 class="mb-3">Сохранить в мою коллекцию?</h5>
-                            <p class="text-muted mb-4">
+                            <h5 class="headline-medium mb-3" style="color: var(--primary);">Сохранить в мою коллекцию?</h5>
+                            <p class="body-medium mb-4" style="color: var(--text-secondary);">
                                 Добавь этот рецепт в свою личную коллекцию, чтобы иметь к нему быстрый доступ
                             </p>
                             <form method="post" action="/recipes/base/{{ recipe.id }}/save" class="d-inline">
                                 {% if csrf_token %}
                                 <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
                                 {% endif %}
-                                <button type="submit" class="btn btn-primary btn-lg">
+                                <button type="submit" class="btn btn-primary">
                                     <i class="bi bi-bookmark-plus"></i> Сохранить в коллекцию
                                 </button>
                             </form>
