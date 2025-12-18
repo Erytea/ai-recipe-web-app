@@ -1,420 +1,238 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Анализ продуктов - AI Recipe</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
-    <style>
-        body {
-            background: #1a1a1a;
-            color: #ffffff;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            min-height: 100vh;
-            padding: 2rem;
-            margin: 0;
-        }
+{% extends "layout.html" %}
 
-        .main-container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
+{% block content %}
+<div class="container py-5 animate-fade-in">
+    <div class="row justify-content-center">
+        <div class="col-12">
+            <!-- Navigation -->
+            <div class="mb-4">
+                <a href="/recipes/create" class="text-secondary text-decoration-none body-medium transition-fast" style="display: inline-flex; align-items: center; gap: var(--space-2);">
+                    <span>←</span>
+                    <span>Назад</span>
+                </a>
+            </div>
 
-        .step-indicator {
-            font-size: 0.875rem;
-            color: #888;
-            text-align: center;
-            margin-bottom: 1rem;
-        }
+            <!-- Step Indicator -->
+            <div class="step-indicator body-small text-center mb-3" style="color: var(--text-secondary);">
+                Шаг 2 из 3
+            </div>
 
-        .main-headline {
-            font-size: 2rem;
-            font-weight: 600;
-            color: #ffffff;
-            text-align: center;
-            margin-bottom: 0.5rem;
-        }
+            <!-- Main Headline -->
+            <div class="text-center mb-5">
+                <h1 class="display-medium mb-3" style="color: var(--text-primary); font-weight: var(--font-weight-semibold);">
+                    Вот что я нашёл на фото
+                </h1>
+                <p class="body-large" style="color: var(--text-secondary);">
+                    Проверь, всё ли верно
+                </p>
+            </div>
 
-        .sub-headline {
-            font-size: 1rem;
-            color: #b0b0b0;
-            text-align: center;
-            margin-bottom: 3rem;
-        }
+            <!-- Content Grid -->
+            <div class="content-grid row g-4">
+                <!-- Photo Section -->
+                <div class="col-lg-6 photo-section">
+                    <div class="card animate-scale-in">
+                        <div class="card-body p-4">
+                            <img src="/static/{{ photo_path }}" alt="Uploaded photo" class="img-fluid rounded" style="width: 100%; height: auto;">
+                        </div>
+                    </div>
+                </div>
 
-        .content-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 3rem;
-            align-items: start;
-        }
+                <!-- Analysis Section -->
+                <div class="col-lg-6 analysis-section">
+                    <div class="card animate-scale-in">
+                        <div class="card-body p-4">
+                            {% if analysis.ingredients %}
+                            <div class="confirmed-section mb-4">
+                                <h3 class="headline-medium mb-4" style="color: var(--text-primary); font-weight: var(--font-weight-semibold);">
+                                    Определены
+                                </h3>
+                                {% for ingredient in analysis.ingredients %}
+                                <div class="confirmed-item d-flex align-items-center py-2 border-bottom" style="border-color: var(--border-light) !important;">
+                                    <i class="bi bi-check-circle-fill me-3" style="color: var(--success); font-size: 1.1rem;"></i>
+                                    <span class="body-large" style="color: var(--text-primary);">{{ ingredient }}</span>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            {% endif %}
 
-        .photo-section {
-            opacity: 0.7;
-        }
+                            {% if analysis.uncertainties %}
+                            <div class="clarify-section">
+                                <h3 class="headline-medium mb-4" style="color: var(--text-primary); font-weight: var(--font-weight-semibold);">
+                                    Нужно уточнить
+                                </h3>
+                                {% for uncertainty in analysis.uncertainties %}
+                                <div class="clarify-item mb-4" data-item="{{ uncertainty.item }}">
+                                    <div class="clarify-question body-large mb-3 fw-medium" style="color: var(--text-primary);">
+                                        {{ uncertainty.question or uncertainty.item }}
+                                    </div>
+                                    <div class="clarify-options d-flex flex-wrap gap-2 mb-3">
+                                        {% for option in uncertainty.options %}
+                                        <button class="clarify-btn btn" style="background: var(--surface-hover); color: var(--text-primary); border: 1px solid var(--border); font-size: var(--text-label-medium);" data-option="{{ option }}">{{ option }}</button>
+                                        {% endfor %}
+                                        <button class="clarify-btn other-btn btn" style="background: var(--surface-hover); color: var(--text-primary); border: 1px solid var(--border); font-size: var(--text-label-medium);" data-option="other">Другое</button>
+                                    </div>
+                                    <div class="other-input" style="display: none;">
+                                        <input type="text" class="form-control" placeholder="Уточни, что это..." data-other-input>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            {% endif %}
 
-        .photo-container {
-            background: #2a2a2a;
-            border-radius: 12px;
-            padding: 1.5rem;
-            border: 1px solid #333;
-        }
-
-        .photo-container img {
-            width: 100%;
-            height: auto;
-            border-radius: 8px;
-            display: block;
-        }
-
-        .analysis-section {
-            background: #2a2a2a;
-            border-radius: 12px;
-            padding: 2rem;
-        }
-
-        .section-title {
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: #ffffff;
-            margin-bottom: 1.5rem;
-        }
-
-        .confirmed-section {
-            margin-bottom: 2rem;
-        }
-
-        .confirmed-item {
-            display: flex;
-            align-items: center;
-            padding: 0.75rem 0;
-            border-bottom: 1px solid #333;
-        }
-
-        .confirmed-item:last-child {
-            border-bottom: none;
-        }
-
-        .confirmed-icon {
-            color: #10b981;
-            margin-right: 0.75rem;
-            font-size: 1.1rem;
-        }
-
-        .confirmed-text {
-            color: #e5e7eb;
-            font-size: 1rem;
-        }
-
-        .clarify-section {
-            margin-bottom: 2rem;
-        }
-
-        .clarify-item {
-            margin-bottom: 1.5rem;
-        }
-
-        .clarify-question {
-            color: #ffffff;
-            font-size: 1rem;
-            margin-bottom: 0.75rem;
-            font-weight: 500;
-        }
-
-        .clarify-options {
-            display: flex;
-            gap: 0.5rem;
-            flex-wrap: wrap;
-        }
-
-        .clarify-btn {
-            background: #333;
-            color: #e5e7eb;
-            border: 1px solid #444;
-            padding: 0.5rem 1rem;
-            border-radius: 6px;
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .clarify-btn:hover {
-            background: #444;
-            border-color: #555;
-        }
-
-        .clarify-btn.selected {
-            background: #576CED;
-            border-color: #576CED;
-            color: white;
-        }
-
-        .other-input {
-            display: none;
-            margin-top: 0.75rem;
-        }
-
-        .other-input.show {
-            display: block;
-        }
-
-        .other-input input {
-            background: #333;
-            border: 1px solid #444;
-            color: #ffffff;
-            padding: 0.5rem;
-            border-radius: 6px;
-            width: 100%;
-            font-size: 0.9rem;
-        }
-
-        .other-input input::placeholder {
-            color: #888;
-        }
-
-        .cta-section {
-            margin-top: 3rem;
-            text-align: center;
-        }
-
-        .primary-btn {
-            background: #576CED;
-            color: white;
-            border: none;
-            padding: 1rem 2rem;
-            border-radius: 8px;
-            font-size: 1rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin-bottom: 1rem;
-        }
-
-        .primary-btn:hover {
-            background: #4a5fd5;
-            transform: translateY(-1px);
-        }
-
-        .secondary-link {
-            color: #888;
-            text-decoration: none;
-            font-size: 0.9rem;
-            transition: color 0.2s ease;
-        }
-
-        .secondary-link:hover {
-            color: #aaa;
-        }
-
-        .error-message {
-            background: #dc3545;
-            color: white;
-            padding: 1rem;
-            border-radius: 8px;
-            margin-bottom: 1rem;
-            font-size: 0.9rem;
-            text-align: center;
-        }
-
-        .home-button {
-            position: fixed;
-            top: 2rem;
-            left: 2rem;
-            background: #2a2a2a;
-            color: #ffffff;
-            border: 2px solid #576CED;
-            border-radius: 12px;
-            padding: 0.75rem 1.25rem;
-            font-size: 1rem;
-            font-weight: 500;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            transition: all 0.3s ease;
-            z-index: 1000;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-        }
-
-        .home-button:hover {
-            background: #576CED;
-            color: white;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(87, 108, 237, 0.4);
-        }
-
-        .home-button i {
-            font-size: 1.1rem;
-        }
-
-        @media (max-width: 768px) {
-            .content-grid {
-                grid-template-columns: 1fr;
-                gap: 2rem;
-            }
-
-            .main-headline {
-                font-size: 1.5rem;
-            }
-
-            .analysis-section {
-                padding: 1.5rem;
-            }
-
-            .home-button {
-                top: 1rem;
-                left: 1rem;
-                padding: 0.5rem 1rem;
-                font-size: 0.9rem;
-            }
-        }
-    </style>
-</head>
-<body>
-    <a href="/" class="home-button">
-        <i class="bi bi-house-door"></i>
-        Главная
-    </a>
-
-    <div class="main-container">
-        <div class="step-indicator">Шаг 2 из 3</div>
-
-        <h1 class="main-headline">Вот что я нашёл на фото</h1>
-        <p class="sub-headline">Проверь, всё ли верно</p>
-
-        <div class="content-grid">
-            <!-- Photo Section -->
-            <div class="photo-section">
-                <div class="photo-container">
-                    <img src="/static/{{ photo_path }}" alt="Uploaded photo">
+                            {% if not analysis.ingredients and not analysis.uncertainties %}
+                            <div class="error-message alert alert-warning animate-fade-in">
+                                <i class="bi bi-exclamation-triangle-fill"></i>
+                                Продукты не распознаны. Попробуй загрузить другое фото.
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <!-- Analysis Section -->
-            <div class="analysis-section">
-                {% if analysis.ingredients %}
-                <div class="confirmed-section">
-                    <h2 class="section-title">Определены</h2>
-                    {% for ingredient in analysis.ingredients %}
-                    <div class="confirmed-item">
-                        <i class="bi bi-check-circle-fill confirmed-icon"></i>
-                        <span class="confirmed-text">{{ ingredient }}</span>
-                    </div>
-                    {% endfor %}
-                </div>
+            <!-- CTA Section -->
+            <div class="cta-section text-center mt-5">
+                {% if analysis.ingredients or analysis.uncertainties %}
+                <button class="primary-btn btn btn-primary btn-lg mb-3" id="continueBtn">
+                    <i class="bi bi-arrow-right-circle"></i> Продолжить
+                </button>
+                {% else %}
+                <button class="primary-btn btn btn-primary btn-lg mb-3" onclick="window.location.href='/recipes/create'">
+                    <i class="bi bi-arrow-repeat"></i> Попробовать другое фото
+                </button>
                 {% endif %}
-
-                {% if analysis.uncertainties %}
-                <div class="clarify-section">
-                    <h2 class="section-title">Нужно уточнить</h2>
-                    {% for uncertainty in analysis.uncertainties %}
-                    <div class="clarify-item" data-item="{{ uncertainty.item }}">
-                        <div class="clarify-question">{{ uncertainty.question or uncertainty.item }}</div>
-                        <div class="clarify-options">
-                            {% for option in uncertainty.options %}
-                            <button class="clarify-btn" data-option="{{ option }}">{{ option }}</button>
-                            {% endfor %}
-                            <button class="clarify-btn other-btn" data-option="other">Другое</button>
-                        </div>
-                        <div class="other-input">
-                            <input type="text" placeholder="Уточни, что это..." data-other-input>
-                        </div>
-                    </div>
-                    {% endfor %}
-                </div>
-                {% endif %}
-
-                {% if not analysis.ingredients and not analysis.uncertainties %}
-                <div class="error-message">
-                    <i class="bi bi-exclamation-triangle-fill"></i>
-                    Продукты не распознаны. Попробуй загрузить другое фото.
-                </div>
-                {% endif %}
+                <br>
+                <a href="/recipes/create" class="secondary-link body-medium text-secondary text-decoration-none transition-fast">
+                    Загрузить другое фото
+                </a>
             </div>
-        </div>
-
-        <!-- CTA Section -->
-        <div class="cta-section">
-            {% if analysis.ingredients or analysis.uncertainties %}
-            <button class="primary-btn" id="continueBtn">Продолжить</button>
-            {% else %}
-            <button class="primary-btn" onclick="window.location.href='/recipes/create'">Попробовать другое фото</button>
-            {% endif %}
-            <br>
-            <a href="/recipes/create" class="secondary-link">Загрузить другое фото</a>
         </div>
     </div>
+</div>
 
-    <form id="clarifyForm" method="post" action="/recipes/create/step2" style="display: none;">
-        <input type="hidden" id="clarificationsInput" name="clarifications" value="">
-    </form>
+<form id="clarifyForm" method="post" action="/recipes/create/step2" style="display: none;">
+    <input type="hidden" id="clarificationsInput" name="clarifications" value="">
+</form>
+{% endblock %}
 
-    <script>
-        // Handle clarification button selections
-        document.querySelectorAll('.clarify-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                const item = this.closest('.clarify-item');
-                const options = item.querySelectorAll('.clarify-btn');
+{% block extra_css %}
+<style>
+.content-grid {
+    align-items: start;
+}
 
-                // Remove selected class from all buttons in this item
-                options.forEach(opt => opt.classList.remove('selected'));
+.photo-section .card {
+    opacity: 0.9;
+}
 
-                // Add selected class to clicked button
-                this.classList.add('selected');
+.photo-section img {
+    border-radius: var(--radius-lg);
+}
 
-                // Handle "other" option
-                if (this.classList.contains('other-btn')) {
-                    item.querySelector('.other-input').classList.add('show');
-                } else {
-                    item.querySelector('.other-input').classList.remove('show');
-                }
+.confirmed-item:last-child {
+    border-bottom: none !important;
+}
 
-                updateContinueButton();
-            });
-        });
+.clarify-btn:hover {
+    background: var(--surface) !important;
+    border-color: var(--border-light) !important;
+}
 
-        function updateContinueButton() {
-            const continueBtn = document.getElementById('continueBtn');
-            if (continueBtn) {
-                const allClarified = document.querySelectorAll('.clarify-item').length ===
-                    document.querySelectorAll('.clarify-item .clarify-btn.selected').length;
+.clarify-btn.selected {
+    background: var(--secondary) !important;
+    border-color: var(--secondary) !important;
+    color: white !important;
+}
 
-                continueBtn.disabled = !allClarified;
-                continueBtn.style.opacity = allClarified ? '1' : '0.5';
+.other-input.show {
+    display: block !important;
+}
+
+.primary-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+.secondary-link:hover {
+    color: var(--text-primary) !important;
+}
+
+@media (max-width: 991.98px) {
+    .content-grid {
+        grid-template-columns: 1fr !important;
+    }
+}
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Handle clarification button selections
+    document.querySelectorAll('.clarify-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const item = this.closest('.clarify-item');
+            const options = item.querySelectorAll('.clarify-btn');
+
+            // Remove selected class from all buttons in this item
+            options.forEach(opt => opt.classList.remove('selected'));
+
+            // Add selected class to clicked button
+            this.classList.add('selected');
+
+            // Handle "other" option
+            if (this.classList.contains('other-btn')) {
+                item.querySelector('.other-input').classList.add('show');
+            } else {
+                item.querySelector('.other-input').classList.remove('show');
             }
+
+            updateContinueButton();
+        });
+    });
+
+    function updateContinueButton() {
+        const continueBtn = document.getElementById('continueBtn');
+        if (continueBtn) {
+            const allClarified = document.querySelectorAll('.clarify-item').length ===
+                document.querySelectorAll('.clarify-item .clarify-btn.selected').length;
+
+            continueBtn.disabled = !allClarified;
+            continueBtn.style.opacity = allClarified ? '1' : '0.5';
         }
+    }
 
-        // Handle continue button
-        document.getElementById('continueBtn')?.addEventListener('click', function() {
-            const clarifications = [];
+    // Handle continue button
+    document.getElementById('continueBtn')?.addEventListener('click', function() {
+        const clarifications = [];
 
-            document.querySelectorAll('.clarify-item').forEach((item, index) => {
-                const selectedBtn = item.querySelector('.clarify-btn.selected');
-                if (selectedBtn) {
-                    let clarification = selectedBtn.dataset.option;
+        document.querySelectorAll('.clarify-item').forEach((item, index) => {
+            const selectedBtn = item.querySelector('.clarify-btn.selected');
+            if (selectedBtn) {
+                let clarification = selectedBtn.dataset.option;
 
-                    // Handle "other" input
-                    if (selectedBtn.classList.contains('other-btn')) {
-                        const otherInput = item.querySelector('[data-other-input]');
-                        if (otherInput && otherInput.value.trim()) {
-                            clarification = otherInput.value.trim();
-                        }
+                // Handle "other" input
+                if (selectedBtn.classList.contains('other-btn')) {
+                    const otherInput = item.querySelector('[data-other-input]');
+                    if (otherInput && otherInput.value.trim()) {
+                        clarification = otherInput.value.trim();
                     }
-
-                    clarifications.push(`${index + 1}. ${item.dataset.item}: ${clarification}`);
                 }
-            });
 
-            document.getElementById('clarificationsInput').value = clarifications.join('; ');
-            document.getElementById('clarifyForm').submit();
+                clarifications.push(`${index + 1}. ${item.dataset.item}: ${clarification}`);
+            }
         });
 
-        // Initialize continue button state
-        updateContinueButton();
-    </script>
-</body>
-</html>
+        document.getElementById('clarificationsInput').value = clarifications.join('; ');
+        document.getElementById('clarifyForm').submit();
+    });
+
+    // Initialize continue button state
+    updateContinueButton();
+});
+</script>
+{% endblock %}
 
 
 
