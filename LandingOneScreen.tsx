@@ -1,4 +1,107 @@
-import React from 'react';
+import React, { useMemo } from 'react';
+
+// Компонент декоративных пончиков на фоне
+const DonutParticles: React.FC = () => {
+  // Генерируем стабильные параметры для пончиков (без перерендера)
+  const donuts = useMemo(() => {
+    const count = 8; // Создаём 8 пончиков, но одновременно видно 2-3
+    return Array.from({ length: count }, (_, i) => {
+      // Распределяем задержки так, чтобы одновременно было видно 2-3 пончика
+      // Каждый пончик появляется с интервалом ~4-6 секунд
+      const baseDelay = i * (4 + Math.random() * 2);
+      
+      return {
+        id: i,
+        startX: Math.random() * 100, // 0-100%
+        size: 24 + Math.random() * 48, // 24-72px
+        duration: 18 + Math.random() * 22, // 18-40s
+        delay: baseDelay, // Распределённые задержки для контроля количества одновременно
+        rotation: 0.5 + Math.random() * 0.7, // 0.5-1.2 оборота
+        direction: Math.random() > 0.5 ? 1 : -1, // вверх-вправо или вниз-влево
+        opacity: 0.06 + Math.random() * 0.08, // 0.06-0.14
+        blur: Math.random() * 2, // 0-2px
+        // Цвет: нейтральный с акцентными штрихами
+        hasAccent: Math.random() > 0.7, // 30% с акцентами Blue 600 / Purple 400
+      };
+    });
+  }, []);
+
+  // SVG пончик: нейтральный с опциональными акцентами
+  const DonutSVG: React.FC<{ hasAccent: boolean; size: number; blur: number }> = ({ hasAccent, size, blur }) => {
+    const donutColor = '#D4A574'; // Нейтральный золотисто-коричневый
+    const icingColor = '#E8E8E8'; // Нейтральный светло-серый
+    const accentBlue = '#576CED'; // Blue 600
+    const accentPurple = '#A3AEF5'; // Purple 400 (bright-blue-400)
+
+    return (
+      <svg width={size} height={size} viewBox="0 0 64 64" style={{ filter: `blur(${blur}px)` }}>
+        {/* Тело пончика */}
+        <circle cx="32" cy="32" r="28" fill={donutColor} stroke="#C99A5F" strokeWidth="1" />
+        {/* Дырка */}
+        <circle cx="32" cy="32" r="12" fill="white" />
+        {/* Глазурь */}
+        <path
+          d="M 16 28 Q 20 20, 28 20 Q 36 20, 40 28 Q 42 32, 40 36 Q 36 44, 28 44 Q 20 44, 20 36 Q 18 32, 16 28"
+          fill={icingColor}
+          opacity="0.9"
+        />
+        {/* Акцентные штрихи (очень дозированно) */}
+        {hasAccent && (
+          <>
+            {/* 1-2 маленьких посыпки в Blue 600 */}
+            <rect x="28" y="24" width="3" height="8" rx="1" fill={accentBlue} opacity="0.6" />
+            <rect x="33" y="26" width="2.5" height="6" rx="1" fill={accentBlue} opacity="0.5" />
+            {/* 1 посыпка в Purple 400 */}
+            <rect x="30" y="28" width="2" height="5" rx="1" fill={accentPurple} opacity="0.4" />
+          </>
+        )}
+      </svg>
+    );
+  };
+
+  return (
+    <>
+      {/* Анимированные пончики */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none z-0 donut-container">
+        {donuts.map((donut) => {
+          const floatAnimation = donut.direction > 0 ? 'donut-float-1' : 'donut-float-2';
+          
+          return (
+            <div
+              key={donut.id}
+              className="absolute donut-animated"
+              style={{
+                left: `${donut.startX}%`,
+                bottom: '-10%',
+                opacity: donut.opacity,
+                animation: `${floatAnimation} ${donut.duration}s linear infinite ${donut.delay}s`,
+              }}
+            >
+              <div
+                style={{
+                  animation: `donut-spin ${donut.duration}s linear infinite ${donut.delay}s`,
+                  transformOrigin: 'center center',
+                }}
+              >
+                <DonutSVG hasAccent={donut.hasAccent} size={donut.size} blur={donut.blur} />
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Статичные пончики для prefers-reduced-motion (скрыты по умолчанию) */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none z-0 donut-static-container" style={{ display: 'none' }}>
+        <div className="donut-static" style={{ left: '15%', bottom: '20%', opacity: 0.04 }}>
+          <DonutSVG hasAccent={false} size={48} blur={1} />
+        </div>
+        <div className="donut-static" style={{ left: '75%', bottom: '60%', opacity: 0.04 }}>
+          <DonutSVG hasAccent={true} size={36} blur={1} />
+        </div>
+      </div>
+    </>
+  );
+};
 
 // LandingOneScreen - усиленная конверсия desktop-first one-screen landing
 // Усиление CTA, proof-блока, заголовков, микро-движения без новых секций
@@ -6,6 +109,9 @@ import React from 'react';
 const LandingOneScreen: React.FC = () => {
   return (
     <div className="min-h-screen h-screen flex flex-col bg-white overflow-hidden relative">
+      {/* Слой с анимированными пончиками */}
+      <DonutParticles />
+
       {/* Мягкий background wash */}
       <div
         className="absolute inset-0 opacity-30"
@@ -22,12 +128,20 @@ const LandingOneScreen: React.FC = () => {
         }}
       />
 
+      {/* Градиентный overlay для защиты конверсии (тихий карман над hero) */}
+      <div
+        className="absolute inset-0 pointer-events-none z-[5]"
+        style={{
+          background: 'linear-gradient(to right, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.2) 35%, transparent 50%)',
+        }}
+      />
+
       {/* Основной контент */}
       <div className="relative z-10 flex-1 flex flex-col max-w-[1280px] mx-auto px-8 py-12">
         {/* Верхняя секция: Hero слева, Proof справа */}
         <div className="flex-1 flex gap-16 mb-16">
           {/* Левая колонка: Hero */}
-          <div className="flex-1 flex flex-col justify-center max-w-[600px]">
+          <div className="flex-1 flex flex-col justify-center max-w-[600px] relative z-10">
             {/* H1 - усиленный контраст */}
             <h1
               className="text-[36px] leading-[44px] font-bold mb-4 tracking-tight"
@@ -49,10 +163,10 @@ const LandingOneScreen: React.FC = () => {
             </p>
 
             {/* Кнопки - усиленный CTA */}
-            <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-3 relative z-20">
               {/* Primary CTA - доминирующая кнопка */}
               <button
-                className="px-10 py-5 rounded-md font-semibold text-[16px] text-white transition-all duration-300 hover:scale-105 hover:shadow-xl"
+                className="px-10 py-5 rounded-md font-semibold text-[16px] text-white transition-all duration-300 hover:scale-105 hover:shadow-xl relative z-20"
                 style={{
                   backgroundColor: '#576CED',
                   letterSpacing: '0',
@@ -284,6 +398,50 @@ const LandingOneScreen: React.FC = () => {
           50% {
             transform: translateX(3px) scale(1.1);
             opacity: 0.8;
+          }
+        }
+
+        /* Анимации пончиков: диагональ снизу-слева → вверх-вправо */
+        @keyframes donut-float-1 {
+          0% {
+            transform: translate(0, 0);
+          }
+          100% {
+            transform: translate(calc(100vw * 0.8), calc(-100vh * 1.2));
+          }
+        }
+
+        /* Анимации пончиков: диагональ снизу-справа → вверх-влево */
+        @keyframes donut-float-2 {
+          0% {
+            transform: translate(0, 0);
+          }
+          100% {
+            transform: translate(calc(-100vw * 0.8), calc(-100vh * 1.2));
+          }
+        }
+
+        /* Вращение пончиков (плавное, ~1 оборот за весь путь) */
+        @keyframes donut-spin {
+          0% {
+            transform: rotate(0deg);
+          }
+          100% {
+            transform: rotate(360deg);
+          }
+        }
+
+        /* Отключение анимации для prefers-reduced-motion */
+        @media (prefers-reduced-motion: reduce) {
+          .donut-container,
+          .donut-animated {
+            display: none !important;
+            animation: none !important;
+          }
+
+          /* Показываем статичные еле заметные пончики */
+          .donut-static-container {
+            display: block !important;
           }
         }
       `}</style>
