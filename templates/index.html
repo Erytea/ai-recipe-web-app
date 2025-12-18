@@ -225,16 +225,16 @@
       staticContainer.style.display = 'block';
       
       // Создаём 2 статичных пончика используя donut.png
-      const createDonutImg = (size, blur) => {
-        return `<img src="/static/images/donut.png" alt="donut" style="width: ${size}px; height: ${size}px; filter: blur(${blur}px); object-fit: contain;" />`;
+      const createDonutImg = (size) => {
+        return `<img src="/static/images/donut.png" alt="donut" style="width: ${size}px; height: ${size}px; object-fit: contain;" />`;
       };
       
       staticContainer.innerHTML = `
-        <div style="position: absolute; left: 15%; bottom: 20%; opacity: 0.04;">
-          ${createDonutImg(48, 1)}
+        <div style="position: absolute; left: 15%; bottom: 20%; opacity: 0.15;">
+          ${createDonutImg(48)}
         </div>
-        <div style="position: absolute; left: 75%; bottom: 60%; opacity: 0.04;">
-          ${createDonutImg(36, 1)}
+        <div style="position: absolute; left: 75%; bottom: 60%; opacity: 0.15;">
+          ${createDonutImg(36)}
         </div>
       `;
     }
@@ -256,21 +256,19 @@
       duration: 18 + Math.random() * 22,
       delay: baseDelay,
       direction: Math.random() > 0.5 ? 1 : -1,
-      opacity: 0.06 + Math.random() * 0.08,
-      blur: Math.random() * 2,
+      opacity: 0.2 + Math.random() * 0.2, // Более яркие: 0.2-0.4 вместо 0.06-0.14
       hasAccent: Math.random() > 0.7
     });
   }
   
-  // Функция создания пончика используя donut.png
-  const createDonutImg = (size, blur) => {
+  // Функция создания пончика используя donut.png (без blur)
+  const createDonutImg = (size) => {
     const img = document.createElement('img');
     img.src = '/static/images/donut.png';
     img.alt = 'donut';
     img.style.cssText = `
       width: ${size}px;
       height: ${size}px;
-      filter: blur(${blur}px);
       object-fit: contain;
     `;
     return img;
@@ -295,7 +293,7 @@
       transform-origin: center center;
     `;
     
-    const donutImg = createDonutImg(donut.size, donut.blur);
+    const donutImg = createDonutImg(donut.size);
     spinDiv.appendChild(donutImg);
     donutDiv.appendChild(spinDiv);
     container.appendChild(donutDiv);
