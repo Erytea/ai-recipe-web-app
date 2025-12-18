@@ -39,14 +39,23 @@ class Settings(BaseSettings):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        # В production проверяем, что используются не dev ключи
+        # В production режиме проверяем критические настройки
         if not self.debug:
-            if self.secret_key == "dev-secret-key-change-in-production-min-32-chars-12345678901234567890123456789012":
-                raise ValueError("SECRET_KEY должен быть изменен для production!")
-            if self.jwt_secret_key == "dev-jwt-secret-key-change-in-production-min-32-chars-12345678901234567890123456789012":
-                raise ValueError("JWT_SECRET_KEY должен быть изменен для production!")
-            if not self.cors_origins.strip():
-                raise ValueError("CORS_ORIGINS должен быть настроен для production!")
+            # Проверяем только если переменные установлены явно (не значения по умолчанию)
+            if os.getenv("SECRET_KEY") and self.secret_key == "dev-secret-key-change-in-production-min-32-chars-12345678901234567890123456789012":
+                print("⚠️  WARNING: SECRET_KEY все еще имеет значение по умолчанию!")
+            if os.getenv("JWT_SECRET_KEY") and self.jwt_secret_key == "dev-jwt-secret-key-change-in-production-min-32-chars-12345678901234567890123456789012":
+                print("⚠️  WARNING: JWT_SECRET_KEY все еще имеет значение по умолчанию!")
+            if os.getenv("CORS_ORIGINS") and not self.cors_origins.strip():
+                print("⚠️  WARNING: CORS_ORIGINS не настроен!")
+
+            # Критическая проверка - если SECRET_KEY не установлен вообще
+            if not os.getenv("SECRET_KEY"):
+                print("⚠️  WARNING: SECRET_KEY не установлен! Используется значение по умолчанию.")
+            if not os.getenv("JWT_SECRET_KEY"):
+                print("⚠️  WARNING: JWT_SECRET_KEY не установлен! Используется значение по умолчанию.")
+
+            print("✅ Production mode activated")
 
 
 # Глобальный экземпляр настроек

@@ -21,7 +21,6 @@ openai>=1.50.0
 python-dotenv==1.0.1
 
 # HTTP client
-aiohttp>=3.9.0
 httpx>=0.27.0
 
 # Data validation
@@ -31,9 +30,6 @@ email-validator>=2.0.0
 
 # PDF processing
 PyPDF2>=3.0.0
-
-# Async file operations
-aiofiles>=24.1.0
 
 # Web scraping
 beautifulsoup4>=4.12.0
