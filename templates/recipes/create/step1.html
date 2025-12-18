@@ -84,7 +84,7 @@
             background: #576CED;
             height: 24px;
             border-radius: 6px;
-            transition: width 0.3s ease;
+            transition: width 0.5s ease-out;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -98,11 +98,11 @@
 
         .progress-donut {
             position: absolute;
-            right: -16px;
+            right: -18px;
             top: 50%;
             transform: translateY(-50%);
-            width: 36px;
-            height: 36px;
+            width: 40px;
+            height: 40px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -110,10 +110,14 @@
             filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.4));
         }
 
-        .progress-donut svg {
+        .progress-donut img {
             width: 100%;
             height: 100%;
-            animation: donutRoll 0.8s linear infinite;
+            object-fit: contain;
+            animation: donutRoll 1.2s linear infinite;
+            /* Если изображение с прозрачностью - ничего не нужно */
+            /* Если есть черный фон, можно попробовать раскомментировать: */
+            /* mix-blend-mode: screen; */
         }
 
         @keyframes donutRoll {
@@ -219,37 +223,7 @@
             <div class="progress-bar" id="progressBar" style="width: 0%">
                 <span class="progress-percent-text" id="progressPercent">0%</span>
                 <div class="progress-donut" id="progressDonut" style="display: none;">
-                    <svg viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
-                        <!-- Тень пончика -->
-                        <ellipse cx="20" cy="32" rx="12" ry="4" fill="rgba(0, 0, 0, 0.2)"/>
-                        
-                        <!-- Основная форма пончика (тор) -->
-                        <path d="M 20 8 Q 28 8 32 12 Q 36 16 36 20 Q 36 24 32 28 Q 28 32 20 32 Q 12 32 8 28 Q 4 24 4 20 Q 4 16 8 12 Q 12 8 20 8 Z" 
-                              fill="#f4d3a1" stroke="#e8c896" stroke-width="0.5"/>
-                        
-                        <!-- Внутренняя дырка -->
-                        <circle cx="20" cy="20" r="6" fill="#1a1a1a"/>
-                        
-                        <!-- Глазурь сверху -->
-                        <path d="M 20 8 Q 28 8 32 12 Q 36 16 36 20 Q 36 20 32 20 Q 28 20 20 20 Q 12 20 8 20 Q 4 20 4 20 Q 4 16 8 12 Q 12 8 20 8 Z" 
-                              fill="#ff6b9d" opacity="0.9"/>
-                        
-                        <!-- Блики на глазури -->
-                        <ellipse cx="24" cy="14" rx="3" ry="2" fill="#ffb3d1" opacity="0.6"/>
-                        <ellipse cx="18" cy="12" rx="2" ry="1.5" fill="#ffffff" opacity="0.4"/>
-                        
-                        <!-- Посыпка (конфетти) -->
-                        <circle cx="26" cy="10" r="1" fill="#ffffff"/>
-                        <circle cx="22" cy="9" r="0.8" fill="#ffd700"/>
-                        <circle cx="28" cy="12" r="0.7" fill="#ff6b9d"/>
-                        <circle cx="16" cy="11" r="0.9" fill="#ffffff"/>
-                        <circle cx="14" cy="14" r="0.6" fill="#ffd700"/>
-                        <circle cx="30" cy="15" r="0.8" fill="#ffffff"/>
-                        
-                        <!-- Объем и тени на пончике -->
-                        <path d="M 20 8 Q 12 8 8 12 Q 4 16 4 20" 
-                              stroke="rgba(0, 0, 0, 0.15)" stroke-width="1" fill="none"/>
-                    </svg>
+                    <img src="/static/images/donut.png" alt="Donut" id="donutImage">
                 </div>
             </div>
         </div>
@@ -301,33 +275,37 @@
             const donut = document.getElementById('progressDonut');
             donut.style.display = 'none';
 
-            // Отслеживание прогресса загрузки
+            // Отслеживание прогресса загрузки (реальный прогресс, без фейка)
+            let lastPercent = 0;
             xhr.upload.addEventListener('progress', function(e) {
-                if (e.lengthComputable) {
-                    const percentComplete = Math.round((e.loaded / e.total) * 100);
-                    progressBar.style.width = percentComplete + '%';
-                    progressPercent.textContent = percentComplete + '%';
+                if (e.lengthComputable && e.total > 0) {
+                    // Реальный процент загрузки файла на сервер
+                    const percentComplete = Math.min(Math.round((e.loaded / e.total) * 100), 99);
                     
-                    // Показываем пончик только если прогресс больше 0
-                    const donut = document.getElementById('progressDonut');
-                    if (percentComplete > 0) {
-                        donut.style.display = 'flex';
-                    } else {
-                        donut.style.display = 'none';
-                    }
-                    
-                    if (percentComplete < 100) {
+                    // Плавное обновление прогресса (чтобы не было резких скачков)
+                    if (percentComplete > lastPercent) {
+                        progressBar.style.width = percentComplete + '%';
+                        progressPercent.textContent = percentComplete + '%';
+                        lastPercent = percentComplete;
+                        
+                        // Показываем пончик только если прогресс больше 0
+                        const donut = document.getElementById('progressDonut');
+                        if (percentComplete > 0) {
+                            donut.style.display = 'flex';
+                        } else {
+                            donut.style.display = 'none';
+                        }
+                        
                         progressText.textContent = `Загрузка: ${percentComplete}%`;
-                    } else {
-                        progressText.textContent = 'Обработка фотографии...';
                     }
                 }
             });
 
             // Обработка завершения загрузки
             xhr.addEventListener('load', function() {
-                // XMLHttpRequest автоматически следует редиректам, поэтому статус будет 200
+                // Только когда сервер полностью обработал запрос, показываем 100%
                 if (xhr.status === 200) {
+                    // Файл полностью загружен и обработан сервером - показываем 100%
                     progressBar.style.width = '100%';
                     progressPercent.textContent = '100%';
                     progressText.textContent = 'Загрузка завершена!';
@@ -335,9 +313,8 @@
                     // Небольшая задержка для визуального отображения 100%
                     setTimeout(function() {
                         // Редирект на следующую страницу (сервер возвращает 302 на /recipes/create/step2)
-                        // XMLHttpRequest автоматически следует редиректу, но нам нужно перейти вручную
                         window.location.href = '/recipes/create/step2';
-                    }, 300);
+                    }, 500);
                 } else if (xhr.status >= 400) {
                     // Обработка ошибок сервера
                     let errorMessage = 'Ошибка при загрузке файла. Попробуйте еще раз.';
@@ -353,16 +330,17 @@
                     hideProgress();
                 }
             });
-
-            // Обработка ошибок
+            
+            // Обработка ошибок сети
             xhr.addEventListener('error', function() {
                 showError('Ошибка соединения. Проверьте интернет-соединение.');
                 hideProgress();
             });
-
+            
             xhr.addEventListener('abort', function() {
                 hideProgress();
             });
+
 
             // Отправка запроса
             xhr.open('POST', '/recipes/create/step1');
