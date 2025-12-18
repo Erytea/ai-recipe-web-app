@@ -217,6 +217,37 @@
             text-align: center;
         }
 
+        .home-button {
+            position: fixed;
+            top: 2rem;
+            left: 2rem;
+            background: #2a2a2a;
+            color: #ffffff;
+            border: 2px solid #576CED;
+            border-radius: 12px;
+            padding: 0.75rem 1.25rem;
+            font-size: 1rem;
+            font-weight: 500;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        .home-button:hover {
+            background: #576CED;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(87, 108, 237, 0.4);
+        }
+
+        .home-button i {
+            font-size: 1.1rem;
+        }
+
         @media (max-width: 768px) {
             .content-grid {
                 grid-template-columns: 1fr;
@@ -230,10 +261,22 @@
             .analysis-section {
                 padding: 1.5rem;
             }
+
+            .home-button {
+                top: 1rem;
+                left: 1rem;
+                padding: 0.5rem 1rem;
+                font-size: 0.9rem;
+            }
         }
     </style>
 </head>
 <body>
+    <a href="/" class="home-button">
+        <i class="bi bi-house-door"></i>
+        Главная
+    </a>
+
     <div class="main-container">
         <div class="step-indicator">Шаг 2 из 3</div>
 
