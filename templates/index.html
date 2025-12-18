@@ -4,18 +4,27 @@
 
 <!-- LandingOneScreen - усиленная конверсия desktop-first one-screen landing -->
 <div style="min-height: 100vh; height: 100vh; display: flex; flex-direction: column; background-color: #ffffff; position: relative; overflow: hidden;">
+  <!-- Слой с анимированными пончиками -->
+  <div id="donut-container" style="position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 0;"></div>
+
+  <!-- Статичные пончики для prefers-reduced-motion (скрыты по умолчанию) -->
+  <div id="donut-static-container" style="position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 0; display: none;"></div>
+
   <!-- Мягкий background wash -->
-  <div style="position: absolute; inset: 0; opacity: 0.3; background: radial-gradient(circle at 80% 20%, #EFF1FD 0%, transparent 50%);"></div>
+  <div style="position: absolute; inset: 0; opacity: 0.3; background: radial-gradient(circle at 80% 20%, #EFF1FD 0%, transparent 50%); z-index: 1;"></div>
 
   <!-- Легкий noise/grain эффект -->
-  <div style="position: absolute; inset: 0; opacity: 0.02; background-image: url('data:image/svg+xml,%3Csvg viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="4" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)"/%3E%3C/svg%3E');"></div>
+  <div style="position: absolute; inset: 0; opacity: 0.02; background-image: url('data:image/svg+xml,%3Csvg viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="noiseFilter"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="4" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23noiseFilter)"/%3E%3C/svg%3E'); z-index: 1;"></div>
+
+  <!-- Градиентный overlay для защиты конверсии (тихий карман над hero) -->
+  <div style="position: absolute; inset: 0; pointer-events: none; z-index: 5; background: linear-gradient(to right, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.2) 35%, transparent 50%);"></div>
 
   <!-- Основной контент -->
   <div style="position: relative; z-index: 10; flex: 1; display: flex; flex-direction: column; max-width: 1280px; margin: 0 auto; padding: 0 32px 48px;">
     <!-- Верхняя секция: Hero слева, Proof справа -->
     <div style="flex: 1; display: flex; gap: 64px; margin-bottom: 64px;">
       <!-- Левая колонка: Hero -->
-      <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; max-width: 600px;">
+      <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; max-width: 600px; position: relative; z-index: 10;">
         <!-- H1 - усиленный контраст -->
         <h1 style="font-size: 36px; line-height: 44px; font-weight: 700; margin-bottom: 16px; letter-spacing: -0.5px; color: #2C2E33; text-shadow: 0 1px 2px rgba(0,0,0,0.1);">
           Сфоткал продукты.<br />Получил рецепт под цель.
@@ -27,9 +36,9 @@
         </p>
 
         <!-- Кнопки - усиленный CTA -->
-        <div style="display: flex; flex-direction: column; gap: 12px;">
+        <div style="display: flex; flex-direction: column; gap: 12px; position: relative; z-index: 20;">
           <!-- Primary CTA - доминирующая кнопка -->
-          <button style="padding: 20px 40px; border-radius: 6px; font-weight: 600; font-size: 16px; color: #ffffff; background-color: #576CED; border: none; transition: all 0.3s ease; cursor: pointer; box-shadow: 0 4px 12px rgba(87, 108, 237, 0.3);" onmouseover="this.style.backgroundColor='#2B50ED'; this.style.boxShadow='0 6px 20px rgba(87, 108, 237, 0.5), 0 0 20px rgba(87, 108, 237, 0.2)'; this.style.transform='scale(1.05)'" onmouseout="this.style.backgroundColor='#576CED'; this.style.boxShadow='0 4px 12px rgba(87, 108, 237, 0.3)'; this.style.transform='scale(1)'">
+          <button style="padding: 20px 40px; border-radius: 6px; font-weight: 600; font-size: 16px; color: #ffffff; background-color: #576CED; border: none; transition: all 0.3s ease; cursor: pointer; box-shadow: 0 4px 12px rgba(87, 108, 237, 0.3); position: relative; z-index: 20;" onmouseover="this.style.backgroundColor='#2B50ED'; this.style.boxShadow='0 6px 20px rgba(87, 108, 237, 0.5), 0 0 20px rgba(87, 108, 237, 0.2)'; this.style.transform='scale(1.05)'" onmouseout="this.style.backgroundColor='#576CED'; this.style.boxShadow='0 4px 12px rgba(87, 108, 237, 0.3)'; this.style.transform='scale(1)'">
             Загрузить фото продуктов
           </button>
 
@@ -158,7 +167,160 @@
     opacity: 0.8;
   }
 }
+
+/* Анимации пончиков: диагональ снизу-слева → вверх-вправо */
+@keyframes donut-float-1 {
+  0% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(calc(100vw * 0.8), calc(-100vh * 1.2));
+  }
+}
+
+/* Анимации пончиков: диагональ снизу-справа → вверх-влево */
+@keyframes donut-float-2 {
+  0% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(calc(-100vw * 0.8), calc(-100vh * 1.2));
+  }
+}
+
+/* Вращение пончиков (плавное, ~1 оборот за весь путь) */
+@keyframes donut-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Отключение анимации для prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  #donut-container {
+    display: none !important;
+  }
+
+  /* Показываем статичные еле заметные пончики */
+  #donut-static-container {
+    display: block !important;
+  }
+}
 </style>
+
+<script>
+(function() {
+  'use strict';
+  
+  // Проверяем prefers-reduced-motion
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  
+  if (prefersReducedMotion) {
+    // Показываем статичные пончики
+    const staticContainer = document.getElementById('donut-static-container');
+    if (staticContainer) {
+      staticContainer.style.display = 'block';
+      
+      // Создаём 2 статичных пончика
+      const donutSVG = (hasAccent, size, blur) => {
+        const accentBlue = '#576CED';
+        const accentPurple = '#A3AEF5';
+        return `
+          <svg width="${size}" height="${size}" viewBox="0 0 64 64" style="filter: blur(${blur}px);">
+            <circle cx="32" cy="32" r="28" fill="#D4A574" stroke="#C99A5F" stroke-width="1" />
+            <circle cx="32" cy="32" r="12" fill="white" />
+            <path d="M 16 28 Q 20 20, 28 20 Q 36 20, 40 28 Q 42 32, 40 36 Q 36 44, 28 44 Q 20 44, 20 36 Q 18 32, 16 28" fill="#E8E8E8" opacity="0.9" />
+            ${hasAccent ? `
+              <rect x="28" y="24" width="3" height="8" rx="1" fill="${accentBlue}" opacity="0.6" />
+              <rect x="33" y="26" width="2.5" height="6" rx="1" fill="${accentBlue}" opacity="0.5" />
+              <rect x="30" y="28" width="2" height="5" rx="1" fill="${accentPurple}" opacity="0.4" />
+            ` : ''}
+          </svg>
+        `;
+      };
+      
+      staticContainer.innerHTML = `
+        <div style="position: absolute; left: 15%; bottom: 20%; opacity: 0.04;">
+          ${donutSVG(false, 48, 1)}
+        </div>
+        <div style="position: absolute; left: 75%; bottom: 60%; opacity: 0.04;">
+          ${donutSVG(true, 36, 1)}
+        </div>
+      `;
+    }
+    return;
+  }
+  
+  // Создаём анимированные пончики
+  const container = document.getElementById('donut-container');
+  if (!container) return;
+  
+  // Генерируем параметры для 8 пончиков
+  const donuts = [];
+  for (let i = 0; i < 8; i++) {
+    const baseDelay = i * (4 + Math.random() * 2);
+    donuts.push({
+      id: i,
+      startX: Math.random() * 100,
+      size: 24 + Math.random() * 48,
+      duration: 18 + Math.random() * 22,
+      delay: baseDelay,
+      direction: Math.random() > 0.5 ? 1 : -1,
+      opacity: 0.06 + Math.random() * 0.08,
+      blur: Math.random() * 2,
+      hasAccent: Math.random() > 0.7
+    });
+  }
+  
+  // Функция создания SVG пончика
+  const createDonutSVG = (hasAccent, size, blur) => {
+    const donutColor = '#D4A574';
+    const icingColor = '#E8E8E8';
+    const accentBlue = '#576CED';
+    const accentPurple = '#A3AEF5';
+    
+    return `
+      <svg width="${size}" height="${size}" viewBox="0 0 64 64" style="filter: blur(${blur}px);">
+        <circle cx="32" cy="32" r="28" fill="${donutColor}" stroke="#C99A5F" stroke-width="1" />
+        <circle cx="32" cy="32" r="12" fill="white" />
+        <path d="M 16 28 Q 20 20, 28 20 Q 36 20, 40 28 Q 42 32, 40 36 Q 36 44, 28 44 Q 20 44, 20 36 Q 18 32, 16 28" fill="${icingColor}" opacity="0.9" />
+        ${hasAccent ? `
+          <rect x="28" y="24" width="3" height="8" rx="1" fill="${accentBlue}" opacity="0.6" />
+          <rect x="33" y="26" width="2.5" height="6" rx="1" fill="${accentBlue}" opacity="0.5" />
+          <rect x="30" y="28" width="2" height="5" rx="1" fill="${accentPurple}" opacity="0.4" />
+        ` : ''}
+      </svg>
+    `;
+  };
+  
+  // Создаём пончики
+  donuts.forEach(donut => {
+    const floatAnimation = donut.direction > 0 ? 'donut-float-1' : 'donut-float-2';
+    const donutDiv = document.createElement('div');
+    donutDiv.className = 'donut-animated';
+    donutDiv.style.cssText = `
+      position: absolute;
+      left: ${donut.startX}%;
+      bottom: -10%;
+      opacity: ${donut.opacity};
+      animation: ${floatAnimation} ${donut.duration}s linear infinite ${donut.delay}s;
+    `;
+    
+    const spinDiv = document.createElement('div');
+    spinDiv.style.cssText = `
+      animation: donut-spin ${donut.duration}s linear infinite ${donut.delay}s;
+      transform-origin: center center;
+    `;
+    spinDiv.innerHTML = createDonutSVG(donut.hasAccent, donut.size, donut.blur);
+    
+    donutDiv.appendChild(spinDiv);
+    container.appendChild(donutDiv);
+  });
+})();
+</script>
 
 {% endblock %}
 
