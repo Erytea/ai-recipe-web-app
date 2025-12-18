@@ -40,14 +40,19 @@ templates_dir.mkdir(exist_ok=True)
 async def lifespan(app: FastAPI):
     """Управление жизненным циклом приложения"""
     # Инициализация
+    logger.info("=" * 50)
     logger.info("Запуск веб-приложения...")
+    logger.info(f"Host: {settings.host}, Port: {settings.port}")
+    logger.info(f"Database URL: {settings.database_url[:50]}...")  # Показываем только начало для безопасности
+    logger.info("=" * 50)
+    
     try:
+        logger.info("Инициализация базы данных...")
         await init_db(settings.database_url)
-        logger.info("База данных инициализирована успешно")
-
-
+        logger.info("✅ База данных инициализирована успешно")
     except Exception as e:
-        logger.error(f"Ошибка инициализации базы данных: {e}", exc_info=True)
+        logger.error("❌ Ошибка инициализации базы данных", exc_info=True)
+        logger.error(f"Детали ошибки: {str(e)}")
         raise
 
     yield

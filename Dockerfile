@@ -30,11 +30,14 @@ RUN chown -R app:app /home/app
 # Переключаемся на пользователя app
 USER app
 
-# Открываем порт
+# Открываем порт (Railway будет использовать переменную PORT)
 EXPOSE 8000
 
-# Команда запуска
-CMD ["python", "main.py"]
+# Команда запуска через uvicorn для production
+# Railway автоматически передает PORT через переменную окружения
+# Используем shell-формат для подстановки переменной окружения
+# Добавляем логирование для отладки
+CMD ["sh", "-c", "echo 'Starting application on port ${PORT:-8000}' && uvicorn main:app --host 0.0.0.0 --port ${PORT:-8000} --log-level info"]
 
 
 
