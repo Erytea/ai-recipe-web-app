@@ -61,22 +61,42 @@
             margin-bottom: 2rem;
         }
 
-        .upload-btn {
-            background: #576CED;
-            color: white;
-            border: none;
-            padding: 1rem 2rem;
-            border-radius: 8px;
-            font-size: 1rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s ease;
+        .progress-container {
+            display: none;
             margin-top: 2rem;
+            width: 100%;
         }
 
-        .upload-btn:hover {
-            background: #4a5fd5;
-            transform: translateY(-1px);
+        .progress-container.active {
+            display: block;
+        }
+
+        .progress-bar-wrapper {
+            background: #1a1a1a;
+            border-radius: 8px;
+            padding: 0.5rem;
+            border: 1px solid #576CED;
+        }
+
+        .progress-bar {
+            background: #576CED;
+            height: 24px;
+            border-radius: 6px;
+            transition: width 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.875rem;
+            font-weight: 500;
+            min-width: 50px;
+        }
+
+        .progress-text {
+            color: #b0b0b0;
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+            text-align: center;
         }
 
         .error-message {
@@ -155,9 +175,14 @@
     </div>
     {% endif %}
 
-    <button class="upload-btn" onclick="document.getElementById('photo').click()">
-        Загрузить фото
-    </button>
+    <div class="progress-container" id="progressContainer">
+        <div class="progress-bar-wrapper">
+            <div class="progress-bar" id="progressBar" style="width: 0%">
+                <span id="progressPercent">0%</span>
+            </div>
+        </div>
+        <div class="progress-text" id="progressText">Загрузка фотографии...</div>
+    </div>
 
     <form id="uploadForm" method="post" action="/recipes/create/step1" enctype="multipart/form-data" style="display: none;">
         <input type="file" id="photo" name="photo" class="file-input" accept="image/*" required>
@@ -179,10 +204,92 @@
                     return;
                 }
 
-                // Автоматическая отправка формы
-                document.getElementById('uploadForm').submit();
+                // Загрузка с отслеживанием прогресса
+                uploadFileWithProgress(file);
             }
         });
+
+        function uploadFileWithProgress(file) {
+            const formData = new FormData();
+            formData.append('photo', file);
+
+            const xhr = new XMLHttpRequest();
+            const progressContainer = document.getElementById('progressContainer');
+            const progressBar = document.getElementById('progressBar');
+            const progressPercent = document.getElementById('progressPercent');
+            const progressText = document.getElementById('progressText');
+
+            // Показываем индикатор прогресса
+            progressContainer.classList.add('active');
+            progressBar.style.width = '0%';
+            progressPercent.textContent = '0%';
+            progressText.textContent = 'Загрузка фотографии...';
+
+            // Отслеживание прогресса загрузки
+            xhr.upload.addEventListener('progress', function(e) {
+                if (e.lengthComputable) {
+                    const percentComplete = Math.round((e.loaded / e.total) * 100);
+                    progressBar.style.width = percentComplete + '%';
+                    progressPercent.textContent = percentComplete + '%';
+                    
+                    if (percentComplete < 100) {
+                        progressText.textContent = `Загрузка: ${percentComplete}%`;
+                    } else {
+                        progressText.textContent = 'Обработка фотографии...';
+                    }
+                }
+            });
+
+            // Обработка завершения загрузки
+            xhr.addEventListener('load', function() {
+                // XMLHttpRequest автоматически следует редиректам, поэтому статус будет 200
+                if (xhr.status === 200) {
+                    progressBar.style.width = '100%';
+                    progressPercent.textContent = '100%';
+                    progressText.textContent = 'Загрузка завершена!';
+                    
+                    // Небольшая задержка для визуального отображения 100%
+                    setTimeout(function() {
+                        // Редирект на следующую страницу (сервер возвращает 302 на /recipes/create/step2)
+                        // XMLHttpRequest автоматически следует редиректу, но нам нужно перейти вручную
+                        window.location.href = '/recipes/create/step2';
+                    }, 300);
+                } else if (xhr.status >= 400) {
+                    // Обработка ошибок сервера
+                    let errorMessage = 'Ошибка при загрузке файла. Попробуйте еще раз.';
+                    try {
+                        const response = JSON.parse(xhr.responseText);
+                        if (response.detail) {
+                            errorMessage = response.detail;
+                        }
+                    } catch (e) {
+                        // Если ответ не JSON, используем стандартное сообщение
+                    }
+                    showError(errorMessage);
+                    hideProgress();
+                }
+            });
+
+            // Обработка ошибок
+            xhr.addEventListener('error', function() {
+                showError('Ошибка соединения. Проверьте интернет-соединение.');
+                hideProgress();
+            });
+
+            xhr.addEventListener('abort', function() {
+                hideProgress();
+            });
+
+            // Отправка запроса
+            xhr.open('POST', '/recipes/create/step1');
+            xhr.send(formData);
+        }
+
+        function hideProgress() {
+            const progressContainer = document.getElementById('progressContainer');
+            progressContainer.classList.remove('active');
+            document.getElementById('photo').value = '';
+        }
 
         function showError(message) {
             const existingError = document.querySelector('.error-message');
@@ -194,11 +301,12 @@
             errorDiv.className = 'error-message';
             errorDiv.innerHTML = '<i class="bi bi-exclamation-triangle-fill"></i> ' + message;
 
-            const uploadBtn = document.querySelector('.upload-btn');
-            uploadBtn.parentNode.insertBefore(errorDiv, uploadBtn);
+            const uploadContainer = document.querySelector('.upload-container');
+            uploadContainer.parentNode.insertBefore(errorDiv, uploadContainer.nextSibling);
 
-            // Очистка файла
+            // Очистка файла и скрытие прогресса
             document.getElementById('photo').value = '';
+            hideProgress();
         }
 
         // Drag and drop functionality
@@ -230,8 +338,8 @@
                     dt.items.add(file);
                     document.getElementById('photo').files = dt.files;
 
-                    // Trigger change event
-                    const event = new Event('change');
+                    // Trigger change event для автоматической загрузки
+                    const event = new Event('change', { bubbles: true });
                     document.getElementById('photo').dispatchEvent(event);
                 } else {
                     showError('Пожалуйста, выберите изображение!');
