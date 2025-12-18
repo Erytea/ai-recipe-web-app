@@ -32,6 +32,9 @@ email-validator>=2.0.0
 # PDF processing
 PyPDF2>=3.0.0
 
+# Async file operations
+aiofiles>=24.1.0
+
 # Web scraping
 beautifulsoup4>=4.12.0
 

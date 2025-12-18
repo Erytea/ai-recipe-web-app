@@ -102,7 +102,12 @@ async def utf8_middleware(request, call_next):
     return response
 
 # Настройка CORS
-origins = settings.cors_origins.split(",") if settings.cors_origins != "*" else ["*"]
+if settings.cors_origins.strip():
+    origins = [origin.strip() for origin in settings.cors_origins.split(",") if origin.strip()]
+else:
+    # Для разработки разрешаем localhost
+    origins = ["http://localhost:8000", "http://127.0.0.1:8000"] if settings.debug else []
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
@@ -140,10 +145,10 @@ async def home(request: Request):
 @app.get("/health")
 async def health_check():
     """Health check endpoint для мониторинга"""
-    from datetime import datetime
+    from datetime import datetime, timezone
     return {
         "status": "healthy",
-        "timestamp": datetime.utcnow().isoformat() + "Z",
+        "timestamp": datetime.now(timezone.utc).isoformat(),
         "version": "1.0.0"
     }
 

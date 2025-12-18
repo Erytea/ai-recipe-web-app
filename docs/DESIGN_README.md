@@ -226,3 +226,5 @@ static/css/
 - Material Design 3
 - 10 эвристик юзабилити Нильсена
 - WCAG 2.1 AA доступности
+
+

@@ -160,8 +160,14 @@ async def process_photo_upload(
     file_name = f"{session_id}_recipe{file_extension}"
     file_path = UPLOAD_DIR / file_name
 
-    with open(file_path, "wb") as buffer:
-        buffer.write(content)
+    try:
+        import aiofiles
+        async with aiofiles.open(file_path, "wb") as buffer:
+            await buffer.write(content)
+    except ImportError:
+        # Fallback на синхронную запись если aiofiles не установлен
+        with open(file_path, "wb") as buffer:
+            buffer.write(content)
 
     # Сохраняем путь к фото в сессии (в куки для простоты)
     response = RedirectResponse(url="/recipes/create/step2", status_code=302)
@@ -197,8 +203,15 @@ async def analyze_photo_page(request: Request):
         raise HTTPException(status_code=404, detail="Фото не найдено")
 
     try:
-        with open(full_path, "rb") as f:
-            analysis = await openai_service.analyze_food_image(f.read())
+        try:
+            import aiofiles
+            async with aiofiles.open(full_path, "rb") as f:
+                content = await f.read()
+        except ImportError:
+            # Fallback на синхронное чтение если aiofiles не установлен
+            with open(full_path, "rb") as f:
+                content = f.read()
+        analysis = await openai_service.analyze_food_image(content)
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Ошибка анализа: {str(e)}")
 
@@ -321,8 +334,14 @@ async def process_nutrition_parameters(
         try:
             photo_full_path = UPLOAD_DIR / photo_path
             if photo_full_path.exists():
-                with open(photo_full_path, 'rb') as f:
-                    image_data = f.read()
+                try:
+                    import aiofiles
+                    async with aiofiles.open(photo_full_path, 'rb') as f:
+                        image_data = await f.read()
+                except ImportError:
+                    # Fallback на синхронное чтение если aiofiles не установлен
+                    with open(photo_full_path, 'rb') as f:
+                        image_data = f.read()
                 ai_params["image_data"] = image_data
         except Exception as e:
             logger.warning(f"Не удалось прочитать изображение: {e}")

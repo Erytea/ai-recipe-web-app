@@ -1,10 +1,13 @@
 import base64
 import json
+import logging
 from typing import Dict, List, Optional
 from openai import AsyncOpenAI
 
 from bot.core.config import settings
 from bot.services.nutrition_database import nutrition_db
+
+logger = logging.getLogger(__name__)
 
 
 class OpenAIService:
@@ -587,7 +590,7 @@ class OpenAIService:
                     # Если продукт не найден в базе, пытаемся найти похожие
                     similar = nutrition_db.find_similar_products(product_name, limit=1)
                     if similar:
-                        print(f"⚠️ Продукт '{product_name}' не найден, используем '{similar[0]}'")
+                        logger.warning(f"Продукт '{product_name}' не найден, используем '{similar[0]}'")
                         nutrition = nutrition_db.calculate_nutrition(similar[0], weight_g)
                         if nutrition:
                             meal_calories += nutrition["calories"]
@@ -600,13 +603,13 @@ class OpenAIService:
                                 "weight_g": weight_g
                             })
                         else:
-                            print(f"❌ Продукт '{product_name}' пропущен (не найден в базе)")
+                            logger.error(f"Продукт '{product_name}' пропущен (не найден в базе)")
                             foods_with_nutrition.append({
                                 "name": product_name + " (не найден в БД)",
                                 "weight_g": weight_g
                             })
                     else:
-                        print(f"❌ Продукт '{product_name}' пропущен (не найден в базе)")
+                        logger.error(f"Продукт '{product_name}' пропущен (не найден в базе)")
                         foods_with_nutrition.append({
                             "name": product_name + " (не найден в БД)",
                             "weight_g": weight_g

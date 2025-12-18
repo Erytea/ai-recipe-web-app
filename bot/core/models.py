@@ -40,15 +40,32 @@ class RecipeBase(Model):
     def __str__(self):
         return f"RecipeBase: {self.title}"
 
+    @staticmethod
+    def _format_kbzhu(calories: float, protein: float, fat: float, carbs: float, per_100g: bool = False) -> str:
+        """Форматировать КБЖУ в читаемый вид"""
+        if per_100g:
+            return (
+                f"КБЖУ на 100 г:\n"
+                f"{calories:.0f} ккал "
+                f"{protein:.1f}г/{fat:.1f}г/{carbs:.1f}г"
+            )
+        else:
+            return (
+                f"Калории: {calories:.0f} ккал\n"
+                f"Белки: {protein:.1f} г\n"
+                f"Жиры: {fat:.1f} г\n"
+                f"Углеводы: {carbs:.1f} г"
+            )
+
     @property
     def kbzhu_formatted(self) -> str:
         """Форматированное КБЖУ на 100г"""
-        return (
-            f"КБЖУ на 100 г:\n"
-            f"{self.calories_per_100g:.0f} ккал "
-            f"{self.protein_per_100g:.1f}/"
-            f"{self.fat_per_100g:.1f}/"
-            f"{self.carbs_per_100g:.1f}"
+        return self._format_kbzhu(
+            self.calories_per_100g,
+            self.protein_per_100g,
+            self.fat_per_100g,
+            self.carbs_per_100g,
+            per_100g=True
         )
 
 
@@ -88,32 +105,41 @@ class Recipe(Model):
     @property
     def kbzhu_formatted(self) -> str:
         """Форматированное КБЖУ"""
-        return (
-            f"Калории: {self.calculated_calories:.0f} ккал\n"
-            f"Белки: {self.calculated_protein:.1f} г\n"
-            f"Жиры: {self.calculated_fat:.1f} г\n"
-            f"Углеводы: {self.calculated_carbs:.1f} г"
+        return RecipeBase._format_kbzhu(
+            self.calculated_calories,
+            self.calculated_protein,
+            self.calculated_fat,
+            self.calculated_carbs,
+            per_100g=False
         )
 
 
 # --- Конфигурация Tortoise ORM для Aerich ---
-TORTOISE_ORM = {
-    "connections": {
-        "default": "sqlite://db.sqlite3?charset=utf8"  # Явно указываем UTF-8 для поддержки Unicode
-    },
-    "apps": {
-        "models": {
-            "models": ["bot.core.models"],
-            "default_connection": "default",
+# Функция для получения конфигурации Tortoise ORM
+def get_tortoise_config(db_url: str):
+    """Получить конфигурацию Tortoise ORM"""
+    return {
+        "connections": {
+            "default": db_url
         },
-    },
-}
+        "apps": {
+            "models": {
+                "models": ["bot.core.models"],
+                "default_connection": "default",
+            },
+        },
+    }
+
+# Глобальная конфигурация - будет инициализирована в init_db
+TORTOISE_ORM = None
 
 
 # --- Вспомогательные функции инициализации БД ---
 async def init_db(db_url: str):
     """Инициализация подключения к базе"""
-    await Tortoise.init(db_url=db_url, modules={"models": ["bot.core.models"]})
+    global TORTOISE_ORM
+    TORTOISE_ORM = get_tortoise_config(db_url)
+    await Tortoise.init(config=TORTOISE_ORM)
     await Tortoise.generate_schemas()
 
 
