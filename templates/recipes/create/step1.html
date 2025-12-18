@@ -104,7 +104,7 @@
 
         .progress-donut {
             position: absolute;
-            left: 0;
+            left: 0%;
             top: 50%;
             transform: translate(-50%, -50%);
             width: 80px;
@@ -114,8 +114,8 @@
             justify-content: center;
             z-index: 10;
             filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.4));
-            /* Анимация движения по прогресс-бару с постоянной скоростью */
-            animation: donutMove 15s linear forwards;
+            /* Плавный переход позиции пончика */
+            transition: left 0.3s ease-out;
         }
 
         .progress-donut img {
@@ -135,20 +135,6 @@
             100% {
                 transform: rotate(360deg);
             }
-        }
-
-        @keyframes donutMove {
-            0% {
-                left: 0%;
-            }
-            100% {
-                left: 100%;
-            }
-        }
-
-        /* Останавливаем анимацию движения, когда загрузка завершена */
-        .progress-donut.completed {
-            animation-play-state: paused;
         }
 
         .progress-percent-text {
@@ -293,30 +279,34 @@
             progressPercent.textContent = '0%';
             progressText.textContent = 'Загрузка фотографии...';
             
-            // Показываем пончик и запускаем анимацию движения
+            // Показываем пончик и сбрасываем позицию
             const donut = document.getElementById('progressDonut');
             donut.style.display = 'flex';
-            donut.classList.remove('completed');
-            // Сбрасываем анимацию
-            donut.style.animation = 'none';
-            setTimeout(() => {
-                donut.style.animation = 'donutMove 15s linear forwards';
-            }, 10);
+            donut.style.left = '0%';
 
             // Отслеживание прогресса загрузки (реальный прогресс, без фейка)
             let lastPercent = 0;
             xhr.upload.addEventListener('progress', function(e) {
                 if (e.lengthComputable && e.total > 0) {
-                    // Реальный процент загрузки файла на сервер
-                    const percentComplete = Math.min(Math.round((e.loaded / e.total) * 100), 99);
+                    // Реальный процент загрузки файла на сервер (без ограничения на 99%)
+                    const percentComplete = Math.round((e.loaded / e.total) * 100);
                     
-                    // Плавное обновление прогресса (чтобы не было резких скачков)
+                    // Обновляем прогресс только если он увеличился
                     if (percentComplete > lastPercent) {
+                        // Обновляем прогресс-бар
                         progressBar.style.width = percentComplete + '%';
                         progressPercent.textContent = percentComplete + '%';
+                        
+                        // Двигаем пончик вместе с прогрессом
+                        donut.style.left = percentComplete + '%';
+                        
                         lastPercent = percentComplete;
                         
-                        progressText.textContent = `Загрузка: ${percentComplete}%`;
+                        if (percentComplete < 100) {
+                            progressText.textContent = `Загрузка: ${percentComplete}%`;
+                        } else {
+                            progressText.textContent = 'Обработка фотографии...';
+                        }
                     }
                 }
             });
@@ -330,9 +320,6 @@
                     progressPercent.textContent = '100%';
                     progressText.textContent = 'Загрузка завершена!';
                     
-                    // Останавливаем анимацию движения пончика
-                    const donut = document.getElementById('progressDonut');
-                    donut.classList.add('completed');
                     // Позиционируем пончик в конец прогресс-бара
                     donut.style.left = '100%';
                     
