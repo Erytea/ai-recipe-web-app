@@ -207,6 +207,20 @@ document.addEventListener('DOMContentLoaded', function() {
                 progressText.textContent = 'Загрузка завершена!';
                 donut.style.left = '100%';
 
+                // Проверяем, является ли ответ JSON (AJAX запрос)
+                try {
+                    const response = JSON.parse(xhr.responseText);
+                    if (response.success && response.redirect) {
+                        setTimeout(function() {
+                            window.location.href = response.redirect;
+                        }, 500);
+                        return;
+                    }
+                } catch (e) {
+                    // Если не JSON, значит обычный редирект или HTML ответ
+                }
+
+                // Если не получили JSON с редиректом, делаем редирект вручную
                 setTimeout(function() {
                     window.location.href = '/recipes/create/step2';
                 }, 500);
@@ -235,8 +249,9 @@ document.addEventListener('DOMContentLoaded', function() {
             hideProgress();
         });
 
-        // Отправка запроса
+        // Отправка запроса с заголовком для AJAX
         xhr.open('POST', '/recipes/create/step1');
+        xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
         xhr.send(formData);
     }
 

@@ -13,7 +13,7 @@ from urllib.parse import quote
 import uuid
 
 from fastapi import APIRouter, Request, Response, HTTPException, UploadFile, File, Form
-from fastapi.responses import HTMLResponse, RedirectResponse
+from fastapi.responses import HTMLResponse, RedirectResponse, JSONResponse
 from fastapi.templating import Jinja2Templates
 
 from bot.core.models import Recipe, RecipeBase
@@ -174,8 +174,21 @@ async def process_photo_upload(
         with open(file_path, "wb") as buffer:
             buffer.write(content)
 
-    # Сохраняем путь к фото в сессии (в куки для простоты)
-    response = RedirectResponse(url="/recipes/create/step2", status_code=302)
+    # Проверяем, является ли запрос AJAX (для XMLHttpRequest)
+    is_ajax = request.headers.get("X-Requested-With") == "XMLHttpRequest" or \
+              request.headers.get("Accept", "").find("application/json") != -1
+
+    if is_ajax:
+        # Для AJAX запросов возвращаем JSON с куками
+        response = JSONResponse(
+            status_code=200,
+            content={"success": True, "redirect": "/recipes/create/step2"}
+        )
+    else:
+        # Для обычных запросов возвращаем редирект
+        response = RedirectResponse(url="/recipes/create/step2", status_code=302)
+
+    # Устанавливаем куки в любом случае
     response.set_cookie(
         key="recipe_session_id",
         value=session_id,
