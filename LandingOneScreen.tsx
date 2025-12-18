@@ -1,8 +1,7 @@
 import React from 'react';
 
-// LandingOneScreen - desktop-first one-screen landing для продукта "фото продуктов → рецепт под цель с КБЖУ"
-// Размер экрана: 1440×900, 100vh без скролла
-// Дизайн-система: цвета и типографика из PDF файлов
+// LandingOneScreen - усиленная конверсия desktop-first one-screen landing
+// Усиление CTA, proof-блока, заголовков, микро-движения без новых секций
 
 const LandingOneScreen: React.FC = () => {
   return (
@@ -29,53 +28,82 @@ const LandingOneScreen: React.FC = () => {
         <div className="flex-1 flex gap-16 mb-16">
           {/* Левая колонка: Hero */}
           <div className="flex-1 flex flex-col justify-center max-w-[600px]">
-            {/* H1 */}
+            {/* H1 - усиленный контраст */}
             <h1
-              className="text-[32px] leading-[40px] font-semibold mb-6 tracking-normal"
-              style={{ color: '#2C2E33', letterSpacing: '0' }}
+              className="text-[36px] leading-[44px] font-bold mb-4 tracking-tight"
+              style={{
+                color: '#2C2E33',
+                letterSpacing: '-0.5px',
+                textShadow: '0 1px 2px rgba(0,0,0,0.1)'
+              }}
             >
               Сфоткал продукты.<br />Получил рецепт под цель.
             </h1>
 
-            {/* Subheadline */}
+            {/* Subheadline - плотнее к H1 */}
             <p
-              className="text-[16px] leading-[24px] mb-12 tracking-normal"
+              className="text-[16px] leading-[24px] mb-8 tracking-normal"
               style={{ color: '#707070', letterSpacing: '0' }}
             >
               КБЖУ считаем сами. Граммовка и шаги сразу.
             </p>
 
-            {/* Кнопки */}
-            <div className="flex flex-col gap-4">
-              {/* Primary CTA */}
+            {/* Кнопки - усиленный CTA */}
+            <div className="flex flex-col gap-3">
+              {/* Primary CTA - доминирующая кнопка */}
               <button
-                className="px-8 py-4 rounded-lg font-medium text-[16px] text-white transition-all duration-300 hover:shadow-lg"
+                className="px-10 py-5 rounded-md font-semibold text-[16px] text-white transition-all duration-300 hover:scale-105 hover:shadow-xl"
                 style={{
                   backgroundColor: '#576CED',
                   letterSpacing: '0',
+                  boxShadow: '0 4px 12px rgba(87, 108, 237, 0.3)',
+                  border: 'none',
+                  cursor: 'pointer',
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.backgroundColor = '#2B50ED';
+                  e.currentTarget.style.boxShadow = '0 6px 20px rgba(87, 108, 237, 0.5), 0 0 20px rgba(87, 108, 237, 0.2)';
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.backgroundColor = '#576CED';
+                  e.currentTarget.style.boxShadow = '0 4px 12px rgba(87, 108, 237, 0.3)';
                 }}
               >
                 Загрузить фото продуктов
               </button>
 
-              {/* Secondary CTA */}
+              {/* Secondary CTA - ближе, контрастнее */}
               <a
                 href="#"
-                className="text-[14px] font-medium underline transition-colors duration-300 hover:opacity-75"
-                style={{ color: '#576CED', letterSpacing: '0' }}
+                className="text-[14px] font-semibold transition-all duration-300 hover:scale-105"
+                style={{
+                  color: '#576CED',
+                  letterSpacing: '0',
+                  textDecoration: 'none',
+                  borderBottom: '1px solid #576CED',
+                  paddingBottom: '2px'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.color = '#2B50ED';
+                  e.currentTarget.style.borderBottomColor = '#2B50ED';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.color = '#576CED';
+                  e.currentTarget.style.borderBottomColor = '#576CED';
+                }}
               >
                 Посмотреть пример
               </a>
             </div>
 
-            {/* Trust chips */}
-            <div className="flex flex-wrap gap-3 mt-8">
+            {/* Trust chips - сгруппированы плотнее */}
+            <div
+              className="flex flex-wrap gap-2 mt-6 p-4 rounded-lg transition-all duration-300 hover:shadow-md"
+              style={{
+                backgroundColor: 'rgba(239, 241, 253, 0.8)',
+                border: '1px solid rgba(225, 223, 251, 0.5)',
+              }}
+            >
               {[
                 'Без регистрации',
                 '30 сек',
@@ -83,7 +111,7 @@ const LandingOneScreen: React.FC = () => {
               ].map((chip, index) => (
                 <div
                   key={index}
-                  className="px-4 py-2 rounded-lg text-[12px] font-medium"
+                  className="px-3 py-1.5 rounded-md text-[11px] font-medium transition-all duration-200 hover:scale-105"
                   style={{
                     backgroundColor: '#EFF1FD',
                     border: '1px solid #E1DFFB',
@@ -97,65 +125,79 @@ const LandingOneScreen: React.FC = () => {
             </div>
           </div>
 
-          {/* Правая колонка: Proof */}
+          {/* Правая колонка: Proof - усиленная трансформация */}
           <div className="flex-1 flex items-center justify-center">
             <div
-              className="w-full max-w-[480px] p-8 rounded-xl border-2"
+              className="w-full max-w-[480px] p-8 rounded-xl border-2 transition-all duration-300 hover:shadow-lg"
               style={{
                 backgroundColor: '#EFF1FD',
                 borderColor: '#E1DFFB',
               }}
             >
-              {/* До → После */}
-              <div className="flex items-center gap-6 mb-8">
-                {/* Фото продуктов (заглушка) */}
+              {/* До → После - усиленный контраст */}
+              <div className="flex items-center gap-6 mb-6">
+                {/* Фото продуктов - визуально "хуже" */}
                 <div className="flex-1">
-                  <div className="aspect-square bg-white rounded-lg border-2 border-dashed mb-3 flex items-center justify-center"
-                       style={{ borderColor: '#E1DFFB' }}>
+                  <div className="aspect-square bg-gray-50 rounded-lg border border-gray-200 mb-3 flex items-center justify-center opacity-75"
+                       style={{ borderStyle: 'dashed' }}>
                     <div className="text-center">
-                      <div className="w-12 h-12 mx-auto mb-2 rounded-full"
-                           style={{ backgroundColor: '#EFF1FD' }}>
+                      <div className="w-12 h-12 mx-auto mb-2 rounded-full bg-gray-100 flex items-center justify-center text-2xl">
                         📸
                       </div>
-                      <div className="text-[10px]" style={{ color: '#A6A6A6' }}>
-                        Фото продуктов
+                      <div className="text-[10px] text-gray-500 font-medium">
+                        Как есть
                       </div>
                     </div>
                   </div>
                 </div>
 
-                {/* Стрелка с анимацией */}
+                {/* Стрелка - усиленная анимация */}
                 <div className="flex-shrink-0">
-                  <div className="text-[24px] animate-pulse">→</div>
+                  <div
+                    className="text-[28px] font-bold transition-all duration-500"
+                    style={{
+                      color: '#576CED',
+                      textShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                      animation: 'arrowPulse 2s ease-in-out infinite'
+                    }}
+                  >
+                    →
+                  </div>
                 </div>
 
-                {/* Результат */}
+                {/* Результат - визуально "лучше" */}
                 <div className="flex-1">
-                  <div className="bg-white rounded-lg p-4 border-2"
-                       style={{ borderColor: '#E1DFFB' }}>
+                  <div
+                    className="bg-white rounded-lg p-4 border-2 transition-all duration-300 hover:shadow-lg hover:scale-105"
+                    style={{
+                      borderColor: '#576CED',
+                      boxShadow: '0 4px 12px rgba(87, 108, 237, 0.15)'
+                    }}
+                  >
                     {/* Название блюда */}
                     <h3
-                      className="text-[16px] font-semibold mb-3"
+                      className="text-[16px] font-bold mb-3"
                       style={{ color: '#2C2E33', letterSpacing: '0' }}
                     >
                       Паста с овощами
                     </h3>
 
-                    {/* КБЖУ чипсы */}
+                    {/* КБЖУ чипсы - акцент сильнее */}
                     <div className="flex flex-wrap gap-2 mb-4">
                       {[
-                        { label: '320 ккал', bg: '#EFF1FD', text: '#576CED' },
-                        { label: '25г Б', bg: '#EFF1FD', text: '#576CED' },
-                        { label: '12г Ж', bg: '#EFF1FD', text: '#576CED' },
-                        { label: '45г У', bg: '#EFF1FD', text: '#576CED' }
+                        { label: '320 ккал', bg: '#576CED', text: '#FFFFFF' },
+                        { label: '25г Б', bg: '#B6C8F9', text: '#2C2E33' },
+                        { label: '12г Ж', bg: '#B6C8F9', text: '#2C2E33' },
+                        { label: '45г У', bg: '#B6C8F9', text: '#2C2E33' }
                       ].map((chip, index) => (
                         <span
                           key={index}
-                          className="px-2 py-1 rounded text-[10px] font-medium"
+                          className="px-2 py-1 rounded-md text-[10px] font-bold transition-all duration-200 hover:scale-105"
                           style={{
                             backgroundColor: chip.bg,
                             color: chip.text,
                             letterSpacing: '0',
+                            boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
                           }}
                         >
                           {chip.label}
@@ -172,7 +214,7 @@ const LandingOneScreen: React.FC = () => {
                       ].map((step, index) => (
                         <div key={index} className="flex gap-2">
                           <span
-                            className="flex-shrink-0 text-[14px] font-medium"
+                            className="flex-shrink-0 text-[14px] font-bold"
                             style={{ color: '#2C2E33' }}
                           >
                             {index + 1}.
@@ -190,38 +232,40 @@ const LandingOneScreen: React.FC = () => {
                 </div>
               </div>
 
-              {/* Дерзкий микро-copy */}
-              <p
-                className="text-[12px] text-center"
-                style={{ color: '#707070', letterSpacing: '0' }}
-              >
-                Да, даже если на фото бардак.
-              </p>
+              {/* Дерзкий микро-copy - ближе к блоку */}
+              <div className="mt-4">
+                <p
+                  className="text-[12px] text-center font-medium"
+                  style={{ color: '#707070', letterSpacing: '0' }}
+                >
+                  Да, даже если на фото бардак.
+                </p>
 
-              {/* Акцент линия */}
-              <div
-                className="w-16 h-0.5 mx-auto mt-4"
-                style={{ backgroundColor: '#576CED' }}
-              />
+                {/* Акцент линия */}
+                <div
+                  className="w-16 h-0.5 mx-auto mt-2"
+                  style={{ backgroundColor: '#576CED' }}
+                />
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Нижняя полоса: 3 шага */}
-        <div className="flex justify-center">
-          <div className="grid grid-cols-3 gap-8 max-w-[800px]">
+        {/* Нижняя полоса: 3 шага - уменьшенный визуальный вес */}
+        <div className="flex justify-center opacity-75">
+          <div className="grid grid-cols-3 gap-6 max-w-[700px]">
             {[
               { icon: '📸', title: 'Сфоткай продукты' },
               { icon: '🎯', title: 'Выбери цель' },
               { icon: '👨‍🍳', title: 'Получай рецепт' }
             ].map((step, index) => (
-              <div key={index} className="text-center">
-                <div className="w-16 h-16 mx-auto mb-3 rounded-full flex items-center justify-center text-[24px]">
+              <div key={index} className="text-center transition-all duration-300 hover:opacity-100">
+                <div className="w-12 h-12 mx-auto mb-2 rounded-full flex items-center justify-center text-lg bg-gray-100">
                   {step.icon}
                 </div>
                 <h3
-                  className="text-[14px] font-medium"
-                  style={{ color: '#2C2E33', letterSpacing: '0' }}
+                  className="text-[13px] font-medium text-gray-600"
+                  style={{ letterSpacing: '0' }}
                 >
                   {step.title}
                 </h3>
@@ -230,6 +274,19 @@ const LandingOneScreen: React.FC = () => {
           </div>
         </div>
       </div>
+
+      <style jsx>{`
+        @keyframes arrowPulse {
+          0%, 100% {
+            transform: translateX(0) scale(1);
+            opacity: 1;
+          }
+          50% {
+            transform: translateX(3px) scale(1.1);
+            opacity: 0.8;
+          }
+        }
+      `}</style>
     </div>
   );
 };

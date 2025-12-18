@@ -2,7 +2,7 @@
 
 {% block content %}
 
-<!-- LandingOneScreen - desktop-first one-screen landing -->
+<!-- LandingOneScreen - усиленная конверсия desktop-first one-screen landing -->
 <div style="min-height: 100vh; height: 100vh; display: flex; flex-direction: column; background-color: #ffffff; position: relative; overflow: hidden;">
   <!-- Мягкий background wash -->
   <div style="position: absolute; inset: 0; opacity: 0.3; background: radial-gradient(circle at 80% 20%, #EFF1FD 0%, transparent 50%);"></div>
@@ -16,91 +16,93 @@
     <div style="flex: 1; display: flex; gap: 64px; margin-bottom: 64px;">
       <!-- Левая колонка: Hero -->
       <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; max-width: 600px;">
-        <!-- H1 -->
-        <h1 style="font-size: 32px; line-height: 40px; font-weight: 600; margin-bottom: 24px; letter-spacing: 0; color: #2C2E33;">
+        <!-- H1 - усиленный контраст -->
+        <h1 style="font-size: 36px; line-height: 44px; font-weight: 700; margin-bottom: 16px; letter-spacing: -0.5px; color: #2C2E33; text-shadow: 0 1px 2px rgba(0,0,0,0.1);">
           Сфоткал продукты.<br />Получил рецепт под цель.
         </h1>
 
-        <!-- Subheadline -->
-        <p style="font-size: 16px; line-height: 24px; margin-bottom: 48px; letter-spacing: 0; color: #707070;">
+        <!-- Subheadline - плотнее к H1 -->
+        <p style="font-size: 16px; line-height: 24px; margin-bottom: 32px; letter-spacing: 0; color: #707070;">
           КБЖУ считаем сами. Граммовка и шаги сразу.
         </p>
 
-        <!-- Кнопки -->
-        <div style="display: flex; flex-direction: column; gap: 16px;">
-          <!-- Primary CTA -->
-          <button style="padding: 16px 32px; border-radius: 8px; font-weight: 500; font-size: 16px; color: #ffffff; background-color: #576CED; border: none; transition: all 0.3s ease; cursor: pointer;" onmouseover="this.style.backgroundColor='#2B50ED'" onmouseout="this.style.backgroundColor='#576CED'">
+        <!-- Кнопки - усиленный CTA -->
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+          <!-- Primary CTA - доминирующая кнопка -->
+          <button style="padding: 20px 40px; border-radius: 6px; font-weight: 600; font-size: 16px; color: #ffffff; background-color: #576CED; border: none; transition: all 0.3s ease; cursor: pointer; box-shadow: 0 4px 12px rgba(87, 108, 237, 0.3);" onmouseover="this.style.backgroundColor='#2B50ED'; this.style.boxShadow='0 6px 20px rgba(87, 108, 237, 0.5), 0 0 20px rgba(87, 108, 237, 0.2)'; this.style.transform='scale(1.05)'" onmouseout="this.style.backgroundColor='#576CED'; this.style.boxShadow='0 4px 12px rgba(87, 108, 237, 0.3)'; this.style.transform='scale(1)'">
             Загрузить фото продуктов
           </button>
 
-          <!-- Secondary CTA -->
-          <a href="#" style="font-size: 14px; font-weight: 500; text-decoration: underline; color: #576CED; letter-spacing: 0; transition: opacity 0.3s ease;" onmouseover="this.style.opacity='0.75'" onmouseout="this.style.opacity='1'">
+          <!-- Secondary CTA - ближе, контрастнее -->
+          <a href="#" style="font-size: 14px; font-weight: 600; color: #576CED; letter-spacing: 0; text-decoration: none; border-bottom: 1px solid #576CED; padding-bottom: 2px; transition: all 0.3s ease;" onmouseover="this.style.color='#2B50ED'; this.style.borderBottomColor='#2B50ED'; this.style.transform='scale(1.05)'" onmouseout="this.style.color='#576CED'; this.style.borderBottomColor='#576CED'; this.style.transform='scale(1)'">
             Посмотреть пример
           </a>
         </div>
 
-        <!-- Trust chips -->
-        <div style="display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px;">
-          <div style="padding: 8px 16px; border-radius: 8px; font-size: 12px; font-weight: 500; background-color: #EFF1FD; border: 1px solid #E1DFFB; color: #576CED; letter-spacing: 0;">
+        <!-- Trust chips - сгруппированы плотнее -->
+        <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 24px; padding: 16px; border-radius: 8px; transition: all 0.3s ease; background-color: rgba(239, 241, 253, 0.8); border: 1px solid rgba(225, 223, 251, 0.5);" onmouseover="this.style.boxShadow='0 4px 12px rgba(0,0,0,0.1)'" onmouseout="this.style.boxShadow='none'">
+          <div style="padding: 6px 12px; border-radius: 6px; font-size: 11px; font-weight: 500; background-color: #EFF1FD; border: 1px solid #E1DFFB; color: #576CED; letter-spacing: 0; transition: all 0.2s ease; cursor: default;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
             Без регистрации
           </div>
-          <div style="padding: 8px 16px; border-radius: 8px; font-size: 12px; font-weight: 500; background-color: #EFF1FD; border: 1px solid #E1DFFB; color: #576CED; letter-spacing: 0;">
+          <div style="padding: 6px 12px; border-radius: 6px; font-size: 11px; font-weight: 500; background-color: #EFF1FD; border: 1px solid #E1DFFB; color: #576CED; letter-spacing: 0; transition: all 0.2s ease; cursor: default;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
             30 сек
           </div>
-          <div style="padding: 8px 16px; border-radius: 8px; font-size: 12px; font-weight: 500; background-color: #EFF1FD; border: 1px solid #E1DFFB; color: #576CED; letter-spacing: 0;">
+          <div style="padding: 6px 12px; border-radius: 6px; font-size: 11px; font-weight: 500; background-color: #EFF1FD; border: 1px solid #E1DFFB; color: #576CED; letter-spacing: 0; transition: all 0.2s ease; cursor: default;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
             КБЖУ автоматически
           </div>
         </div>
       </div>
 
-      <!-- Правая колонка: Proof -->
+      <!-- Правая колонка: Proof - усиленная трансформация -->
       <div style="flex: 1; display: flex; align-items: center; justify-content: center;">
-        <div style="width: 100%; max-width: 480px; padding: 32px; border-radius: 12px; border: 2px solid #E1DFFB; background-color: #EFF1FD;">
-          <!-- До → После -->
-          <div style="display: flex; align-items: center; gap: 24px; margin-bottom: 32px;">
-            <!-- Фото продуктов (заглушка) -->
+        <div style="width: 100%; max-width: 480px; padding: 32px; border-radius: 12px; border: 2px solid #E1DFFB; background-color: #EFF1FD; transition: all 0.3s ease;" onmouseover="this.style.boxShadow='0 8px 24px rgba(87, 108, 237, 0.15)'" onmouseout="this.style.boxShadow='none'">
+          <!-- До → После - усиленный контраст -->
+          <div style="display: flex; align-items: center; gap: 24px; margin-bottom: 24px;">
+            <!-- Фото продуктов - визуально "хуже" -->
             <div style="flex: 1;">
-              <div style="aspect-ratio: 1; background-color: #ffffff; border-radius: 8px; border: 2px dashed #E1DFFB; display: flex; align-items: center; justify-content: center; margin-bottom: 12px;">
+              <div style="aspect-ratio: 1; background-color: #f9f9f9; border-radius: 8px; border: 1px dashed #d1d1d1; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; opacity: 0.75;">
                 <div style="text-align: center;">
-                  <div style="width: 48px; height: 48px; border-radius: 50%; background-color: #EFF1FD; display: flex; align-items: center; justify-content: center; margin: 0 auto 8px; font-size: 24px;">📸</div>
-                  <div style="font-size: 10px; color: #A6A6A6; letter-spacing: 0;">Фото продуктов</div>
+                  <div style="width: 48px; height: 48px; border-radius: 50%; background-color: #e5e5e5; display: flex; align-items: center; justify-content: center; margin: 0 auto 8px; font-size: 24px;">📸</div>
+                  <div style="font-size: 10px; color: #999999; letter-spacing: 0; font-weight: 500;">Как есть</div>
                 </div>
               </div>
             </div>
 
-            <!-- Стрелка с анимацией -->
+            <!-- Стрелка - усиленная анимация -->
             <div style="flex-shrink: 0;">
-              <div style="font-size: 24px; animation: pulse 2s infinite;">→</div>
+              <div style="font-size: 28px; font-weight: 700; color: #576CED; text-shadow: 0 2px 4px rgba(0,0,0,0.1); animation: arrowPulse 2s ease-in-out infinite;">
+                →
+              </div>
             </div>
 
-            <!-- Результат -->
+            <!-- Результат - визуально "лучше" -->
             <div style="flex: 1;">
-              <div style="background-color: #ffffff; border-radius: 8px; padding: 16px; border: 2px solid #E1DFFB;">
+              <div style="background-color: #ffffff; border-radius: 8px; padding: 16px; border: 2px solid #576CED; transition: all 0.3s ease; box-shadow: 0 4px 12px rgba(87, 108, 237, 0.15);" onmouseover="this.style.boxShadow='0 6px 20px rgba(87, 108, 237, 0.25)'; this.style.transform='scale(1.02)'" onmouseout="this.style.boxShadow='0 4px 12px rgba(87, 108, 237, 0.15)'; this.style.transform='scale(1)'">
                 <!-- Название блюда -->
-                <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 12px; color: #2C2E33; letter-spacing: 0;">
+                <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 12px; color: #2C2E33; letter-spacing: 0;">
                   Паста с овощами
                 </h3>
 
-                <!-- КБЖУ чипсы -->
+                <!-- КБЖУ чипсы - акцент сильнее -->
                 <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px;">
-                  <span style="padding: 4px 8px; border-radius: 6px; font-size: 10px; font-weight: 500; background-color: #EFF1FD; color: #576CED; letter-spacing: 0;">320 ккал</span>
-                  <span style="padding: 4px 8px; border-radius: 6px; font-size: 10px; font-weight: 500; background-color: #EFF1FD; color: #576CED; letter-spacing: 0;">25г Б</span>
-                  <span style="padding: 4px 8px; border-radius: 6px; font-size: 10px; font-weight: 500; background-color: #EFF1FD; color: #576CED; letter-spacing: 0;">12г Ж</span>
-                  <span style="padding: 4px 8px; border-radius: 6px; font-size: 10px; font-weight: 500; background-color: #EFF1FD; color: #576CED; letter-spacing: 0;">45г У</span>
+                  <span style="padding: 4px 8px; border-radius: 6px; font-size: 10px; font-weight: 700; background-color: #576CED; color: #ffffff; letter-spacing: 0; box-shadow: 0 1px 3px rgba(0,0,0,0.1); transition: all 0.2s ease;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">320 ккал</span>
+                  <span style="padding: 4px 8px; border-radius: 6px; font-size: 10px; font-weight: 700; background-color: #B6C8F9; color: #2C2E33; letter-spacing: 0; box-shadow: 0 1px 3px rgba(0,0,0,0.1); transition: all 0.2s ease;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">25г Б</span>
+                  <span style="padding: 4px 8px; border-radius: 6px; font-size: 10px; font-weight: 700; background-color: #B6C8F9; color: #2C2E33; letter-spacing: 0; box-shadow: 0 1px 3px rgba(0,0,0,0.1); transition: all 0.2s ease;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">12г Ж</span>
+                  <span style="padding: 4px 8px; border-radius: 6px; font-size: 10px; font-weight: 700; background-color: #B6C8F9; color: #2C2E33; letter-spacing: 0; box-shadow: 0 1px 3px rgba(0,0,0,0.1); transition: all 0.2s ease;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">45г У</span>
                 </div>
 
                 <!-- Шаги приготовления -->
                 <div style="display: flex; flex-direction: column; gap: 8px;">
                   <div style="display: flex; gap: 8px;">
-                    <span style="flex-shrink: 0; font-size: 14px; font-weight: 500; color: #2C2E33;">1.</span>
+                    <span style="flex-shrink: 0; font-size: 14px; font-weight: 700; color: #2C2E33;">1.</span>
                     <span style="font-size: 12px; line-height: 16px; color: #2C2E33; letter-spacing: 0;">Отварите пасту согласно инструкции</span>
                   </div>
                   <div style="display: flex; gap: 8px;">
-                    <span style="flex-shrink: 0; font-size: 14px; font-weight: 500; color: #2C2E33;">2.</span>
+                    <span style="flex-shrink: 0; font-size: 14px; font-weight: 700; color: #2C2E33;">2.</span>
                     <span style="font-size: 12px; line-height: 16px; color: #2C2E33; letter-spacing: 0;">Обжарьте овощи на оливковом масле</span>
                   </div>
                   <div style="display: flex; gap: 8px;">
-                    <span style="flex-shrink: 0; font-size: 14px; font-weight: 500; color: #2C2E33;">3.</span>
+                    <span style="flex-shrink: 0; font-size: 14px; font-weight: 700; color: #2C2E33;">3.</span>
                     <span style="font-size: 12px; line-height: 16px; color: #2C2E33; letter-spacing: 0;">Смешайте и подавайте горячим</span>
                   </div>
                 </div>
@@ -108,10 +110,11 @@
             </div>
           </div>
 
-          <!-- Дерзкий микро-copy -->
-          <p style="font-size: 12px; text-align: center; color: #707070; letter-spacing: 0; margin: 0;">
-            Да, даже если на фото бардак.
-          </p>
+          <!-- Дерзкий микро-copy - ближе к блоку -->
+          <div style="margin-top: 16px;">
+            <p style="font-size: 12px; text-align: center; color: #707070; letter-spacing: 0; font-weight: 500;">
+              Да, даже если на фото бардак.
+            </p>
 
           <!-- Акцент линия -->
           <div style="width: 64px; height: 1px; background-color: #576CED; margin: 16px auto 0;"></div>
@@ -119,20 +122,20 @@
       </div>
     </div>
 
-    <!-- Нижняя полоса: 3 шага -->
-    <div style="display: flex; justify-content: center;">
-      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; max-width: 800px;">
-        <div style="text-align: center;">
-          <div style="width: 64px; height: 64px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; margin: 0 auto 12px;">📸</div>
-          <h3 style="font-size: 14px; font-weight: 500; color: #2C2E33; letter-spacing: 0; margin: 0;">Сфоткай продукты</h3>
+    <!-- Нижняя полоса: 3 шага - уменьшенный визуальный вес -->
+    <div style="display: flex; justify-content: center; opacity: 0.75;">
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; max-width: 700px;">
+        <div style="text-align: center; transition: all 0.3s ease;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.75'">
+          <div style="width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; margin: 0 auto 8px; background-color: #f5f5f5;">📸</div>
+          <h3 style="font-size: 13px; font-weight: 500; color: #757575; letter-spacing: 0; margin: 0;">Сфоткай продукты</h3>
         </div>
-        <div style="text-align: center;">
-          <div style="width: 64px; height: 64px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; margin: 0 auto 12px;">🎯</div>
-          <h3 style="font-size: 14px; font-weight: 500; color: #2C2E33; letter-spacing: 0; margin: 0;">Выбери цель</h3>
+        <div style="text-align: center; transition: all 0.3s ease;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.75'">
+          <div style="width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; margin: 0 auto 8px; background-color: #f5f5f5;">🎯</div>
+          <h3 style="font-size: 13px; font-weight: 500; color: #757575; letter-spacing: 0; margin: 0;">Выбери цель</h3>
         </div>
-        <div style="text-align: center;">
-          <div style="width: 64px; height: 64px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; margin: 0 auto 12px;">👨‍🍳</div>
-          <h3 style="font-size: 14px; font-weight: 500; color: #2C2E33; letter-spacing: 0; margin: 0;">Получай рецепт</h3>
+        <div style="text-align: center; transition: all 0.3s ease;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.75'">
+          <div style="width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; margin: 0 auto 8px; background-color: #f5f5f5;">👨‍🍳</div>
+          <h3 style="font-size: 13px; font-weight: 500; color: #757575; letter-spacing: 0; margin: 0;">Получай рецепт</h3>
         </div>
       </div>
     </div>
@@ -143,6 +146,17 @@
 @keyframes pulse {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.5; }
+}
+
+@keyframes arrowPulse {
+  0%, 100% {
+    transform: translateX(0) scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: translateX(3px) scale(1.1);
+    opacity: 0.8;
+  }
 }
 </style>
 
