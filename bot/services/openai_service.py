@@ -32,8 +32,13 @@ class OpenAIService:
                 - ingredients: список обнаруженных продуктов
                 - uncertainties: список продуктов, требующих уточнения
         """
+        if not image_data:
+            raise ValueError("image_data не может быть пустым")
+        
+        logger.info(f"Анализ изображения, размер: {len(image_data)} байт")
         # Кодируем изображение в base64
         base64_image = base64.b64encode(image_data).decode('utf-8')
+        logger.info(f"Base64 размер: {len(base64_image)} символов")
         
         prompt = """
         Проанализируй это изображение продуктов. Определи, что там есть.
@@ -55,7 +60,11 @@ class OpenAIService:
         Будь точным и конкретным в определении продуктов.
         """
         
+        if not self.client:
+            raise Exception("OpenAI клиент не инициализирован. Проверьте настройки API ключа.")
+        
         try:
+            logger.info("Отправка запроса к OpenAI для анализа изображения")
             response = await self.client.chat.completions.create(
                 model="gpt-4o",  # Модель с поддержкой изображений
                 messages=[
@@ -297,20 +306,29 @@ class OpenAIService:
         
         # Если есть изображение, добавляем его
         if image_data:
+            logger.info(f"Передача изображения в OpenAI, размер: {len(image_data)} байт")
             base64_image = base64.b64encode(image_data).decode('utf-8')
+            logger.info(f"Base64 размер: {len(base64_image)} символов")
             user_content.append({
                 "type": "image_url",
                 "image_url": {
                     "url": f"data:image/jpeg;base64,{base64_image}"
                 }
             })
+            logger.info("Изображение добавлено в запрос к OpenAI")
+        else:
+            logger.warning("Изображение не передано в generate_recipe (image_data is None)")
         
         messages.append({
             "role": "user",
             "content": user_content
         })
         
+        if not self.client:
+            raise Exception("OpenAI клиент не инициализирован. Проверьте настройки API ключа.")
+        
         try:
+            logger.info(f"Отправка запроса к OpenAI для генерации рецепта. Передано изображение: {image_data is not None}")
             response = await self.client.chat.completions.create(
                 model="gpt-4o",
                 messages=messages,

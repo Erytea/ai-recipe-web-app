@@ -350,7 +350,9 @@ async def process_nutrition_parameters(
     image_data = None
     if photo_path:
         try:
-            photo_full_path = UPLOAD_DIR / photo_path
+            # Путь в cookie сохранен относительно "static", поэтому используем Path("static") / photo_path
+            photo_full_path = Path("static") / photo_path
+            logger.info(f"Попытка прочитать изображение из: {photo_full_path}")
             if photo_full_path.exists():
                 try:
                     import aiofiles
@@ -360,9 +362,12 @@ async def process_nutrition_parameters(
                     # Fallback на синхронное чтение если aiofiles не установлен
                     with open(photo_full_path, 'rb') as f:
                         image_data = f.read()
+                logger.info(f"Изображение прочитано успешно, размер: {len(image_data)} байт")
                 ai_params["image_data"] = image_data
+            else:
+                logger.error(f"Файл изображения не найден: {photo_full_path}")
         except Exception as e:
-            logger.warning(f"Не удалось прочитать изображение: {e}")
+            logger.error(f"Не удалось прочитать изображение: {e}", exc_info=True)
 
     # Если изображения нет, используем список ингредиентов из анализа (обратная совместимость)
     if not image_data:
