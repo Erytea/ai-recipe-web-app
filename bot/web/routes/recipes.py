@@ -105,8 +105,13 @@ async def recipes_home(request: Request):
 @router.get("/create", response_class=HTMLResponse)
 async def create_recipe_page(request: Request):
     """Страница создания рецепта - шаг 1: загрузка фото"""
+    return await create_recipe_step1_page(request)
+
+@router.get("/create/step1", response_class=HTMLResponse)
+async def create_recipe_step1_page(request: Request):
+    """Страница создания рецепта - шаг 1: загрузка фото"""
     error_message = request.query_params.get("error")
-    
+
     context = {
         "request": request,
         "title": "Создать рецепт - Загрузка фото",
