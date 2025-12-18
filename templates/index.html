@@ -224,47 +224,17 @@
     if (staticContainer) {
       staticContainer.style.display = 'block';
       
-      // Создаём 2 статичных пончика
-      const donutSVG = (hasAccent, size, blur) => {
-        // Цвета как на картинке: светло-голубая глазурь, золотисто-коричневое тело
-        const donutColor = '#D4A574'; // Золотисто-коричневый
-        const icingColor = '#B8E6FF'; // Светло-голубая глазурь
-        const icingHighlight = '#D4F1FF'; // Блик на глазури
-        
-        // Цветные посыпки: розовые, оранжевые, фиолетовые, желтые
-        const sprinkles = [
-          { x: 26, y: 22, w: 2.5, h: 6, color: '#FF9EC5', rx: 0.5 }, // Розовая
-          { x: 30, y: 24, w: 2, h: 5, color: '#FFB84D', rx: 0.5 }, // Оранжевая
-          { x: 34, y: 26, w: 2.5, h: 7, color: '#C8A8FF', rx: 0.5 }, // Фиолетовая
-          { x: 28, y: 28, w: 2, h: 5, color: '#FFE066', rx: 0.5 }, // Желтая
-          { x: 32, y: 30, w: 2, h: 6, color: '#FF9EC5', rx: 0.5 }, // Розовая
-          { x: 36, y: 32, w: 2.5, h: 5, color: '#FFB84D', rx: 0.5 }, // Оранжевая
-        ];
-        
-        return `
-          <svg width="${size}" height="${size}" viewBox="0 0 64 64" style="filter: blur(${blur}px);">
-            <!-- Тело пончика -->
-            <circle cx="32" cy="32" r="28" fill="${donutColor}" stroke="#B8956A" stroke-width="1.5" />
-            <!-- Дырка -->
-            <circle cx="32" cy="32" r="12" fill="white" stroke="#E0E0E0" stroke-width="0.5" />
-            <!-- Глазурь с бликом -->
-            <path d="M 16 28 Q 20 20, 28 20 Q 36 20, 40 28 Q 42 32, 40 36 Q 36 44, 28 44 Q 20 44, 20 36 Q 18 32, 16 28" fill="${icingColor}" stroke="#A8D5E8" stroke-width="1" />
-            <!-- Блик на глазури -->
-            <ellipse cx="28" cy="26" rx="8" ry="6" fill="${icingHighlight}" opacity="0.4" />
-            <!-- Посыпки -->
-            ${hasAccent ? sprinkles.map(s => `
-              <rect x="${s.x}" y="${s.y}" width="${s.w}" height="${s.h}" rx="${s.rx}" fill="${s.color}" stroke="#333" stroke-width="0.3" />
-            `).join('') : ''}
-          </svg>
-        `;
+      // Создаём 2 статичных пончика используя donut.png
+      const createDonutImg = (size, blur) => {
+        return `<img src="/static/images/donut.png" alt="donut" style="width: ${size}px; height: ${size}px; filter: blur(${blur}px); object-fit: contain;" />`;
       };
       
       staticContainer.innerHTML = `
         <div style="position: absolute; left: 15%; bottom: 20%; opacity: 0.04;">
-          ${donutSVG(false, 48, 1)}
+          ${createDonutImg(48, 1)}
         </div>
         <div style="position: absolute; left: 75%; bottom: 60%; opacity: 0.04;">
-          ${donutSVG(true, 36, 1)}
+          ${createDonutImg(36, 1)}
         </div>
       `;
     }
@@ -292,39 +262,18 @@
     });
   }
   
-  // Функция создания SVG пончика (как на картинке)
-  const createDonutSVG = (hasAccent, size, blur) => {
-    // Цвета как на картинке: светло-голубая глазурь, золотисто-коричневое тело
-    const donutColor = '#D4A574'; // Золотисто-коричневый
-    const icingColor = '#B8E6FF'; // Светло-голубая глазурь
-    const icingHighlight = '#D4F1FF'; // Блик на глазури
-    
-    // Цветные посыпки: розовые, оранжевые, фиолетовые, желтые (как на картинке)
-    const sprinkles = [
-      { x: 26, y: 22, w: 2.5, h: 6, color: '#FF9EC5', rx: 0.5 }, // Розовая
-      { x: 30, y: 24, w: 2, h: 5, color: '#FFB84D', rx: 0.5 }, // Оранжевая
-      { x: 34, y: 26, w: 2.5, h: 7, color: '#C8A8FF', rx: 0.5 }, // Фиолетовая
-      { x: 28, y: 28, w: 2, h: 5, color: '#FFE066', rx: 0.5 }, // Желтая
-      { x: 32, y: 30, w: 2, h: 6, color: '#FF9EC5', rx: 0.5 }, // Розовая
-      { x: 36, y: 32, w: 2.5, h: 5, color: '#FFB84D', rx: 0.5 }, // Оранжевая
-    ];
-    
-    return `
-      <svg width="${size}" height="${size}" viewBox="0 0 64 64" style="filter: blur(${blur}px);">
-        <!-- Тело пончика -->
-        <circle cx="32" cy="32" r="28" fill="${donutColor}" stroke="#B8956A" stroke-width="1.5" />
-        <!-- Дырка -->
-        <circle cx="32" cy="32" r="12" fill="white" stroke="#E0E0E0" stroke-width="0.5" />
-        <!-- Глазурь с бликом -->
-        <path d="M 16 28 Q 20 20, 28 20 Q 36 20, 40 28 Q 42 32, 40 36 Q 36 44, 28 44 Q 20 44, 20 36 Q 18 32, 16 28" fill="${icingColor}" stroke="#A8D5E8" stroke-width="1" />
-        <!-- Блик на глазури -->
-        <ellipse cx="28" cy="26" rx="8" ry="6" fill="${icingHighlight}" opacity="0.4" />
-        <!-- Посыпки -->
-        ${hasAccent ? sprinkles.map(s => `
-          <rect x="${s.x}" y="${s.y}" width="${s.w}" height="${s.h}" rx="${s.rx}" fill="${s.color}" stroke="#333" stroke-width="0.3" />
-        `).join('') : ''}
-      </svg>
+  // Функция создания пончика используя donut.png
+  const createDonutImg = (size, blur) => {
+    const img = document.createElement('img');
+    img.src = '/static/images/donut.png';
+    img.alt = 'donut';
+    img.style.cssText = `
+      width: ${size}px;
+      height: ${size}px;
+      filter: blur(${blur}px);
+      object-fit: contain;
     `;
+    return img;
   };
   
   // Создаём пончики
@@ -345,8 +294,9 @@
       animation: donut-spin ${donut.duration}s linear infinite ${donut.delay}s;
       transform-origin: center center;
     `;
-    spinDiv.innerHTML = createDonutSVG(donut.hasAccent, donut.size, donut.blur);
     
+    const donutImg = createDonutImg(donut.size, donut.blur);
+    spinDiv.appendChild(donutImg);
     donutDiv.appendChild(spinDiv);
     container.appendChild(donutDiv);
   });
