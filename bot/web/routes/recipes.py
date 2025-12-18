@@ -79,6 +79,19 @@ async def recipes_home(request: Request):
     """Главная страница рецептов"""
     # Получаем последние рецепты
     recipes = await Recipe.all().order_by("-created_at").limit(10)
+    
+    # Парсим recipe_text для каждого рецепта и добавляем как атрибут
+    for recipe in recipes:
+        if recipe.recipe_text:
+            try:
+                if isinstance(recipe.recipe_text, str):
+                    recipe.recipe_data = json.loads(recipe.recipe_text)
+                else:
+                    recipe.recipe_data = recipe.recipe_text
+            except (json.JSONDecodeError, TypeError):
+                recipe.recipe_data = {}
+        else:
+            recipe.recipe_data = {}
 
     context = {
         "request": request,
@@ -434,11 +447,22 @@ async def view_recipe(request: Request, recipe_id: str):
     """Просмотр готового рецепта"""
     try:
         recipe = await Recipe.get(id=recipe_id)
-        recipe_data = json.loads(recipe.recipe_text)
+        
+        # Парсим recipe_text если это строка
+        if isinstance(recipe.recipe_text, str):
+            try:
+                recipe_data = json.loads(recipe.recipe_text)
+            except (json.JSONDecodeError, TypeError):
+                logger.error(f"Failed to parse recipe_text for recipe {recipe_id}")
+                recipe_data = {}
+        elif isinstance(recipe.recipe_text, dict):
+            recipe_data = recipe.recipe_text
+        else:
+            recipe_data = {}
 
         context = {
             "request": request,
-            "title": recipe_data.get('recipe_title', 'Рецепт'),
+            "title": recipe_data.get('recipe_title', 'Рецепт') if recipe_data else 'Рецепт',
             "recipe": recipe,
             "recipe_data": recipe_data
         }

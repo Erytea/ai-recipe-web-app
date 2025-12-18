@@ -28,7 +28,7 @@
                 <div class="card-body d-flex flex-column">
                     <h5 class="title-large mb-3">
                         <a href="/recipes/{{ recipe.id }}" class="text-decoration-none" style="color: var(--text-primary);">
-                            {{ recipe.recipe_text.get('recipe_title', 'Без названия') if recipe.recipe_text else 'Без названия' }}
+                            {{ recipe.recipe_data.get('recipe_title', 'Без названия') if recipe.recipe_data else 'Без названия' }}
                         </a>
                     </h5>
 
